@@ -23,7 +23,7 @@ $('#collapseMap').on('shown.bs.collapse', function(e) {
                 properties: {
                     propertyId: property.propertyId,
                     description: '<strong>Mad Men Season Five Finale Watch Party</strong><p>Head to Lounge 201 (201 Massachusetts Avenue NE) Sunday for a <a href="http://madmens5finale.eventbrite.com/" target="_blank" title="Opens in a new window">Mad Men Season Five Finale Watch Party</a>, complete with 60s costume contest, Mad Men trivia, and retro food and drink. 8:00-11:00 p.m. $10 general admission, $20 admission and two hour open bar.</p>',
-
+                    Address: property.location.formattedAddress,
                     icon: 'shop'
                 }
             };
@@ -59,7 +59,7 @@ $('#collapseMap').on('shown.bs.collapse', function(e) {
             map.on('click', 'places', function(e) {
                 var coordinates = e.features[0].geometry.coordinates.slice();
                 var description = e.features[0].properties.description;
-
+                var address = e.features[0].properties.Address;
 
 
                 // Ensure that if the map is zoomed out such that multiple
@@ -71,7 +71,7 @@ $('#collapseMap').on('shown.bs.collapse', function(e) {
 
                 new mapboxgl.Popup()
                     .setLngLat(coordinates)
-                    .setHTML(description)
+                    .setHTML('<img src="img/thumb_map_single_hotel.jpg" alt="" style ="max-width:100%;"> <br> <h1 style="font-size: 22px;">' + address + ' </h1> <br> <h4><b>17$</b>/night</h4>')
                     .addTo(map);
             });
 

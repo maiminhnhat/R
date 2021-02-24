@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-//home
+//home 
 const home_controller = require('./guest/home_controllers');
 router.use('/', home_controller);
 
@@ -29,4 +29,11 @@ router.use('/', login_controller);
 //add-property
 const add_property = require('./host/add-property');
 router.use('/api/properties', add_property)
+
+//home(host)
+const host_home_controller = require('./host/home_controllers');
+router.use('/host', host_home_controller);
+//add(host)
+const host_add_controller = require('./host/add_controllers');
+router.use('/host', host_add_controller);
 module.exports = router;

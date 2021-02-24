@@ -14,7 +14,7 @@ app.use(bodyparser.json());
 app.use(cors());
 // load env vars
 dotenv.config({ path: './config/config.env' });
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname + '/public'));
 // gọi ejs
 app.set('view engine', 'ejs');
 const control_controllers = require('./controller/control_controllers');

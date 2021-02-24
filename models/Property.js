@@ -9,10 +9,28 @@ const PropertySchema = new mongoose.Schema({
         trim: true,
         maxlength: [10, 'ID must be less than 10 chars']
     },
+    title: {
+        type: String,
+        required: [true, 'Please add a title'],
+        unique: true,
+    },
     address: {
         type: String,
         required: [true, 'Please add an address']
     },
+
+    category: {
+        type: Array,
+        default: 0,
+        required: true
+            //0:false, 1:true
+    },
+    description: String,
+    price: {
+        type: String,
+        required: true
+    },
+
     location: {
         type: {
             type: String,
