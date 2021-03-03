@@ -29,8 +29,6 @@ function uploadFile(e) {
     });
 
 };
-
-
 // Send POST to API to add property
 async function addProperty(Fname) {
     if (propertyId.value === '' || propertyAddress.value === '' || propertyTitle.value === '' || propertyPrice.value === '' || propertyCategory.value === '') {
