@@ -49,22 +49,6 @@ router.post('/uploadFile', (req, res, next) => {
     });
 
 });
-// router.post('/api/properties', upload.array('input-fa[]', 10), (req, res) => {
-//         res.send(req.files.filename);
-//         // // khai báo
-//         // var img = req.files;
-//         // // lấy dữ liệu
-//         // property = {
-//         //     'image': img
-//         // };
-//         // Property.create(property, (err, data) => {
-//         //     if (err) {
-//         //         res.send({ kq: 0, err: err });
-//         //     } else {
-//         //         res.send({ kq: 1 });
-//         //     }
-//         // });
-//     })
 router.post('/api/properties', async(req, res) => {
     try {
         const property = await Property.create(req.body);

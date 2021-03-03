@@ -33,11 +33,6 @@ function uploadFile(e) {
 
 // Send POST to API to add property
 async function addProperty(Fname) {
-    // e.preventDefault();
-    // for (var i = 0; i < propertyImage.files.length; i++) {
-    //     arr.push(propertyImage.files[i].name)
-    //     console.log(arr)
-    // }
     if (propertyId.value === '' || propertyAddress.value === '' || propertyTitle.value === '' || propertyPrice.value === '' || propertyCategory.value === '') {
         alert('Please fill in fields');
     } else {
