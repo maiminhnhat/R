@@ -26,9 +26,7 @@ const login_controller = require('./guest/login_controllers');
 router.use('/', login_controller);
 
 
-//add-property
-const add_property = require('./host/add-property');
-router.use('/api/properties', add_property)
+
 
 //home(host)
 const host_home_controller = require('./host/home_controllers');

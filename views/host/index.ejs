@@ -30,15 +30,18 @@
         <link href="/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
         <%}%>
             <% if (url == '/host/add') {%>
+                <link rel="stylesheet" href="/bs-fileinput/css/fileinput.min.css">
                 <!-- Plugin styles -->
                 <link href="/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
                 <link href="/vendor/dropzone.css" rel="stylesheet">
                 <link href="/css/date_picker.css" rel="stylesheet">
-                <!-- WYSIWYG Editor -->
-                <link rel="stylesheet" href="/js/editor/summernote-bs4.css">
+                <style>
+                    div.preview-images>img {
+                        width: 30%;
+                        padding: 10px;
+                    }
+                </style>
                 <%}%>
-
-
                     <!-- Your custom styles -->
                     <link href="/css/custom.css" rel="stylesheet">
                     <base href="http://localhost:3200/host/">
@@ -263,7 +266,7 @@
             </div>
         </div>
         <!-- Bootstrap core JavaScript-->
-        <script src="/vendor/jquery/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <!-- Core plugin JavaScript-->
         <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -272,7 +275,6 @@
         <script src="/vendor/datatables/jquery.dataTables.js"></script>
         <script src="/vendor/datatables/dataTables.bootstrap4.js"></script>
         <script src="/vendor/jquery.selectbox-0.2.js"></script>
-        <script src="/vendor/retina-replace.min.js"></script>
         <script src="/vendor/jquery.magnific-popup.min.js"></script>
         <!-- Custom scripts for all pages-->
         <script src="/js/admin.js"></script>
@@ -281,82 +283,36 @@
             <script src="/js/admin-charts.js"></script>
             <%}%>
                 <%if(url == '/host/add') {%>
+                    <script src="/bs-fileinput/js/fileinput.js"></script>
+                    <script src="/bs-fileinput/js/plugins/piexif.min.js"></script>
+                    <script src="/bs-fileinput/js/plugins/sortable.min.js"></script>
+                    <script src="/bs-fileinput/fa/theme.js"></script>
                     <!-- Custom scripts for this page-->
                     <script src="/vendor/dropzone.min.js"></script>
                     <script src="/vendor/bootstrap-datepicker.js"></script>
                     <script>
                         $('input.date-pick').datepicker();
                     </script>
-                    <!-- WYSIWYG Editor -->
-                    <script src="/js/editor/summernote-bs4.min.js"></script>
+
+                    <script src="/js/ProccessProperty.js"></script>
+
                     <script>
-                        $('.editor').summernote({
-                            fontSizes: ['10', '14', '22'],
-                            toolbar: [
-                                // [groupName, [list of button]]
-                                ['style', ['bold', 'italic', 'underline', 'clear']],
-                                ['font', ['strikethrough']],
-                                ['fontsize', ['fontsize']],
-                                ['para', ['ul', 'ol', 'paragraph']]
-                            ],
-                            placeholder: 'Write here your description....',
-                            tabsize: 2,
-                            height: 200
+                        $(document).ready(function() {
+
+                            $("#input-fa").fileinput({
+                                theme: "fa",
+                                showUpload: false,
+                                'previewFileType': 'any',
+                                uploadUrl: "/file-upload-batch/2",
+                                maxFileCount: 10
+                            });
                         });
                     </script>
-                    <script>
-                        const propertyForm = document.getElementById('property-form');
-                        const propertyId = document.getElementById('property-id');
-                        const propertyAddress = document.getElementById('property-address');
-                        const propertyTitle = document.getElementById('property-title');
-                        const propertyDescription = document.getElementsByClassName('editor');
-                        const propertyPrice = document.getElementById('property-price');
-                        const propertyCategory = document.getElementById('property-type');
-
-                        // Send POST to API to add property
-                        async function addProperty(e) {
-                            e.preventDefault();
-
-                            if (propertyId.value === '' || propertyAddress.value === '' || propertyTitle.value === '' || propertyPrice.value === '' || propertyCategory.value === '') {
-                                alert('Please fill in fields');
-                            }
-
-                            const sendBody = {
-                                propertyId: propertyId.value,
-                                title: propertyTitle.value,
-                                address: propertyAddress.value,
-                                category: propertyCategory.value,
-                                description: propertyDescription.value,
-                                price: propertyPrice.value
-                            };
-
-                            try {
-                                const res = await fetch('/api/properties', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify(sendBody)
-                                });
-
-                                if (res.status === 400) {
-                                    throw Error('Store already exists!');
-                                }
-
-                                alert('Property added!');
-                                window.location.href = 'add';
-                            } catch (err) {
-                                alert(err);
-                                return;
-                            }
-                        }
-
-                        propertyForm.addEventListener('submit', addProperty);
-                    </script>
-
                     <%}%>
 
 
 </body>
+
+</html>
 
 </html>

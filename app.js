@@ -15,10 +15,14 @@ app.use(cors());
 // load env vars
 dotenv.config({ path: './config/config.env' });
 app.use(express.static(__dirname + '/public'));
+
 // gọi ejs
 app.set('view engine', 'ejs');
 const control_controllers = require('./controller/control_controllers');
 app.use('/', control_controllers);
+
+
+
 //gọi đến dbconnect
 require('./dbconnect')
 app.listen(3200, () => {
