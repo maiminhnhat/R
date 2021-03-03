@@ -23,7 +23,7 @@ function uploadFile(e) {
         success: function(result) {
             arr = result;
             Filename = arr.map(item => item.filename);
-            console.log(Filename)
+            // console.log(Filename)
             addProperty(Filename)
         }
     });
