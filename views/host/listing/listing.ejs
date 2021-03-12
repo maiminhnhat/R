@@ -1,0 +1,33 @@
+<div class="content-wrapper">
+    <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="home">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">Listings</li>
+        </ol>
+        <div class="box_general">
+
+            <div class="list_general">
+                <ul>
+                    <%-str%>
+                </ul>
+            </div>
+        </div>
+        <!-- /box_general-->
+        <nav aria-label="...">
+            <ul class="pagination pagination-sm add_bottom_30">
+                <li class="page-item">
+                    <a class="page-link" id="prev-btn" href="" tabindex="-1">Previous</a>
+                </li>
+                <%-pa%>
+                    <li class="page-item">
+                        <a class="page-link" id="next-btn" href="">Next</a>
+                    </li>
+            </ul>
+        </nav>
+        <!-- /pagination-->
+    </div>
+    <!-- /container-fluid-->
+</div>

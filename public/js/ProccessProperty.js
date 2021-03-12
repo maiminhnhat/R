@@ -5,7 +5,7 @@ const propertyTitle = document.getElementById('property_title');
 const propertyDescription = document.getElementById('property_descript');
 const propertyPrice = document.getElementById('property_price');
 const propertyCategory = document.getElementById('property_type');
-const propertyImage = document.getElementById('input-fa');
+const ObjectId = document.getElementById('iduser');
 var arr;
 var Filename;
 
@@ -23,19 +23,19 @@ function uploadFile(e) {
         success: function(result) {
             arr = result;
             Filename = arr.map(item => item.filename);
-            // console.log(Filename)
+            // console.log(Filename);
             addProperty(Filename)
         }
     });
-
 };
 // Send POST to API to add property
 async function addProperty(Fname) {
     if (propertyId.value === '' || propertyAddress.value === '' || propertyTitle.value === '' || propertyPrice.value === '' || propertyCategory.value === '') {
         alert('Please fill in fields');
     } else {
-        alert(F)
+
         const sendBody = {
+            _id: ObjectId.value,
             propertyId: propertyId.value,
             title: propertyTitle.value,
             address: propertyAddress.value,
@@ -61,14 +61,13 @@ async function addProperty(Fname) {
             if (res.status === 500) {
                 throw Error('Server Error');
             }
-            alert('Property added!');
-            window.location.href = 'add';
+            // alert('Property added!');
+            window.location.href = 'list';
         } catch (err) {
             alert(err);
             return;
         }
     }
-
-
 }
+
 propertyForm.addEventListener('submit', uploadFile);

@@ -27,13 +27,13 @@
         <!-- SPECIFIC CSS -->
         <link href="css/blog.css" rel="stylesheet">
         <%}%>
-            <% if(url == '/property'){%>
-                <script src='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js'></script>
-                <link href='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css' rel='stylesheet' />
-                <%}%>
-                    <!-- YOUR CUSTOM CSS -->
-                    <link href="/css/custom.css" rel="stylesheet">
-                    <base href="http://localhost:3200/">
+
+            <script src='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js'></script>
+            <link href='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css' rel='stylesheet' />
+
+            <!-- YOUR CUSTOM CSS -->
+            <link href="/css/custom.css" rel="stylesheet">
+            <base href="http://localhost:3200/">
 
 </head>
 
@@ -282,10 +282,9 @@
             <% break;
             case '/house':%>
                 <!-- Map -->
-                <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB1Is5XGywaMj01UtR9CLQZBLJGVbGrNoA"></script>
-                <script src="/js/markerclusterer.js"></script>
+
                 <script src="/js/map_hotels.js"></script>
-                <script src="/js/infobox.js"></script>
+
 
                 <!-- Masonry Filtering -->
                 <script src="/js/isotope.min.js"></script>
@@ -308,10 +307,9 @@
                 <% break;
                    case '/flat':%>
                     <!-- Map -->
-                    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB1Is5XGywaMj01UtR9CLQZBLJGVbGrNoA"></script>
-                    <script src="/js/markerclusterer.js"></script>
+
                     <script src="/js/map_hotels.js"></script>
-                    <script src="/js/infobox.js"></script>
+
 
                     <!-- Masonry Filtering -->
                     <script src="/js/isotope.min.js"></script>
@@ -332,12 +330,10 @@
                         });
                     </script>
                     <% break;
-                    case '/property':%>
+                    case '/unique':%>
                         <!-- Map -->
-                        <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB1Is5XGywaMj01UtR9CLQZBLJGVbGrNoA"></script>
-                        <script src="/js/markerclusterer.js"></script>
+
                         <script src="/js/map_hotels.js"></script>
-                        <script src="/js/infobox.js"></script>
 
                         <!-- Masonry Filtering -->
                         <script src="/js/isotope.min.js"></script>
@@ -358,69 +354,43 @@
                             });
                         </script>
                         <% break;
-                    case '/unique':%>
+                    case '/details':%>
                             <!-- Map -->
                             <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB1Is5XGywaMj01UtR9CLQZBLJGVbGrNoA"></script>
-                            <script src="/js/markerclusterer.js"></script>
-                            <script src="/js/map_hotels.js"></script>
+                            <script src="/js/map_single_hotel.js"></script>
                             <script src="/js/infobox.js"></script>
 
-                            <!-- Masonry Filtering -->
-                            <script src="/js/isotope.min.js"></script>
+                            <!-- DATEPICKER  -->
                             <script>
-                                $(window).on('load', function() {
-                                    var $container = $('.isotope-wrapper');
-                                    $container.isotope({
-                                        itemSelector: '.isotope-item',
-                                        layoutMode: 'masonry'
+                                $(function() {
+                                    $('input[name="dates"]').daterangepicker({
+                                        autoUpdateInput: false,
+                                        parentEl: '.scroll-fix',
+                                        minDate: new Date(),
+                                        opens: 'left',
+                                        locale: {
+                                            cancelLabel: 'Clear'
+                                        }
                                     });
-                                });
-
-                                $('.filters_listing').on('click', 'input', 'change', function() {
-                                    var selector = $(this).attr('data-filter');
-                                    $('.isotope-wrapper').isotope({
-                                        filter: selector
+                                    $('input[name="dates"]').on('apply.daterangepicker', function(ev, picker) {
+                                        $(this).val(picker.startDate.format('MM-DD-YY') + ' > ' + picker.endDate.format('MM-DD-YY'));
+                                    });
+                                    $('input[name="dates"]').on('cancel.daterangepicker', function(ev, picker) {
+                                        $(this).val('');
                                     });
                                 });
                             </script>
+
+                            <!-- INPUT QUANTITY  -->
+                            <script src="/js/input_qty.js"></script>
+
                             <% break;
-                    case '/details':%>
-                                <!-- Map -->
-                                <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB1Is5XGywaMj01UtR9CLQZBLJGVbGrNoA"></script>
-                                <script src="/js/map_single_hotel.js"></script>
-                                <script src="/js/infobox.js"></script>
-
-                                <!-- DATEPICKER  -->
-                                <script>
-                                    $(function() {
-                                        $('input[name="dates"]').daterangepicker({
-                                            autoUpdateInput: false,
-                                            parentEl: '.scroll-fix',
-                                            minDate: new Date(),
-                                            opens: 'left',
-                                            locale: {
-                                                cancelLabel: 'Clear'
-                                            }
-                                        });
-                                        $('input[name="dates"]').on('apply.daterangepicker', function(ev, picker) {
-                                            $(this).val(picker.startDate.format('MM-DD-YY') + ' > ' + picker.endDate.format('MM-DD-YY'));
-                                        });
-                                        $('input[name="dates"]').on('cancel.daterangepicker', function(ev, picker) {
-                                            $(this).val('');
-                                        });
-                                    });
-                                </script>
-
-                                <!-- INPUT QUANTITY  -->
-                                <script src="/js/input_qty.js"></script>
-
-                                <% break;
                                     case '/contact':%>
-                                    <!-- SPECIFIC SCRIPTS -->
-                                    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB1Is5XGywaMj01UtR9CLQZBLJGVbGrNoA"></script>
-                                    <script src="/js/mapmarker.jquery.js"></script>
-                                    <script src="/js/mapmarker_func.jquery.js"></script>
-                                    <% break;
+                                <!-- SPECIFIC SCRIPTS -->
+                                <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB1Is5XGywaMj01UtR9CLQZBLJGVbGrNoA"></script>
+                                <script src="/js/mapmarker.jquery.js"></script>
+                                <script src="/js/mapmarker_func.jquery.js"></script>
+                                <% break;
             }%>
 
 

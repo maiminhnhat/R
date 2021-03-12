@@ -15,6 +15,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
+                            <input type="hidden" id="iduser" value="">
                             <label>ID</label>
                             <input type="text" class="form-control" placeholder="001" id="property_id" name="property_id">
                         </div>
@@ -96,11 +97,12 @@
                         <div class="form-group">
                             <label>Photos</label>
 
-                            <input id="input-fa" name="input-fa[]" type="file" multiple>
+                            <div class="file-loading">
+                                <input id="input-pd" name="input-pd[]" type="file" multiple>
+                            </div>
 
 
                         </div>
-                        <div class="preview-images"></div>
                     </div>
                 </div>
                 <!-- /row-->

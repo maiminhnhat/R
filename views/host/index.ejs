@@ -25,11 +25,11 @@
     <link href="/css/admin.css" rel="stylesheet">
     <!-- Icon fonts-->
     <link href="/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <%if(url == '/host/home') {%>
+    <%if(url[2] == 'home') {%>
         <!-- Plugin styles -->
         <link href="/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
         <%}%>
-            <% if (url == '/host/add') {%>
+            <% if (url[2] == 'add'|| url[2] == 'edit') {%>
                 <link rel="stylesheet" href="/bs-fileinput/css/fileinput.min.css">
                 <!-- Plugin styles -->
                 <link href="/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
@@ -98,9 +98,9 @@
                     </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Bookmarks">
-                    <a class="nav-link" href="bookmarks.html">
+                    <a class="nav-link" href="list">
                         <i class="fa fa-fw fa-heart"></i>
-                        <span class="nav-link-text">Bookmarks</span>
+                        <span class="nav-link-text">Listing</span>
                     </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Add listing">
@@ -278,11 +278,11 @@
         <script src="/vendor/jquery.magnific-popup.min.js"></script>
         <!-- Custom scripts for all pages-->
         <script src="/js/admin.js"></script>
-        <% if(url == '/host/home') {%>
+        <% if(url[2] == 'home') {%>
             <!-- Custom scripts for this page-->
             <script src="/js/admin-charts.js"></script>
             <%}%>
-                <%if(url == '/host/add') {%>
+                <%if(url[2] == 'add'|| url[2] == 'edit') {%>
                     <script src="/bs-fileinput/js/fileinput.js"></script>
                     <script src="/bs-fileinput/js/plugins/piexif.min.js"></script>
                     <script src="/bs-fileinput/js/plugins/sortable.min.js"></script>
@@ -295,20 +295,66 @@
                     </script>
 
                     <script src="/js/ProccessProperty.js"></script>
-
                     <script>
-                        $(document).ready(function() {
-
-                            $("#input-fa").fileinput({
-                                theme: "fa",
-                                showUpload: false,
-                                'previewFileType': 'any',
-                                uploadUrl: "/file-upload-batch/2",
-                                maxFileCount: 10
-                            });
+                        $("#input-pd").fileinput({
+                            theme: "fa",
+                            showUpload: false,
+                            'previewFileType': 'any',
+                            maxFileCount: 10
                         });
                     </script>
+
                     <%}%>
+
+                        <!-- <% if(url[2] == 'edit') {%>
+                                    <script>
+                                        $(document).ready(function() {
+
+                                            var image = '<%=data[0].image%>';
+                                            console.log(image);
+                                            var arr = image.split(',');
+                                            var url = []
+                                            for (var i = 0; i < arr.length; i++) {
+                                                url.push('/img/' + arr[i])
+
+                                            }
+
+                                            $("#input-pd").fileinput({
+                                                initialPreview: url,
+                                                initialPreviewAsData: true,
+                                                initialPreviewFileType: 'image',
+                                                theme: "fa",
+                                                showUpload: false,
+                                                overwriteInitial: false,
+                                                'previewFileType': 'any',
+                                                maxFileCount: 10
+                                            })
+                                        });
+                                    </script>
+                                    <%}%> -->
+                        <% if(url[2] == 'list') {%>
+                            <script>
+                                $(document).ready(function() {
+                                    var pageItem = $(".pagination li").not("#prev-btn,#prev-btn");
+                                    var prev = $("#prev-btn");
+                                    var next = $("#prev-btn");
+
+                                    pageItem.click(function() {
+                                        pageItem.removeClass("active");
+                                    });
+
+                                    next.click(function() {
+                                        $('li.active').removeClass('active').next().addClass('active');
+                                    });
+
+                                    prev.click(function() {
+                                        $('li.active').removeClass('active').prev().addClass('active');
+                                    });
+
+
+                                });
+                            </script>
+                            <%}%>
 
 
 </body>
