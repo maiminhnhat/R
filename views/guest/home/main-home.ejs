@@ -203,58 +203,20 @@
 
             </div>
             <div class="row ">
-                <div class="col-xl-3 col-lg-6 col-md-6 ">
-                    <a href="details" class="grid_item ">
-                        <figure>
-                            <div class="score "><strong>8.9</strong></div>
-                            <img src="img/hotel_1.jpg " class="img-fluid " alt=" ">
-                            <div class="info ">
-                                <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
-                                <h3>Mariott Hotel</h3>
-                            </div>
-                        </figure>
-                    </a>
-                </div>
-                <!-- /grid_item -->
-                <div class="col-xl-3 col-lg-6 col-md-6 ">
-                    <a href="details" class="grid_item ">
-                        <figure>
-                            <div class="score "><strong>7.9</strong></div>
-                            <img src="img/hotel_2.jpg " class="img-fluid " alt=" ">
-                            <div class="info ">
-                                <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
-                                <h3>Concorde Hotel </h3>
-                            </div>
-                        </figure>
-                    </a>
-                </div>
-                <!-- /grid_item -->
-                <div class="col-xl-3 col-lg-6 col-md-6 ">
-                    <a href="details" class="grid_item ">
-                        <figure>
-                            <div class="score "><strong>7.0</strong></div>
-                            <img src="img/hotel_3.jpg " class="img-fluid " alt=" ">
-                            <div class="info ">
-                                <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
-                                <h3>Louvre Hotel</h3>
-                            </div>
-                        </figure>
-                    </a>
-                </div>
-                <!-- /grid_item -->
-                <div class="col-xl-3 col-lg-6 col-md-6 ">
-                    <a href="details" class="grid_item ">
-                        <figure>
-                            <div class="score "><strong>8.9</strong></div>
-                            <img src="img/hotel_4.jpg " class="img-fluid " alt=" ">
-                            <div class="info ">
-                                <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
-                                <h3>Park Yatt Hotel</h3>
-                            </div>
-                        </figure>
-                    </a>
-                </div>
-                <!-- /grid_item -->
+                <%unique.forEach(e =>{ %>
+                    <div class="col-xl-3 col-lg-6 col-md-6 ">
+                        <a href="details" class="grid_item ">
+                            <figure>
+                                <div class="score"><strong>8.9</strong></div>
+                                <img src="/img/<%=e.image[0]%>" class="img-fluid " alt=" ">
+                                <div class="info ">
+                                    <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
+                                    <h3><%=e.title %></h3>
+                                </div>
+                            </figure>
+                        </a>
+                    </div>
+               <% })%>
             </div>
             <!-- /row -->
             <a href="unique"><strong>View all (157) <i class="arrow_carrot-right "></i></strong></a>
@@ -273,58 +235,20 @@
 
             </div>
             <div class="row ">
-                <div class="col-xl-3 col-lg-6 col-md-6 ">
-                    <a href="details" class="grid_item ">
-                        <figure>
-                            <div class="score "><strong>8.9</strong></div>
-                            <img src="img/hotel_1.jpg " class="img-fluid " alt=" ">
-                            <div class="info ">
-                                <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
-                                <h3>Mariott Hotel</h3>
-                            </div>
-                        </figure>
-                    </a>
-                </div>
-                <!-- /grid_item -->
-                <div class="col-xl-3 col-lg-6 col-md-6 ">
-                    <a href="details" class="grid_item ">
-                        <figure>
-                            <div class="score "><strong>7.9</strong></div>
-                            <img src="img/hotel_2.jpg " class="img-fluid " alt=" ">
-                            <div class="info ">
-                                <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
-                                <h3>Concorde Hotel </h3>
-                            </div>
-                        </figure>
-                    </a>
-                </div>
-                <!-- /grid_item -->
-                <div class="col-xl-3 col-lg-6 col-md-6 ">
-                    <a href="details" class="grid_item ">
-                        <figure>
-                            <div class="score "><strong>7.0</strong></div>
-                            <img src="img/hotel_3.jpg " class="img-fluid " alt=" ">
-                            <div class="info ">
-                                <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
-                                <h3>Louvre Hotel</h3>
-                            </div>
-                        </figure>
-                    </a>
-                </div>
-                <!-- /grid_item -->
-                <div class="col-xl-3 col-lg-6 col-md-6 ">
-                    <a href="details" class="grid_item ">
-                        <figure>
-                            <div class="score "><strong>8.9</strong></div>
-                            <img src="img/hotel_4.jpg " class="img-fluid " alt=" ">
-                            <div class="info ">
-                                <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
-                                <h3>Park Yatt Hotel</h3>
-                            </div>
-                        </figure>
-                    </a>
-                </div>
-                <!-- /grid_item -->
+                <%hotel.forEach(e =>{ %>
+                    <div class="col-xl-3 col-lg-6 col-md-6 ">
+                        <a href="details" class="grid_item ">
+                            <figure>
+                                <div class="score"><strong>8.9</strong></div>
+                                <img src="/img/<%=e.image[0]%>" class="img-fluid " alt=" ">
+                                <div class="info ">
+                                    <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
+                                    <h3><%=e.title %></h3>
+                                </div>
+                            </figure>
+                        </a>
+                    </div>
+               <% })%>
             </div>
             <!-- /row -->
             <a href="hotel"><strong>View all (157) <i class="arrow_carrot-right "></i></strong></a>
@@ -344,58 +268,20 @@
 
             </div>
             <div class="row ">
-                <div class="col-xl-3 col-lg-6 col-md-6 ">
-                    <a href="details" class="grid_item ">
-                        <figure>
-                            <div class="score "><strong>8.9</strong></div>
-                            <img src="img/hotel_1.jpg " class="img-fluid " alt=" ">
-                            <div class="info ">
-                                <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
-                                <h3>Mariott Hotel</h3>
-                            </div>
-                        </figure>
-                    </a>
-                </div>
-                <!-- /grid_item -->
-                <div class="col-xl-3 col-lg-6 col-md-6 ">
-                    <a href="details" class="grid_item ">
-                        <figure>
-                            <div class="score "><strong>7.9</strong></div>
-                            <img src="img/hotel_2.jpg " class="img-fluid " alt=" ">
-                            <div class="info ">
-                                <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
-                                <h3>Concorde Hotel </h3>
-                            </div>
-                        </figure>
-                    </a>
-                </div>
-                <!-- /grid_item -->
-                <div class="col-xl-3 col-lg-6 col-md-6 ">
-                    <a href="details" class="grid_item ">
-                        <figure>
-                            <div class="score "><strong>7.0</strong></div>
-                            <img src="img/hotel_3.jpg " class="img-fluid " alt=" ">
-                            <div class="info ">
-                                <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
-                                <h3>Louvre Hotel</h3>
-                            </div>
-                        </figure>
-                    </a>
-                </div>
-                <!-- /grid_item -->
-                <div class="col-xl-3 col-lg-6 col-md-6 ">
-                    <a href="details" class="grid_item ">
-                        <figure>
-                            <div class="score "><strong>8.9</strong></div>
-                            <img src="img/hotel_4.jpg " class="img-fluid " alt=" ">
-                            <div class="info ">
-                                <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
-                                <h3>Park Yatt Hotel</h3>
-                            </div>
-                        </figure>
-                    </a>
-                </div>
-                <!-- /grid_item -->
+                <%house.forEach(e =>{ %>
+                    <div class="col-xl-3 col-lg-6 col-md-6 ">
+                        <a href="details" class="grid_item ">
+                            <figure>
+                                <div class="score"><strong>8.9</strong></div>
+                                <img src="/img/<%=e.image[0]%>" class="img-fluid " alt=" ">
+                                <div class="info ">
+                                    <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
+                                    <h3><%=e.title %></h3>
+                                </div>
+                            </figure>
+                        </a>
+                    </div>
+               <% })%>
             </div>
             <!-- /row -->
             <a href="house"><strong>View all (157) <i class="arrow_carrot-right "></i></strong></a>
@@ -416,58 +302,20 @@
 
             </div>
             <div class="row ">
-                <div class="col-xl-3 col-lg-6 col-md-6 ">
-                    <a href="details" class="grid_item ">
-                        <figure>
-                            <div class="score "><strong>8.9</strong></div>
-                            <img src="img/hotel_1.jpg " class="img-fluid " alt=" ">
-                            <div class="info ">
-                                <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
-                                <h3>Mariott Hotel</h3>
-                            </div>
-                        </figure>
-                    </a>
-                </div>
-                <!-- /grid_item -->
-                <div class="col-xl-3 col-lg-6 col-md-6 ">
-                    <a href="details" class="grid_item ">
-                        <figure>
-                            <div class="score "><strong>7.9</strong></div>
-                            <img src="img/hotel_2.jpg " class="img-fluid " alt=" ">
-                            <div class="info ">
-                                <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
-                                <h3>Concorde Hotel </h3>
-                            </div>
-                        </figure>
-                    </a>
-                </div>
-                <!-- /grid_item -->
-                <div class="col-xl-3 col-lg-6 col-md-6 ">
-                    <a href="details" class="grid_item ">
-                        <figure>
-                            <div class="score "><strong>7.0</strong></div>
-                            <img src="img/hotel_3.jpg " class="img-fluid " alt=" ">
-                            <div class="info ">
-                                <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
-                                <h3>Louvre Hotel</h3>
-                            </div>
-                        </figure>
-                    </a>
-                </div>
-                <!-- /grid_item -->
-                <div class="col-xl-3 col-lg-6 col-md-6 ">
-                    <a href="details" class="grid_item ">
-                        <figure>
-                            <div class="score "><strong>8.9</strong></div>
-                            <img src="img/hotel_4.jpg " class="img-fluid " alt=" ">
-                            <div class="info ">
-                                <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
-                                <h3>Park Yatt Hotel</h3>
-                            </div>
-                        </figure>
-                    </a>
-                </div>
-                <!-- /grid_item -->
+                <%flat.forEach(e =>{ %>
+                    <div class="col-xl-3 col-lg-6 col-md-6 ">
+                        <a href="details" class="grid_item ">
+                            <figure>
+                                <div class="score"><strong>8.9</strong></div>
+                                <img src="/img/<%=e.image[0]%>" class="img-fluid " alt=" ">
+                                <div class="info ">
+                                    <div class="cat_star "><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i><i class="icon_star "></i></div>
+                                    <h3><%=e.title %></h3>
+                                </div>
+                            </figure>
+                        </a>
+                    </div>
+               <% })%>
             </div>
             <!-- /row -->
             <a href="flat"><strong>View all (157) <i class="arrow_carrot-right "></i></strong></a>

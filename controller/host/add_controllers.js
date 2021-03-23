@@ -34,6 +34,15 @@ router.get('/edit/:id', (req, res) => {
         });
 
 });
+router.get('/delete/:id',(req, res)=>{
+    var url = req.originalUrl.split('/');
+    Property.findByIdAndDelete({ _id:req.params.id},(err, data) => {
+            if (err) console.log(err)
+            res.redirect('back')
+  
+});
+});
+
 
 // cấu hình lưu file và ktra file
 var storage = multer.diskStorage({
@@ -61,8 +70,8 @@ router.post('/uploadFile', (req, res, next) => {
 });
 router.post('/api/properties', async(req, res) => {
     var iduser = req.body._id
-    console.log(iduser)
-    console.log(req.body);
+    // console.log(iduser)
+    // console.log(req.body);
     var obj_insert = {
         'propertyId': req.body.propertyId,
         'title': req.body.title,
@@ -177,8 +186,22 @@ router.get('/list(/:page)?', async(req, res) => {
                         <small>` + type + `</small>
                         <h4>` + e.title + `</h4>
                         <p>` + e.description + `</p>
-                        <div class="btn" style="
-                        display: flex;"> <p><a href="#0"  class="btn_1 gray"><i class="fa fa-fw fa-eye"></i> View item</a></p>
+                        <div class="modal fade" role="dialog" tabindex="-1" id="MyModal">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">ATTENTION!!!!</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure?</p>
+                                    </div>
+                                    <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">No</button>
+                                    <a href="delete/` + e._id + `" class="btn btn-primary">Delete</a></div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn" style="display: flex;"><p> <button class="btn_1 gray" type="button" data-toggle="modal" data-target="#MyModal"><i class="fa fa-trash-o"></i>Delete item</button></p>
                         <p><a href="edit/` + e._id + `" class="btn_1 gray"><i class="fa fa-fw fa-plus"></i> Edit item</a></p></div>
 
                     </li>
