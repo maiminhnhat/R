@@ -22,8 +22,7 @@ const PropertySchema = new mongoose.Schema({
     category: {
         type: Array,
         default: 0,
-        // required: true
-        //0:false, 1:true
+     
     },
     description: String,
     image: [String],

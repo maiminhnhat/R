@@ -70,8 +70,7 @@ router.post('/uploadFile', (req, res, next) => {
 });
 router.post('/api/properties', async(req, res) => {
     var iduser = req.body._id
-    // console.log(iduser)
-    // console.log(req.body);
+
     var obj_insert = {
         'propertyId': req.body.propertyId,
         'title': req.body.title,

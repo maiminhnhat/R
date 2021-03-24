@@ -6,45 +6,43 @@
         <div data-loader="circle-side"></div>
     </div>
     <!-- End Preload -->
-
-    <div id="login">
-        <aside>
-            <figure>
-                <a href="home"><img src="img/logo_sticky.png" width="155" height="36" data-retina="true" alt="" class="logo_sticky"></a>
-            </figure>
-            <form autocomplete="off">
-                <div class="form-group">
-                    <label>Your Name</label>
-                    <input class="form-control" type="text">
-                    <i class="ti-user"></i>
-                </div>
-                <div class="form-group">
-                    <label>Your Last Name</label>
-                    <input class="form-control" type="text">
-                    <i class="ti-user"></i>
-                </div>
-                <div class="form-group">
-                    <label>Your Email</label>
-                    <input class="form-control" type="email">
-                    <i class="icon_mail_alt"></i>
-                </div>
-                <div class="form-group">
-                    <label>Your password</label>
-                    <input class="form-control" type="password" id="password1">
-                    <i class="icon_lock_alt"></i>
-                </div>
-                <div class="form-group">
-                    <label>Confirm password</label>
-                    <input class="form-control" type="password" id="password2">
-                    <i class="icon_lock_alt"></i>
-                </div>
-                <div id="pass-info" class="clearfix"></div>
-                <a href="#0" class="btn_1 rounded full-width add_top_30">Register Now!</a>
-                <div class="text-center add_top_10">Already have an acccount? <strong><a href="login">Sign In</a></strong></div>
-            </form>
-            <div class="copy">© 2018 Panagea</div>
-        </aside>
-    </div>
+    <form action="" method="POST" id="register_form">
+        <div id="login">
+            <input type="hidden" id="iduser" value="">
+            <aside>
+                <figure>
+                    <a href="home"><img src="img/logo_sticky.png" width="155" height="36" data-retina="true" alt="" class="logo_sticky"></a>
+                </figure>
+                <form autocomplete="off">
+                    <div class="form-group">
+                        <i class="ti-user"></i><label>Your Name</label>
+                        <input class="form-control" type="text" name="name" placeholder=" "id="name">
+                     
+                    </div>
+                    <div class="form-group">
+                        <i class="icon_mail_alt"></i><label>Your Email</label>
+                        <input class="form-control" type="email" id="email" name="email">
+                     
+                    </div>
+                    <div class="form-group">
+                        <i class="icon_lock_alt"></i> <label>Your password</label>
+                        <input class="form-control" type="password" id="password1" name="password">
+                        
+                    </div>
+                    <div class="form-group">
+                        <i class="icon_lock_alt"></i>  <label>Confirm password</label>
+                        <input class="form-control" type="password" id="password2">
+                    
+                    </div>
+                    <div id="pass-info" class="clearfix"></div>
+                    <button type="submit"  class="btn_1 rounded full-width add_top_30">Register Now!</button>
+                    <div class="text-center add_top_10">Already have an acccount? <strong><a href="login">Sign In</a></strong></div>
+                </form>
+                <div class="copy">© 2018 Panagea</div>
+            </aside>
+        </div>
+    </form>
+   
     <!-- /login -->
 
     <!-- COMMON SCRIPTS -->
@@ -52,8 +50,54 @@
     <script src="js/main.js"></script>
     <script src="assets/validate.js"></script>
 
+
     <!-- SPECIFIC SCRIPTS -->
     <script src="js/pw_strenght.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#register_form').on('submit', function(e){
+                e.preventDefault();
+        
+                // khai báo
+                var name, password, email,iduser,flag = 1
+                // lấy dữ liệu
+                name=$('#name').val();
+                password=$('#password1').val();
+                email=$('#email').val();
+                // iduser=$('#iduser').val();
+      
 
+                // alert( name + '/' + password );
+                // kết luận
+                
+                  // gửi ajax
+                  $.ajax({
+                    url: 'api/user',
+                    type: 'POST',
+                    data: {
+                      'name': name,
+                      'password': password,
+                      'email': email,
+                     
+                    },
+                    success: function(){
+                     alert('Succcessfully!!!')
+                      window.location.href = 'login';
+                    },
+                  error: function(res){
+                    if (res.status === 400) {
+                alert('User already exists!');
+                    }
+                    if (res.status === 500) {
+                        alert('Server Error');
+                    }
+                  }
+                  });
+              
+                  return false;
+            });
+        
+        });
+        </script>
 
 </body>

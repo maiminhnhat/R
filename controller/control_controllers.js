@@ -25,6 +25,9 @@ router.use('/', event_controller);
 const login_controller = require('./guest/login_controllers');
 router.use('/', login_controller);
 
+//user
+const user_controller = require('./guest/user_controllers');
+router.use('/', user_controller);
 
 
 
