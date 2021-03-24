@@ -1,6 +1,14 @@
 const express = require('express');
 const router = express.Router();
 var User = require('../../models/User');
+var nodemailer = require('nodemailer');
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'noreply8421@gmail.com',
+        pass: 'zgmfx19a'
+    }
+});
 router.get('/api/user', async(req, res) => {
     try {
         const user = await User.find();
