@@ -54,7 +54,6 @@
                 </a>
             </div>
             <ul id="top_menu">
-
                 <li><a href="#sign-in-dialog" id="sign-in" class="login" title="Sign In">Sign In</a></li>
                 <li>
                     <div class="dropdown" style="display:none" id="user">
@@ -226,16 +225,18 @@
             }
         });
 
+
         $(document).ready(function() {
             $('#login_form').on('submit', function(e) {
                 e.preventDefault();
                 // khai báo
-                var password, email, iduser
+                var password, email, iduser, top_menu
                     // lấy dữ liệu
                 password = $('#password').val();
                 email = $('#email').val();
-                // iduser=$('#iduser').val();
-                // // gửi ajax
+                top_menu = $('#top_menu')
+                    // iduser=$('#iduser').val();
+                    // // gửi ajax
                 $.ajax({
                     url: 'api/processLogin',
                     type: 'POST',
@@ -246,7 +247,11 @@
                     },
                     success: function(result) {
                         if (result.kq == 1) {
-                            initApp(result.name)
+                            localStorage.setItem('propertyGlobal', result.name);
+                            localStorage.getItem('propertyGlobal')
+                            $("#sign-in").hide();
+                            $("#user").show();
+                            $("#dropdownMenuButton").val(localStorage.getItem('propertyGlobal'));
                         } else {
                             alert(result.err);
 
@@ -260,16 +265,11 @@
 
 
         });
-
-        function initApp(name) {
-            localStorage.setItem('propertyGlobal', name);
-            localStorage.getItem('propertyGlobal')
-            window.location.reload('home');
-        }
         $(document).ready(function() {
             $('#logout').click(function(e) {
                 localStorage.removeItem('propertyGlobal');
-                window.location.reload('home');
+                $("#sign-in").show();
+                $("#user").hide();
             });
         })
     </script>
