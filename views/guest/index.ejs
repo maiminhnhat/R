@@ -56,6 +56,16 @@
             <ul id="top_menu">
 
                 <li><a href="#sign-in-dialog" id="sign-in" class="login" title="Sign In">Sign In</a></li>
+                <li>
+                    <div class="dropdown" style="display:none" id="user">
+                        <input type="button" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="">
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <input type="button" class="dropdown-item" id="logout" value="Logout">
+
+                        </div>
+                    </div>
+                </li>
                 <li><a href="wishlist.html" class="wishlist_bt_top" title="Your wishlist">Your wishlist</a></li>
             </ul>
             <!-- /top_menu -->
@@ -155,9 +165,9 @@
         <div class="small-dialog-header">
             <h3>Sign In</h3>
         </div>
-        <form>
+        <form action="" method="POST" id="login_form">
             <div class="sign-in-wrapper">
-                <a href="#0" class="social_bt facebook">Login with Facebook</a>
+
                 <a href="#0" class="social_bt google">Login with Google</a>
                 <div class="divider"><span>Or</span></div>
                 <div class="form-group">
@@ -204,6 +214,65 @@
     <script src="/js/common_scripts.js"></script>
     <script src="/js/main.js"></script>
     <script src="/assets/validate.js"></script>
+    <script>
+        $(window).on('load', function() {
+            if (localStorage.getItem('propertyGlobal') === null) {
+                $("#sign-in").show();
+                $("#user").hide();
+            } else {
+                $("#sign-in").hide();
+                $("#user").show();
+                $("#dropdownMenuButton").val(localStorage.getItem('propertyGlobal'));
+            }
+        });
+
+        $(document).ready(function() {
+            $('#login_form').on('submit', function(e) {
+                e.preventDefault();
+                // khai báo
+                var password, email, iduser
+                    // lấy dữ liệu
+                password = $('#password').val();
+                email = $('#email').val();
+                // iduser=$('#iduser').val();
+                // // gửi ajax
+                $.ajax({
+                    url: 'api/processLogin',
+                    type: 'POST',
+                    data: {
+                        'password': password,
+                        'email': email,
+
+                    },
+                    success: function(result) {
+                        if (result.kq == 1) {
+                            initApp(result.name)
+                        } else {
+                            alert(result.err);
+
+                        }
+                    },
+
+                });
+
+                return false;
+            });
+
+
+        });
+
+        function initApp(name) {
+            localStorage.setItem('propertyGlobal', name);
+            localStorage.getItem('propertyGlobal')
+            window.location.reload('home');
+        }
+        $(document).ready(function() {
+            $('#logout').click(function(e) {
+                localStorage.removeItem('propertyGlobal');
+                window.location.reload('home');
+            });
+        })
+    </script>
     <%switch(url){
         case '/home' : %>
         <!-- DATEPICKER  -->
@@ -253,6 +322,8 @@
                 });
             }
         </script>
+
+
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1Is5XGywaMj01UtR9CLQZBLJGVbGrNoA&libraries=places&callback=initMap"></script>
         <% break;
         case '/property':%>

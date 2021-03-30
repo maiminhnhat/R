@@ -72,7 +72,7 @@
 
                 // gửi ajax
                 $.ajax({
-                    url: 'api/user',
+                    url: 'api/register',
                     type: 'POST',
                     data: {
                         'name': name,
@@ -80,18 +80,19 @@
                         'email': email,
 
                     },
-                    success: function() {
-                        alert('Sign Up Succcessfully!!!')
-                        window.location.href = 'login';
-                    },
                     error: function(res) {
-                        if (res.status === 400) {
+                        if (res.code == 400) {
                             alert('User already exists!');
                         }
-                        if (res.status === 500) {
-                            alert('Server Error');
+                        if (res.code == 500) {
+                            al('Server Error');
                         }
+                    },
+                    success: function(result) {
+                        alert(result)
+                        window.location.href = 'login';
                     }
+
                 });
 
                 return false;

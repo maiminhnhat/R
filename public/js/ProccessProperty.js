@@ -56,12 +56,12 @@ async function addProperty(Fname) {
             });
 
             if (res.status === 400) {
-                throw Error('Store already exists!');
+                throw Error('Property already exists!');
             }
             if (res.status === 500) {
                 throw Error('Server Error');
             }
-            // alert('Property added!');
+            alert('Property added!');
             window.location.href = 'list';
         } catch (err) {
             alert(err);

@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const schemaUser = new mongoose.Schema({
     name: {
         type: String,
-        unique: true,
         required: true
     },
     password: {
@@ -19,13 +18,16 @@ const schemaUser = new mongoose.Schema({
         type: Boolean,
         default: 0
     },
+    activeToken: String,
+    activeExpires: Date,
     status: {
         type: Boolean,
         default: 1
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
     }
 });
 
