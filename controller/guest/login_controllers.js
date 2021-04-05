@@ -17,7 +17,7 @@ var LocalStorage = require('node-localstorage').LocalStorage,
     localStorage = new LocalStorage('./scratch');
 //login
 router.get('/login', (req, res) => {
-    var url = req.originalUrl;
+    var url = req.originalUrl.split('/');
     var main_login = 'login/main-login';
     res.render('guest/index-login', { main_login: main_login, url: url })
 
@@ -30,7 +30,6 @@ router.post('/api/processLogin', (req, res) => {
     // lấy dữ liệu
     email = req.body.email;
     password = req.body.password;
-
     // kiểm tra email
     User.find({ 'email': email })
         .exec((err, data) => {
@@ -48,21 +47,26 @@ router.post('/api/processLogin', (req, res) => {
                     else if (data[0].password !== password) {
                         res.send({ kq: 0, err: 'Mật khẩu không chính xác.' });
                     } else {
+
+                        propertyGlobal = [{
+                            name: data[0].name,
+                            id: data[0]._id
+                        }];
                         // tạo 1 localstorage
-
-
+                        localStorage.setItem('propertyGlobal', JSON.stringify(propertyGlobal));
                         var name = data[0].name
-
-                        res.send({ kq: 1, name: name, message: 'Đăng nhập thành công.' });
+                        var id = data[0]._id
+                        res.send({ kq: 1, name: name, id: id, message: 'Đăng nhập thành công.' });
 
                     }
                 }
             }
         });
 });
+
 //registers
 router.get('/register', (req, res) => {
-    var url = req.originalUrl;
+    var url = req.originalUrl.split('/');
     var main_login = 'login/main-register';
     res.render('guest/index-login', { main_login: main_login, url: url })
 
@@ -160,5 +164,7 @@ router.get('/active/:activeToken', (req, res, next) => {
         })
     })
 });
-
+router.post('/logout', function(req, res) {
+    localStorage.removeItem('propertyGlobal');
+});
 module.exports = router;

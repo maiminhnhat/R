@@ -22,7 +22,7 @@ const PropertySchema = new mongoose.Schema({
     category: {
         type: Array,
         default: 0,
-     
+
     },
     description: String,
     image: [String],
@@ -46,7 +46,13 @@ const PropertySchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    liked_user: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+
+    }]
+
 });
 // Geocode & create location
 PropertySchema.pre('save', async function(next) {

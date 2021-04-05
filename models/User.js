@@ -28,7 +28,12 @@ const schemaUser = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-    }
+    },
+    wishlist: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Property",
+
+    }]
 });
 
 // 2. model : tạo collection

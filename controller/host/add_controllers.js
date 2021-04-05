@@ -6,6 +6,7 @@ const { MulterError } = require('multer');
 const multer = require('multer');
 //Display in map
 router.get('/api/properties', async(req, res) => {
+
     try {
         const property = await Property.find();
         return res.status(200).json({
@@ -13,7 +14,22 @@ router.get('/api/properties', async(req, res) => {
             count: property.length,
             data: property
         });
-    } catch (error) {
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ err: 'Server err' })
+    }
+});
+router.get('/api/property', async(req, res) => {
+
+    try {
+        const property = await Property.find({ _id: req.query.idproperty });
+        return res.status(200).json({
+            success: true,
+            count: property.length,
+            data: property
+        });
+
+    } catch (err) {
         console.log(err);
         res.status(500).json({ err: 'Server err' })
     }
@@ -34,13 +50,13 @@ router.get('/edit/:id', (req, res) => {
         });
 
 });
-router.get('/delete/:id',(req, res)=>{
+router.get('/delete/:id', (req, res) => {
     var url = req.originalUrl.split('/');
-    Property.findByIdAndDelete({ _id:req.params.id},(err, data) => {
-            if (err) console.log(err)
-            res.redirect('back')
-  
-});
+    Property.findByIdAndDelete({ _id: req.params.id }, (err, data) => {
+        if (err) console.log(err)
+        res.redirect('back')
+
+    });
 });
 
 

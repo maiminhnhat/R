@@ -75,7 +75,11 @@
                     },
                     success: function(result) {
                         if (result.kq == 1) {
-                            initApp(result.name)
+                            propertyGlobal = [{
+                                name: result.name,
+                                id: result.id
+                            }]
+                            localStorage.setItem('propertyGlobal', JSON.stringify(propertyGlobal));
                             window.location.href = 'home';
 
                         } else {
@@ -89,11 +93,6 @@
             });
 
         });
-
-        function initApp(name) {
-            localStorage.setItem('propertyGlobal', name);
-            localStorage.getItem('propertyGlobal')
-        }
     </script>
 
 </body>

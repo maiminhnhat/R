@@ -9,7 +9,7 @@ $('#collapseMap').on('shown.bs.collapse', function(e) {
     async function getProperties() {
         const res = await fetch('/host/api/properties');
         const data = await res.json();
-
+        console.log(data);
         const houses = data.data.map(property => {
             return {
                 type: 'Feature',
