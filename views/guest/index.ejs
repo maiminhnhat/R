@@ -58,10 +58,8 @@
                 <li>
                     <div class="dropdown" style="display:none" id="user">
                         <input type="button" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="">
-
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <input type="button" class="dropdown-item" id="logout" value="Logout">
-
                         </div>
                     </div>
                 </li>
@@ -178,7 +176,7 @@
         <form action="" method="POST" id="login_form">
             <div class="sign-in-wrapper">
 
-                <a href="#0" class="social_bt google">Login with Google</a>
+                <a href="" id="btn_google" class="social_bt google">Login with Google</a>
                 <div class="divider"><span>Or</span></div>
                 <div class="form-group">
                     <label>Email</label>
@@ -244,13 +242,13 @@
             $('#login_form').on('submit', function(e) {
                 e.preventDefault();
                 // khai báo
-                var password, email, iduser, top_menu
+                var password, email, iduser
                     // lấy dữ liệu
                 password = $('#password').val();
                 email = $('#email').val();
-                top_menu = $('#top_menu')
-                    // iduser=$('#iduser').val();
-                    // // gửi ajax
+
+                // iduser=$('#iduser').val();
+                // // gửi ajax
                 $.ajax({
                     url: 'api/processLogin',
                     type: 'POST',
@@ -285,7 +283,14 @@
 
 
         });
+        $.ajax({
+            url: 'api/google/auth',
+            type: 'POST',
+            success: function(result) {
+                document.getElementById("btn_google").setAttribute("href", result.url_g);
+            },
 
+        });
         $(document).ready(function() {
             $('#logout').click(function(e) {
                 localStorage.removeItem('propertyGlobal');
@@ -295,6 +300,33 @@
                 window.location.reload('home')
             });
         })
+        var url_string = window.location.href;
+        if (url_string.indexOf("code") == -1) {
+            console.log("Login by system");
+
+        } else {
+            var url = new URL(url_string);
+            var extract_code = url.searchParams.get("code");
+            $.ajax({
+                url: 'api/google/getUserInfo',
+                type: 'POST',
+                data: {
+                    'code': extract_code
+                },
+                success: function(result) {
+                    propertyGlobal = [{
+                        name: result.data.name,
+                        id: result.data.id
+                    }]
+                    localStorage.setItem('propertyGlobal', JSON.stringify(propertyGlobal));
+                    var user = JSON.parse(localStorage.getItem('propertyGlobal'))
+                    $("#sign-in").hide();
+                    $("#user").show();
+                    $("#dropdownMenuButton").val(user[0].name);
+                },
+
+            });
+        }
     </script>
 
     <%switch(url[1]){

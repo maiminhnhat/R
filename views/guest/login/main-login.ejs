@@ -14,8 +14,7 @@
                 </figure>
                 <form>
                     <div class="access_social">
-
-                        <a href="#0" class="social_bt google">Login with Google</a>
+                        <a href="" id="btn_google" class="social_bt google">Login with Google</a>
 
                     </div>
                     <div class="divider"><span>Or</span></div>
@@ -94,5 +93,14 @@
 
         });
     </script>
+    <script>
+        $.ajax({
+            url: 'api/google/auth',
+            type: 'POST',
+            success: function(result) {
+                document.getElementById("btn_google").setAttribute("href", result.url_g);
+            },
 
+        });
+    </script>
 </body>

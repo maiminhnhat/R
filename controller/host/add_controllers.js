@@ -20,7 +20,6 @@ router.get('/api/properties', async(req, res) => {
     }
 });
 router.get('/api/property', async(req, res) => {
-
     try {
         const property = await Property.find({ _id: req.query.idproperty });
         return res.status(200).json({
