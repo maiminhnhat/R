@@ -1,7 +1,11 @@
 const { google } = require('googleapis')
 const express = require('express');
 const router = express.Router();
-const axios = require('axios')
+const axios = require('axios');
+var User = require('../../models/User');
+// localstorage
+var LocalStorage = require('node-localstorage').LocalStorage,
+    localStorage = new LocalStorage('./scratch');
 const googleConfig = {
     clientId: '16491659698-1aptk9c1a33fpnisu1lqij009jt2jivb.apps.googleusercontent.com', // e.g. asdfghjkljhgfdsghjk.apps.googleusercontent.com
     clientSecret: 'u42W1mVNpuWsyIbsbEhryWWC', // e.g. _ASDFA%DFASDFASDFASD#FAD-
@@ -30,8 +34,6 @@ router.post('/api/google/auth', (req, res) => {
             scope: defaultScope
         });
     }
-
-
 
     function urlGoogle() {
         const auth = createConnection(); // this is from previous step
@@ -68,7 +70,45 @@ router.post('/api/google/getUserInfo', (req, res) => {
             },
         });
         console.log(data); // { id, email, given_name, family_name }
-        res.send({ data: data })
+
+        User.find({ "email": data.email })
+            .countDocuments()
+            .exec(async(err, Data) => {
+                if (Data > 0) {
+                    User.find({ "email": data.email })
+                        .exec((err, DaTa) => {
+                            console.log(DaTa);
+                            propertyGlobal = [{
+                                name: data.name,
+                                id: DaTa[0]._id
+                            }];
+                            var iduser = DaTa[0]._id
+                                // tạo 1 localstorage
+                            localStorage.setItem('propertyGlobal', JSON.stringify(propertyGlobal));
+                            res.send({ data: data, iduser: iduser })
+                        })
+
+                } else {
+                    var obj_insert = {
+                        'name': data.name,
+                        'email': data.email,
+                        'active': data.verified_email
+                    }
+                    const user = await User.create(obj_insert);
+                    console.log(user)
+                    propertyGlobal = [{
+                        name: data.name,
+                        id: user._id
+                    }];
+
+                    var iduser = user._id;
+                    // tạo 1 localstorage
+                    localStorage.setItem('propertyGlobal', JSON.stringify(propertyGlobal));
+                    res.send({ data: data, iduser: iduser })
+                }
+            })
+
+
     };
 
 })

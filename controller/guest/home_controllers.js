@@ -12,7 +12,6 @@ router.get("/home", (req, res) => {
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
     }
-    // console.log(user);
     //lấy toàn bộ property
     Property.find()
         .exec((err, data) => {

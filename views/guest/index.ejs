@@ -234,6 +234,7 @@
                 $("#user").show();
                 $("#dropdownMenuButton").val(user[0].name);
 
+
             }
         });
 
@@ -283,6 +284,7 @@
 
 
         });
+        // LOGIN GOOGLE
         $.ajax({
             url: 'api/google/auth',
             type: 'POST',
@@ -316,13 +318,14 @@
                 success: function(result) {
                     propertyGlobal = [{
                         name: result.data.name,
-                        id: result.data.id
+                        id: result.iduser
                     }]
                     localStorage.setItem('propertyGlobal', JSON.stringify(propertyGlobal));
                     var user = JSON.parse(localStorage.getItem('propertyGlobal'))
                     $("#sign-in").hide();
                     $("#user").show();
                     $("#dropdownMenuButton").val(user[0].name);
+
                 },
 
             });
