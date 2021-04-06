@@ -299,7 +299,7 @@
                 $.post('/logout');
                 $("#sign-in").show();
                 $("#user").hide();
-                window.location.reload('home')
+                window.location.assign('home')
             });
         })
         var url_string = window.location.href;
@@ -325,7 +325,7 @@
                     $("#sign-in").hide();
                     $("#user").show();
                     $("#dropdownMenuButton").val(user[0].name);
-
+                    window.location.replace('home')
                 },
 
             });

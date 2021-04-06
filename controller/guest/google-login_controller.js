@@ -15,17 +15,16 @@ const defaultScope = [
     'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/userinfo.email',
 ];
-/**
- * Create the google auth object which gives us access to talk to google's apis.
- */
+
+function createConnection() {
+    return new google.auth.OAuth2(
+        googleConfig.clientId,
+        googleConfig.clientSecret,
+        googleConfig.redirect
+    );
+}
+
 router.post('/api/google/auth', (req, res) => {
-    function createConnection() {
-        return new google.auth.OAuth2(
-            googleConfig.clientId,
-            googleConfig.clientSecret,
-            googleConfig.redirect
-        );
-    }
 
     function getConnectionUrl(auth) {
         return auth.generateAuthUrl({
@@ -45,16 +44,9 @@ router.post('/api/google/auth', (req, res) => {
 });
 router.post('/api/google/getUserInfo', (req, res) => {
     var code = req.body.code;
-    getGoogleAccountFromCode(code)
+    getTokenFromCode(code)
 
-    function createConnection() {
-        return new google.auth.OAuth2(
-            googleConfig.clientId,
-            googleConfig.clientSecret,
-            googleConfig.redirect
-        );
-    }
-    async function getGoogleAccountFromCode(code) {
+    async function getTokenFromCode(code) {
         const auth = createConnection();
         const data = await auth.getToken(code);
         const tokens = data.tokens;
@@ -69,7 +61,7 @@ router.post('/api/google/getUserInfo', (req, res) => {
                 Authorization: `Bearer ${access_token}`,
             },
         });
-        console.log(data); // { id, email, given_name, family_name }
+        // console.log(data); // { id, email, given_name, family_name }
 
         User.find({ "email": data.email })
             .countDocuments()
