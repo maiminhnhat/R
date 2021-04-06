@@ -31,7 +31,7 @@ router.get("/home", (req, res) => {
                
             </figure>
             <div class="wrapper">
-                <h3><a href="details/` + e._id + `">` + e.title + `e</a></h3>
+                <h3><a href="details/` + e._id + `">` + e.title + `</a></h3>
                 <p>` + e.description + `</p>
                 <span class="price">From <strong>` + e.price + `</strong> /per person</span>
             </div>

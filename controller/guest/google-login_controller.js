@@ -77,7 +77,6 @@ router.post('/api/google/getUserInfo', (req, res) => {
                 if (Data > 0) {
                     User.find({ "email": data.email })
                         .exec((err, DaTa) => {
-                            console.log(DaTa);
                             propertyGlobal = [{
                                 name: data.name,
                                 id: DaTa[0]._id
@@ -95,7 +94,6 @@ router.post('/api/google/getUserInfo', (req, res) => {
                         'active': data.verified_email
                     }
                     const user = await User.create(obj_insert);
-                    console.log(user)
                     propertyGlobal = [{
                         name: data.name,
                         id: user._id
