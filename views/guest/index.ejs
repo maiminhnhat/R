@@ -611,10 +611,7 @@
                                             success: function(result) {
                                                 if (result.kq == 1) {
                                                     alert('Review added!');
-                                                    $("#reviews").load(function() {
-                                                            $("#reviews").fadeIn('slow');
-                                                        })
-                                                        // window.location.reload('back')
+                                                    window.location.reload('back')
                                                 } else {
                                                     console.log(result.err)
                                                 }
