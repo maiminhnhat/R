@@ -262,6 +262,7 @@
                         if (result.kq == 1) {
                             propertyGlobal = [{
                                 name: result.name,
+                                email: result.email,
                                 id: result.id
                             }]
                             localStorage.setItem('propertyGlobal', JSON.stringify(propertyGlobal));
@@ -299,7 +300,7 @@
                 $.post('/logout');
                 $("#sign-in").show();
                 $("#user").hide();
-                window.location.assign('home')
+                window.location.reload('back')
             });
         })
         var url_string = window.location.href;
@@ -318,6 +319,7 @@
                 success: function(result) {
                     propertyGlobal = [{
                         name: result.data.name,
+                        email: result.data.email,
                         id: result.iduser
                     }]
                     localStorage.setItem('propertyGlobal', JSON.stringify(propertyGlobal));
@@ -577,6 +579,52 @@
                                     $('input[name="dates"]').on('cancel.daterangepicker', function(ev, picker) {
                                         $(this).val('');
                                     });
+                                });
+                            </script>
+                            <!-- Review -->
+                            <script>
+                                $(document).ready(function() {
+                                    $('#review_form').on('submit', function(e) {
+                                        e.preventDefault();
+                                        // khai báo
+                                        var username, email, rating, text, idproperty
+                                        var user = JSON.parse(localStorage.getItem('propertyGlobal'))
+                                            // lấy dữ liệu
+                                        var url = window.location.href;
+                                        idproperty = url.split('/')
+                                        username = user[0].name;
+                                        email = user[0].email;
+                                        rating = $('#rating_review').val();
+                                        text = $('#review_text').val();
+                                        // gửi ajax
+                                        $.ajax({
+                                            url: 'api/processComment',
+                                            type: 'POST',
+                                            data: {
+                                                'username': username,
+                                                'email': email,
+                                                'rating': rating,
+                                                'text': text,
+                                                'idproperty': idproperty[4]
+                                            },
+
+                                            success: function(result) {
+                                                if (result.kq == 1) {
+                                                    alert('Review added!');
+                                                    $("#reviews").load(function() {
+                                                            $("#reviews").fadeIn('slow');
+                                                        })
+                                                        // window.location.reload('back')
+                                                } else {
+                                                    console.log(result.err)
+                                                }
+
+                                            },
+
+                                        });
+
+                                        return false;
+                                    })
                                 });
                             </script>
 

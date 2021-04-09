@@ -51,6 +51,14 @@ const PropertySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
 
+    }],
+    rate: {
+        type: Number,
+        default: 0
+    },
+    comment: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
     }]
 
 });

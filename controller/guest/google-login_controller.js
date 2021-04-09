@@ -71,6 +71,7 @@ router.post('/api/google/getUserInfo', (req, res) => {
                         .exec((err, DaTa) => {
                             propertyGlobal = [{
                                 name: data.name,
+                                email: data.email,
                                 id: DaTa[0]._id
                             }];
                             var iduser = DaTa[0]._id
@@ -88,6 +89,7 @@ router.post('/api/google/getUserInfo', (req, res) => {
                     const user = await User.create(obj_insert);
                     propertyGlobal = [{
                         name: data.name,
+                        email: data.email,
                         id: user._id
                     }];
 

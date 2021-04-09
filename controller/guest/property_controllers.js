@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 var Property = require("../../models/Property");
 var User = require("../../models/User");
+var Comment = require("../../models/Comment");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 var LocalStorage = require('node-localstorage').LocalStorage,
     localStorage = new LocalStorage('./scratch');
 router.get('/property', (req, res) => {
@@ -234,17 +237,128 @@ router.get('/hotel', (req, res) => {
         })
 
 });
+
 router.get('/details/:id', (req, res) => {
     var url = req.originalUrl.split('/');
     var main = 'property/property-detail';
-    var user = JSON.parse(localStorage.getItem('propertyGlobal'));
-    Property.find({ _id: req.params.id })
-        .exec(function(err, data) {
-            var img = data[0].image;
-            var liked = data[0].liked_user
-            res.render('guest/index', { main: main, user: user, liked: liked, data: data, img: img, url: url })
+    var user;
+    var user_id;
 
-        })
+    if (localStorage.getItem('propertyGlobal') == null) {
+        user = null;
+        user_id = 0;
+        Comment.aggregate([{
+                    $match: { property: ObjectId(req.params.id) }
+                },
+                {
+                    $group: {
+                        _id: "$rating",
+                        count: { $sum: 1 }
+                    }
+
+                }
+            ])
+            .exec((err, Data) => {
+                var count = Data.sort((a, b) => parseFloat(b._id) - parseFloat(a._id))
+                var rate = '';
+                count.forEach(e => {
+                    rate += `   <div class="row">
+            <div class="col-lg-10 col-9">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: ` + e.count + `%" aria-valuenow="` + e.count + `" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-3"><small><strong>` + e._id + ` stars</strong></small></div>
+        </div>`;
+                })
+                Property.find({ _id: req.params.id })
+                    .populate('comment')
+                    .exec(function(err, data) {
+                        var Comment = JSON.parse(JSON.stringify(data[0].comment));
+                        var str = '';
+                        Comment.forEach(e => {
+                            str += `    <div class="review-box clearfix">
+                <div class="rev-content">
+                    <div class="rev-info">
+                    ` + e.username + `
+                    </div>
+                    <div class="rev-text">
+                        <p>
+                        ` + e.comment + `
+                        </p>
+                    </div>
+                </div>
+            </div>`;
+                        })
+                        var img = data[0].image;
+                        var liked = data[0].liked_user
+                        var liked_id = liked.toString()
+                        res.render('guest/index', { main: main, user: user, rate: rate, str: str, liked_id: liked_id, user_id: user_id, data: data, img: img, url: url })
+                            // res.send({ count: count })
+                    })
+
+
+            })
+
+    } else {
+        user = JSON.parse(localStorage.getItem('propertyGlobal'));
+        user_id = user[0].id
+        Comment.aggregate([{
+                    $match: { property: ObjectId(req.params.id) }
+                },
+                {
+                    $group: {
+                        _id: "$rating",
+                        count: { $sum: 1 }
+                    }
+
+                }
+            ])
+            .exec((err, Data) => {
+                var count = Data.sort((a, b) => parseFloat(b._id) - parseFloat(a._id))
+                var rate = '';
+                count.forEach(e => {
+                    rate += `   <div class="row">
+                    <div class="col-lg-10 col-9">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: ` + e.count + `%" aria-valuenow="` + e.count + `" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-3"><small><strong>` + e._id + ` stars</strong></small></div>
+                </div>`;
+                })
+                Property.find({ _id: req.params.id })
+                    .populate('comment')
+                    .exec(function(err, data) {
+                        var Comment = JSON.parse(JSON.stringify(data[0].comment));
+                        var str = '';
+                        Comment.forEach(e => {
+                            str += `    <div class="review-box clearfix">
+                        <div class="rev-content">
+                            <div class="rev-info">
+                            ` + e.username + `
+                            </div>
+                            <div class="rev-text">
+                                <p>
+                                ` + e.comment + `
+                                </p>
+                            </div>
+                        </div>
+                    </div>`;
+                        })
+                        var img = data[0].image;
+                        var liked = data[0].liked_user
+                        var liked_id = liked.toString()
+                        res.render('guest/index', { main: main, user: user, rate: rate, str: str, liked_id: liked_id, user_id: user_id, data: data, img: img, url: url })
+                            // res.send({ count: count })
+                    })
+
+
+            })
+
+
+    }
+
 });
 router.get('/wishlist', (req, res) => {
     var url = req.originalUrl.split('/');
@@ -341,4 +455,60 @@ router.post('/api/RemoveWishlist', (req, res) => {
         console.log(err)
     });
 })
+router.post('/api/processComment', (req, res) => {
+    var username = req.body.username;
+    var email = req.body.email;
+    var rating = req.body.rating;
+    var idproperty = req.body.idproperty;
+    var text = req.body.text;
+    var obj_insert = {
+        'username': username,
+        'email': email,
+        'rating': rating,
+        'property': idproperty,
+        'comment': text
+    }
+    Comment.create(obj_insert, (err, data) => {
+        console.error(err)
+        if (err) {
+            res.send({ kq: 0, err: err })
+        } else {
+            res.send({ kq: 1 })
+            Property.updateOne({ _id: idproperty }, {
+                "$push": { "comment": data._id }
+            }, function(err, data) {
+                if (err) throw err;
+            })
+            Comment.aggregate([{
+                        $group: {
+                            _id: "$property",
+                            avg: { $avg: "$rating" },
+                            count: { $sum: 1 }
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: "$_id",
+                            avg: { $round: ['$avg', 1] },
+                            count: "$count"
+                        }
+                    },
+
+                ])
+                .exec(function(err, data) {
+                    Property.updateOne({ _id: data[0]._id }, { $set: { rate: data[0].avg } }, function(err, data) {
+                        if (err) throw err;
+                    })
+                });
+
+        }
+
+    });
+
+
+
+
+
+
+});
 module.exports = router;

@@ -50,13 +50,15 @@ router.post('/api/processLogin', (req, res) => {
 
                         propertyGlobal = [{
                             name: data[0].name,
+                            email: data[0].email,
                             id: data[0]._id
                         }];
                         // tạo 1 localstorage
                         localStorage.setItem('propertyGlobal', JSON.stringify(propertyGlobal));
                         var name = data[0].name
+                        var email = data[0].email
                         var id = data[0]._id
-                        res.send({ kq: 1, name: name, id: id, message: 'Đăng nhập thành công.' });
+                        res.send({ kq: 1, name: name, email: email, id: id, message: 'Đăng nhập thành công.' });
 
                     }
                 }
