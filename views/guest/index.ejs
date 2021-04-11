@@ -90,13 +90,14 @@
                     </li>
 
                     <li><span><a href="property">Properties</a></span>
-                        <ul>
-
-                            <li><a href="house">House</a></li>
-                            <li><a href="flat">Flat</a></li>
-                            <li><a href="unique">Unique Stay</a></li>
-                            <li><a href="hotel">Hotel</a></li>
-                        </ul>
+                  
+                            <ul>
+                                <%data.forEach(e=>{%>
+                                <li><a href="<%=e.name%>"><%=e.name%></a></li>
+                                <%})%>
+                            </ul>
+                    
+                     
                     </li>
 
                 </ul>

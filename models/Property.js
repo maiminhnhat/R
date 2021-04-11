@@ -20,9 +20,12 @@ const PropertySchema = new mongoose.Schema({
     },
 
     category: {
-        type: Array,
-        default: 0,
-
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref:"Category"
+          },
+          cate_name:String,
+      
     },
     description: String,
     image: [String],

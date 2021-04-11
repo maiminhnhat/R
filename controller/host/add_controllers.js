@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 var Property = require('../../models/Property');
+var Category = require("../../models/Category");
 const { MulterError } = require('multer');
 //multer 
 const multer = require('multer');
 //Display in map
 router.get('/api/properties', async(req, res) => {
-
     try {
         const property = await Property.find();
         return res.status(200).json({
@@ -83,25 +83,40 @@ router.post('/uploadFile', (req, res, next) => {
     });
 
 });
-router.post('/api/properties', async(req, res) => {
-    var iduser = req.body._id
+router.post('/api/properties', async (req, res) => {
+var iduser = req.body._id;
+Property.findOne({_id: iduser})
 
+Category.findOne({name:req.body.category})
+.exec(async function(err, data){
     var obj_insert = {
         'propertyId': req.body.propertyId,
         'title': req.body.title,
         'address': req.body.address,
-        'category': req.body.category,
+        'category':{
+            'id':data._id,
+            'cate_name': req.body.category
+        },
         'description': req.body.description,
         'price': req.body.price,
         'image': req.body.image
     };
     if (iduser == '') {
         try {
-            const property = await Property.create(obj_insert);
+            const property = await Property.create(obj_insert,(err,data)=>{
+                Category.updateOne({name:req.body.category},{ 
+                    "$push": { "propertyId": data._id }
+                },function(err, data) {
+                        if (err) throw err;
+                    })
+            });
+     
+           
             return res.status(201).json({
                 success: true,
                 data: property
             });
+            
         } catch (err) {
             console.error(err);
             if (err.code === 11000) {
@@ -111,9 +126,22 @@ router.post('/api/properties', async(req, res) => {
         }
     } else {
         try {
-            const property = await Property.updateMany({ _id: req.body._id }, {
-                $set: req.body
+            const property = await Property.findOneAndUpdate({ _id: req.body._id }, {
+                $set: obj_insert
+            },{returnNewDocument: false},function(err, data){
+                if(err) throw err;
+                Category.updateOne({name: data.category.cate_name},{ 
+                    "$pull": { "propertyId": data._id}
+                },function(err, data) {
+                        if (err) throw err;
+                    })
             });
+                Category.updateOne({name: req.body.category},{ 
+                    "$push": { "propertyId": req.body._id}
+                },function(err, data) {
+                        if (err) throw err;
+                    })
+          
             return res.status(201).json({
                 success: true,
                 data: property
@@ -123,10 +151,7 @@ router.post('/api/properties', async(req, res) => {
             res.status(500).json({ error: 'Server error' });
         }
     }
-
-
-
-
+})
 });
 //get all Property
 router.get('/list(/:page)?', async(req, res) => {
@@ -135,7 +160,6 @@ router.get('/list(/:page)?', async(req, res) => {
 
     totalData = await Property.find();
     totalData = totalData.length;
-
     limit = 3;
     page = req.params.page;
     if (page == undefined) {
@@ -143,11 +167,12 @@ router.get('/list(/:page)?', async(req, res) => {
     } else {
         skip = (page - 1) * limit;
     }
-    // lấy toàn bộ user
+    // lấy toàn bộ property
     Property.find()
         .sort({ _id: -1 })
         .limit(limit)
         .skip(skip)
+        .populate('category')
         .exec((err, data) => {
             if (err) {
                 res.send({ kq: 0, err, err });
@@ -178,26 +203,11 @@ router.get('/list(/:page)?', async(req, res) => {
                 var str = '';
 
                 data.forEach(e => {
-                    var arr = e.category;
-                    var type
-                    switch (arr[0]) {
-                        case "1":
-                            type = "Flat"
-                            break;
-                        case "2":
-                            type = "Hotel"
-                            break;
-                        case "3":
-                            type = "House"
-                            break;
-                        case "4":
-                            type = "Unique Stay"
-                            break;
-                    }
+                  
                     str += `
                     <li>
                         <figure><img src="/img/` + e.image[0] + `" alt=""></figure>
-                        <small>` + type + `</small>
+                        <small>` + e.category.cate_name + `</small>
                         <h4>` + e.title + `</h4>
                         <p>` + e.description + `</p>
                         <div class="modal fade" role="dialog" tabindex="-1" id="MyModal">

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 var Property = require("../../models/Property");
+var Category = require("../../models/Category");
 var LocalStorage = require('node-localstorage').LocalStorage,
     localStorage = new LocalStorage('./scratch');
 router.get("/home", (req, res) => {
@@ -12,15 +13,10 @@ router.get("/home", (req, res) => {
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
     }
+    var prop = '';
     //lấy toàn bộ property
     Property.find()
-
     .exec((err, data) => {
-        var unique = data.filter(a => a.category == "4")
-        var hotel = data.filter(a => a.category == "2")
-        var house = data.filter(a => a.category == "3")
-        var flat = data.filter(a => a.category == "1")
-        var prop = '';
         data.forEach(e => {
             prop += `<div class="item">
         <div class="box_grid">
@@ -45,8 +41,47 @@ router.get("/home", (req, res) => {
         </div>
     </div>`
         })
-        res.render("guest/index", { main: main, user: user, url: url, unique: unique, house: house, flat: flat, hotel: hotel, prop: prop });
+       
     });
+    Category.find()
+    .populate('propertyId')
+    .exec((err, data)=>{
+        var place ='';
+      data.forEach(e=>{
+        e.propertyId.forEach(r=>{
+            place  += `<div class="container container-custom margin_30_95 ">
+            <section class="add_bottom_45 ">
+                <div class="main_title_3 ">
+                    <span><em></em></span>
+                    <h2>`+r.category.cate_name+`</h2>
+    
+                </div>
+                <div class="row ">
+                  
+                        <div class="col-xl-3 col-lg-6 col-md-6 ">
+                            <a href="details/` + r._id + `" class="grid_item ">
+                                <figure>
+                                    <div class="score"><strong>`+r.rate+`</strong></div>
+                                    <img src="/img/`+r.image[0]+`" class="img-fluid " alt=" ">
+                                    <div class="info ">
+                                        
+                                        <h3>
+                                            `+r.title+`
+                                        </h3>
+                                    </div>
+                                </figure>
+                            </a>
+                        </div>
+                     
+                </div>
+                <!-- /row -->
+                <a href="`+r.category.cate_name+`"><strong>View all<i class="arrow_carrot-right "></i></strong></a>
+            </section>
+        </div>`;
+         })
+      })
+        res.render("guest/index", { main: main, user: user, data: data,url: url, prop: prop,place:place});
+    })
 
 });
 

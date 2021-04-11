@@ -61,7 +61,8 @@ async function addProperty(Fname) {
                 throw Error('Server Error');
             }
             alert('Property added!');
-            window.location.href = 'list';
+            // window.location.href = 'list';
+            window.location.assign('list')
         } catch (err) {
             alert(err);
             return;

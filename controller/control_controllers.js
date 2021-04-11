@@ -39,4 +39,11 @@ router.use('/host', host_home_controller);
 //add(host)
 const host_add_controller = require('./host/add_controllers');
 router.use('/host', host_add_controller);
+
+
+//add(admin)
+const category_controller = require('./admin/category_controller');
+router.use('/admin', category_controller);
 module.exports = router;
+
+

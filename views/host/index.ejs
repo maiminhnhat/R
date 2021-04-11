@@ -303,9 +303,15 @@
                             maxFileCount: 10
                         });
                     </script>
-
+                  
                     <%}%>
-
+                <%if(url[2] == 'edit'){%>
+                    <script>
+                    $(function(){
+                    $("#property_type").val("<%=data[0].category.cate_name%>").attr("selected","selected");
+                      });
+                    </script>
+                <%}%>
                         <!-- <% if(url[2] == 'edit') {%>
                                     <script>
                                         $(document).ready(function() {

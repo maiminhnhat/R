@@ -51,7 +51,7 @@ router.get('/property', (req, res) => {
 
 });
 //house
-router.get('/house', (req, res) => {
+router.get('/House', (req, res) => {
     var url = req.originalUrl.split('/');
     var main = 'property/list-house';
     var user;
@@ -98,7 +98,7 @@ router.get('/house', (req, res) => {
 
 });
 //flat
-router.get('/flat', (req, res) => {
+router.get('/Flat', (req, res) => {
     var url = req.originalUrl.split('/');
     var main = 'property/list-flat';
     var user;
@@ -145,7 +145,7 @@ router.get('/flat', (req, res) => {
 
 });
 //unique stay
-router.get('/unique', (req, res) => {
+router.get('/Unique', (req, res) => {
     var url = req.originalUrl.split('/');
     var main = 'property/list-unique-stay';
     var user;
@@ -192,7 +192,7 @@ router.get('/unique', (req, res) => {
 
 });
 //hotel
-router.get('/hotel', (req, res) => {
+router.get('/Hotel', (req, res) => {
     var url = req.originalUrl.split('/');
     var main = 'property/list-hotels';
     var user;
@@ -243,7 +243,6 @@ router.get('/details/:id', (req, res) => {
     var main = 'property/property-detail';
     var user;
     var user_id;
-
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null;
         user_id = 0;
@@ -333,13 +332,14 @@ router.get('/details/:id', (req, res) => {
                         var Comment = JSON.parse(JSON.stringify(data[0].comment));
                         var str = '';
                         Comment.forEach(e => {
-                            str += `    <div class="review-box clearfix">
+                            str += `<div class="review-box clearfix">
                         <div class="rev-content">
                             <div class="rev-info">
-                            ` + e.username + `
+                            <p id="username"> ` + e.username + `</p>
+                           
                             </div>
                             <div class="rev-text">
-                                <p>
+                                <p id="comment" >
                                 ` + e.comment + `
                                 </p>
                             </div>
