@@ -835,7 +835,7 @@
         expire_year = $("#expire_year").val()
         ccv = $("#ccv").val()
         $.ajax({
-            url: "charge",
+            url: "api/charge",
             type: "POST",
             data: {
               'name_card_bookign': name_card_bookign,

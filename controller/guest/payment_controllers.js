@@ -18,10 +18,8 @@ var Category = require("../../models/Category");
    res.render("guest/index", { main: main, data:data, user: user, email:email, url: url});
   })
  })
-router.post('/charge', async (req, res)=>{
+router.post('/api/charge', async (req, res)=>{
     // console.log(req.body.email)
-    var url = req.originalUrl.split('/');
-    var main ='cart/success';
     var email = req.body.email;
     var user = JSON.parse(localStorage.getItem('propertyGlobal'));
     const token = await stripe.tokens.create({
