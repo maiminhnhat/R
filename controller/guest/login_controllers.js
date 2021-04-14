@@ -4,6 +4,11 @@ var User = require('../../models/User');
 var handlebars = require('handlebars');
 var fs = require('fs');
 var crypto = require('crypto');
+// gọi thư viện bcrypt
+const bcrypt = require('bcrypt');
+// độ băm
+const saltRounds = 10;
+
 var nodemailer = require('nodemailer');
 var transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -94,17 +99,21 @@ router.post('/api/register', (req, res) => {
             // Set expiration time is 24 hours.
             User.activeExpires = Date.now() + 24 * 3600 * 1000;
             var link = 'http://localhost:4500/active/' +
-                User.activeToken;
-            var obj_insert = {
-                'name': req.body.name,
-                'password': req.body.password,
-                'email': req.body.email,
-                'activeToken': User.activeToken,
-                'activeExpires': User.activeExpires
-
-            }
-
-            const user = await User.create(obj_insert);
+             User.activeToken;
+             bcrypt.genSalt(saltRounds, function(err, salt) {
+                bcrypt.hash(password, salt, async function(err, hash) {
+                    var obj_insert = {
+                        'name': req.body.name,
+                        'password': hash,
+                        'email': req.body.email,
+                        'activeToken': User.activeToken,
+                        'activeExpires': User.activeExpires
+        
+                    }
+                    const user = await User.create(obj_insert);
+                });
+            });   
+        
             readHTMLFile(__dirname + '../../../public/pages/Confirmation-Job-Site.html', function(err, html) {
                 var template = handlebars.compile(html);
                 var replacements = {

@@ -42,7 +42,6 @@
         </div>
     </section>
     <!-- /hero_single -->
-
     <div class="container container-custom margin_80_0">
         <div class="main_title_2">
             <span><em></em></span>
@@ -58,8 +57,41 @@
         <hr class="large ">
     </div>
     <!-- /container -->
-
-  <%-place%>
+    <div class="container container-custom margin_30_95 ">
+        <div class="container container-custom margin_30_95 ">
+            <section class="add_bottom_45 ">
+              <%data.forEach(e=>{%>
+                <div class="main_title_3 ">
+                    <span><em></em></span>
+                    <h2><%=e.name%></h2>
+                        <div class="row">
+                            <%e.propertyId.forEach(r=>{%>
+                            <div class="col-xl-3 col-lg-6 col-md-6 ">
+                                <a href="details/<%=r._id%>" class="grid_item ">
+                                    <figure>
+                                        <div class="score"><strong><%=r.rate%></strong></div>
+                                        <img src="/img/<%=r.image[0]%>" class="img-fluid " alt=" ">
+                                        <div class="info ">
+                                            
+                                            <h3>
+                                                <%=r.title%>
+                                            </h3>
+                                        </div>
+                                    </figure>
+                                </a>
+                            </div> 
+                            <%})%>
+                    </div>
+                    <!-- /row -->
+                    <a href="<%=e.name%>"><strong>View all<i class="arrow_carrot-right "></i></strong></a>
+                   
+                </div>
+             
+              <%})%>
+              
+            </section>
+        </div>
+    </div>
     <!-- /container -->
 
     <div class="bg_color_1 ">

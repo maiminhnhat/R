@@ -32,6 +32,11 @@ const schemaUser = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Property",
 
+    }],
+    cart: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Cart",
+
     }]
 });
 

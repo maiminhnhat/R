@@ -36,7 +36,7 @@ const PropertySchema = new mongoose.Schema({
 
     location: {
         type: {
-            type: String,
+            type: Number,
             enum: ['Point']
         },
         coordinates: {

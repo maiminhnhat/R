@@ -3,28 +3,47 @@ const router = express.Router();
 var Property = require("../../models/Property");
 var User = require("../../models/User");
 var Comment = require("../../models/Comment");
+var Category = require("../../models/Category");
+var Cart = require("../../models/Cart");
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 var LocalStorage = require('node-localstorage').LocalStorage,
     localStorage = new LocalStorage('./scratch');
-router.get('/property', (req, res) => {
+router.get('/property(/:page)?', async (req, res) => {
     var url = req.originalUrl.split('/');
     var main = 'property/main-property';
     var user;
+    var limit, skip, totalData, page;
+
+    totalData = await Property.find();
+    totalData = totalData.length;
+    limit = 6;
+    page = req.params.page;
+    if (page == undefined) {
+        skip = 0;
+    } else {
+        skip = (page - 1) * limit;
+    }
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
     }
+     // tổng số trang
+    var totalPage = Math.ceil(totalData / limit);
+    var property = '';
     //lấy toàn bộ property
     Property.find()
+        .sort({ _id: -1 })
+        .limit(limit)
+        .skip(skip)
         .exec((err, data) => {
-            var property = '';
             data.forEach(e => {
+                 
                 property += ` <div class="col-xl-4 col-lg-6 col-md-6 isotope-item popular">
-                <div class="box_grid">
+                <div class="box_grid" id="box_grid">
                     <figure>
-                        <a href="#0" class="wish_bt"></a>
+                      
                         <a href="details/` + e._id + `"><img src="img/` + e.image[0] + `" class="img-fluid" alt="" width="800" height="533">
                             <div class="read_more"><span>Read more</span></div>
                         </a>
@@ -45,196 +64,149 @@ router.get('/property', (req, res) => {
                 </div>
             </div>`
             })
-            res.render('guest/index', { main: main, user: user, property: property, url: url })
+            
         })
-
+        Category.find()
+        .populate('propertyId')
+        .exec((err, data)=>{
+            res.render('guest/index', { main: main, user: user, data:data, property: property, url: url,page: page, totalPage: totalPage })
+        })
 
 });
 //house
-router.get('/House', (req, res) => {
+router.get('/House(/:page)?', async (req, res) => {
     var url = req.originalUrl.split('/');
     var main = 'property/list-house';
     var user;
+    var limit, skip, totalData, page;
+    totalData = await Category.findOne({name: {'$regex': 'House'}});
+    totalData = totalData.propertyId.length;
+    limit = 6;
+    page = req.params.page;
+    if (page == undefined) {
+        skip = 0;
+    } else {
+        skip = (page - 1) * limit;
+    }
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
     }
+    var totalPage = Math.ceil(totalData / limit);
     //lấy toàn bộ property
-    Property.find({
-            category: { '$regex': "3" }
-        })
+    Category.find()
+        .populate('propertyId')
+        .sort({ _id: 1 })
+        .limit(limit)
+        .skip(skip)
         .exec((err, data) => {
-            var house = '';
-            data.forEach(e => {
-                house += `<div class="col-xl-4 col-lg-6 col-md-6 isotope-item popular">
-                <div class="box_grid">
-                    <figure>
-                        <a href="#0" class="wish_bt"></a>
-                        <a href="details/` + e._id + `"><img src="img/` + e.image[0] + `" class="img-fluid" alt="" width="800" height="533">
-                            <div class="read_more"><span>Read more</span></div>
-                        </a>
-                        <small>` + e.title + `</small>
-                    </figure>
-                    <div class="wrapper">
-                        <div class="cat_star"><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i></div>
-                        <h3><a href="details/` + e._id + `">` + e.title + `</a></h3>
-                        <p>` + e.description + `</p>
-                        <span class="price">From <strong>` + e.price + `</strong> /per person</span>
-                    </div>
-                    <ul>
-                        <li><i class="ti-eye"></i> 164 views</li>
-                        <li>
-                            <div class="score"><span>Superb<em>350 Reviews</em></span><strong>8.9</strong></div>
-                        </li>
-                    </ul>
-                </div>
-            </div>`
-
-            });
-            res.render('guest/index', { main: main, user: user, house: house, url: url })
+             var house = data.filter(c => c.name == 'House' )
+            res.render('guest/index', { main: main, user: user, data:data, house: house, url: url,page: page, totalPage: totalPage })
         })
 
 
 });
 //flat
-router.get('/Flat', (req, res) => {
+router.get('/Flat(/:page)?', async (req, res) => {
     var url = req.originalUrl.split('/');
     var main = 'property/list-flat';
     var user;
+    var limit, skip, totalData, page;
+    totalData = await Category.findOne({name: {'$regex': 'Flat'}});
+    totalData = totalData.propertyId.length;
+   
+    limit = 6;
+    page = req.params.page;
+    if (page == undefined) {
+        skip = 0;
+    } else {
+        skip = (page - 1) * limit;
+    }
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
+  
     }
-    //lấy toàn bộ property
-    Property.find({
-            category: { '$regex': "1" }
-        })
-        .exec((err, data) => {
-            var flat = '';
-            data.forEach(e => {
-                flat += `<div class="col-xl-4 col-lg-6 col-md-6 isotope-item popular">
-            <div class="box_grid">
-                <figure>
-                    <a href="#0" class="wish_bt"></a>
-                    <a href="details/` + e._id + `"><img src="img/` + e.image[0] + `" class="img-fluid" alt="" width="800" height="533">
-                        <div class="read_more"><span>Read more</span></div>
-                    </a>
-                    <small>` + e.title + `</small>
-                </figure>
-                <div class="wrapper">
-                    <div class="cat_star"><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i></div>
-                    <h3><a href="details/` + e._id + `">` + e.title + `</a></h3>
-                    <p>` + e.description + `</p>
-                    <span class="price">From <strong>` + e.price + `</strong> /per person</span>
-                </div>
-                <ul>
-                    <li><i class="ti-eye"></i> 164 views</li>
-                    <li>
-                        <div class="score"><span>Superb<em>350 Reviews</em></span><strong>8.9</strong></div>
-                    </li>
-                </ul>
-            </div>
-        </div>`
-
-            });
-            res.render('guest/index', { main: main, user: user, flat: flat, url: url })
-        })
-
+    var totalPage = Math.ceil(totalData / limit);
+      //lấy toàn bộ property
+      Category.find()
+      .populate('propertyId')
+      .sort({ _id: 1 })
+      .limit(limit)
+      .skip(skip)
+      .exec((err, data) => {
+          var flat = data.filter(c => c.name == 'Flat' )
+          res.render('guest/index', { main: main, user: user, data:data, flat: flat, url: url,page: page, totalPage: totalPage })
+      });
 
 });
 //unique stay
-router.get('/Unique', (req, res) => {
+router.get('/Unique(/:page)?', async (req, res) => {
     var url = req.originalUrl.split('/');
     var main = 'property/list-unique-stay';
     var user;
+    var limit, skip, totalData, page;
+    totalData = await Category.findOne({name: {'$regex': 'Unique'}});
+    totalData = totalData.propertyId.length;
+   
+    limit = 6;
+    page = req.params.page;
+    if (page == undefined) {
+        skip = 0;
+    } else {
+        skip = (page - 1) * limit;
+    }
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
     }
+    var totalPage = Math.ceil(totalData / limit);
     //lấy toàn bộ property
-    Property.find({
-            category: { '$regex': "4" }
-        })
+    Category.find()
+        .populate('propertyId')
+        .sort({ _id: 1 })
+        .limit(limit)
+        .skip(skip)
         .exec((err, data) => {
-            var unique = '';
-            data.forEach(e => {
-                unique += `<div class="col-xl-4 col-lg-6 col-md-6 isotope-item popular">
-        <div class="box_grid">
-            <figure>
-                <a href="#0" class="wish_bt"></a>
-                <a href="details/` + e._id + `"><img src="img/` + e.image[0] + `" class="img-fluid" alt="" width="800" height="533">
-                    <div class="read_more"><span>Read more</span></div>
-                </a>
-                <small>` + e.title + `</small>
-            </figure>
-            <div class="wrapper">
-                <div class="cat_star"><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i></div>
-                <h3><a href="detail/` + e._id + `s">` + e.title + `</a></h3>
-                <p>` + e.description + `</p>
-                <span class="price">From <strong>` + e.price + `</strong> /per person</span>
-            </div>
-            <ul>
-                <li><i class="ti-eye"></i> 164 views</li>
-                <li>
-                    <div class="score"><span>Superb<em>350 Reviews</em></span><strong>8.9</strong></div>
-                </li>
-            </ul>
-        </div>
-    </div>`
-
-            });
-            res.render('guest/index', { main: main, user: user, unique: unique, url: url })
-        })
+            var unique = data.filter(c => c.name == 'Unique' )
+            res.render('guest/index', { main: main, user: user, data:data, unique: unique, url: url,page: page, totalPage: totalPage })
+        });
 
 
 });
 //hotel
-router.get('/Hotel', (req, res) => {
+router.get('/Hotel(/:page)?',async (req, res) => {
     var url = req.originalUrl.split('/');
     var main = 'property/list-hotels';
     var user;
+    var limit, skip, totalData, page;
+    totalData = await Category.findOne({name: {'$regex': 'Hotel'}});
+    totalData = totalData.propertyId.length;
+    limit = 6;
+    page = req.params.page;
+    if (page == undefined) {
+        skip = 0;
+    } else {
+        skip = (page - 1) * limit;
+    }
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
     }
-    //lấy toàn bộ property
-    Property.find({
-            category: { '$regex': "3" }
-        })
-        .exec((err, data) => {
-            var hotel = '';
-            data.forEach(e => {
-                hotel += `<div class="col-xl-4 col-lg-6 col-md-6 isotope-item popular">
-    <div class="box_grid">
-        <figure>
-            <a href="#0" class="wish_bt"></a>
-            <a href="details/` + e._id + `"><img src="img/` + e.image[0] + `" class="img-fluid" alt="" width="800" height="533">
-                <div class="read_more"><span>Read more</span></div>
-            </a>
-            <small>` + e.title + `</small>
-        </figure>
-        <div class="wrapper">
-            <div class="cat_star"><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i></div>
-            <h3><a href="details/` + e._id + `">` + e.title + `</a></h3>
-            <p>` + e.description + `</p>
-            <span class="price">From <strong>` + e.price + `</strong> /per person</span>
-        </div>
-        <ul>
-            <li><i class="ti-eye"></i> 164 views</li>
-            <li>
-                <div class="score"><span>Superb<em>350 Reviews</em></span><strong>8.9</strong></div>
-            </li>
-        </ul>
-    </div>
-</div>`
-
-            });
-            res.render('guest/index', { main: main, user: user, hotel: hotel, url: url })
-        })
+      //lấy toàn bộ property
+      Category.find()
+      .populate('propertyId')
+      .sort({ _id: 1 })
+        .limit(limit)
+        .skip(skip)
+      .exec((err, data) => {
+        var hotel = data.filter(c => c.name == 'Hotel' )
+          res.render('guest/index', { main: main, user: user, data:data, hotel: hotel, url: url,page: page, totalPage: totalPage })
+      });
 
 });
 
@@ -261,7 +233,7 @@ router.get('/details/:id', (req, res) => {
                 var count = Data.sort((a, b) => parseFloat(b._id) - parseFloat(a._id))
                 var rate = '';
                 count.forEach(e => {
-                    rate += `   <div class="row">
+                    rate += `<div class="row">
             <div class="col-lg-10 col-9">
                 <div class="progress">
                     <div class="progress-bar" role="progressbar" style="width: ` + e.count + `%" aria-valuenow="` + e.count + `" aria-valuemin="0" aria-valuemax="100"></div>
@@ -371,12 +343,7 @@ router.get('/wishlist', (req, res) => {
         <div class="col-xl-7 col-lg-9">
             <h2>404 <i class="icon_error-triangle_alt"></i></h2>
             <p>We're sorry, but you have to sign-in to see your wishlist.</p>
-            <form>
-                <div class="search_bar_error">
-                    <input type="text" class="form-control" placeholder="What are you looking for?">
-                    <input type="submit" value="Search">
-                </div>
-            </form>
+          
         </div>
     </div>`
         res.render('guest/index', { main: main, error: error, user: user, url: url })
@@ -504,11 +471,188 @@ router.post('/api/processComment', (req, res) => {
         }
 
     });
-
-
-
-
-
-
 });
+router.get('/cart',(req, res)=>{
+    var url = req.originalUrl.split('/');
+    var main = 'cart/cart';
+    var user;
+    if (localStorage.getItem('propertyGlobal') == null) {
+        user = null
+        var error = '';
+        error += `<div class="row justify-content-center text-center">
+        <div class="col-xl-7 col-lg-9">
+            <h2>404 <i class="icon_error-triangle_alt"></i></h2>
+            <p>We're sorry, but you have to sign-in to see your cart.</p>
+         
+        </div>
+    </div>`
+    Category.find()
+    .populate('propertyId')
+    .exec((err, data)=>{
+     res.render("guest/index", { main: main,data:data, user: user,error:error,url: url});
+    })
+    } else {
+        user = JSON.parse(localStorage.getItem('propertyGlobal'));
+        Cart.aggregate([{
+            $match: { user: ObjectId(user[0].id) }
+        },
+        {
+            $group: {
+                _id: '',
+                total: { $sum: '$price' }
+            }
+         }, {
+            $project: {
+                _id: 0,
+                total: '$total'
+            }
+    
+        }
+    ]).exec(function(err, Data){
+        if (err) throw err
+        User.findOne({_id: user[0].id})
+            .populate('cart')
+            .exec(function(err, data){
+                var order ='';
+                var cart_detail ='';
+                data.cart.forEach(e=>{
+                    order += `<tbody>
+                    <tr>
+                        <td>
+                            <span class="item_cart">`+e.item+`</span>
+                        </td>
+                        <td>
+                            <strong>`+e.price+`</strong>
+                        </td>
+                        <td class="options" style="width:5%; text-align:center;">
+                            <a href="#"><i class="icon-trash"></i></a>
+                        </td>
+                    </tr>
+                
+                    </tr>
+                </tbody>` 
+                cart_detail += `<div id="property-name" style="color: white;
+                font-size: 33px;
+                text-align: center;
+                text-transform: uppercase;
+                font-weight: 400;
+                border: 0;
+                padding-top: 0;">
+                `+e.item+`
+            </div>
+            <ul class="cart_details">
+                <li>From <span>`+e.cart_details.date+`</span></li>
+                <li>Adults <span>`+e.cart_details.adults+`</span></li>
+                <li>Childs <span>`+e.cart_details.children+`</span></li>
+                <li>Room Type <span>`+e.cart_details.room+`</span></li>
+            </ul>`
+                })
+                Category.find()
+                .populate('propertyId')
+                .exec((err, data)=>{
+                 res.render("guest/index", { main: main, user: user, data: data,Data:Data, order:order, cart_detail: cart_detail,url: url});
+                })
+        
+            })
+          
+    })
+    } 
+})
+router.get('/checkout', (req, res)=>{
+    var url = req.originalUrl.split('/');
+    var main = 'cart/checkout';
+    var user;
+    if (localStorage.getItem('propertyGlobal') == null) {
+        user = null
+    } else {
+        user = JSON.parse(localStorage.getItem('propertyGlobal'));
+        Cart.aggregate([{
+            $match: { user: ObjectId(user[0].id) }
+        },
+        {
+            $group: {
+                _id: '',
+                total: { $sum: '$price' }
+            }
+         }, {
+            $project: {
+                _id: 0,
+                total: '$total'
+            }
+    
+        }
+    ]).exec(function(err, Data){
+        if (err) throw err
+        User.findOne({_id: user[0].id})
+            .populate('cart')
+            .exec(function(err, data){
+                var cart_detail ='';
+                data.cart.forEach(e=>{
+                cart_detail += `<div id="property-name" style="color: white;
+                font-size: 33px;
+                text-align: center;
+                text-transform: uppercase;
+                font-weight: 400;
+                border: 0;
+                padding-top: 0;">
+                `+e.item+`
+            </div>
+            <ul class="cart_details">
+                <li>From <span>`+e.cart_details.date+`</span></li>
+                <li>Adults <span>`+e.cart_details.adults+`</span></li>
+                <li>Childs <span>`+e.cart_details.children+`</span></li>
+                <li>Room Type <span>`+e.cart_details.room+`</span></li>
+            </ul>`
+                })
+                Category.find()
+                .populate('propertyId')
+                .exec((err, data)=>{
+                 res.render("guest/index", { main: main, user: user, data: data, Data:Data, cart_detail: cart_detail,url: url});
+                })
+        
+            })
+          
+    })
+    } 
+})
+router.post('/api/ProcessAddCart',(req, res)=>{
+    var idproperty = req.body.idproperty
+    var iduser = req.body.iduser
+    var date = req.body.date
+    var adults = req.body.adults
+    var children = req.body.children
+    var room = req.body.room
+    Property.find({ _id: idproperty})
+    .exec(function(err, data) {
+        if(err) throw err;
+     data.forEach(e=>{
+        var obj_insert ={
+            'item':e.title,
+            'price':e.price,
+            'cart_details':{
+                'date': date,
+                'adults': adults,
+                'children':children,
+                'room':room
+            },
+            'user': iduser
+        }
+        Cart.create(obj_insert, (err, data)=>{
+            console.error(err)
+            if(err){
+                res.send({kq:0,err:err})
+            }
+            else{
+                res.send({kq:1})
+                User.updateOne({ _id: iduser }, {
+                    "$push": { "cart": data._id }
+                }, function(err, data) {
+                    if(err) throw err
+                });
+            }
+        })
+     })
+     
+    })
+})
 module.exports = router;

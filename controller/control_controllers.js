@@ -30,7 +30,9 @@ router.use('/', google_controller);
 //user
 const user_controller = require('./guest/user_controllers');
 router.use('/', user_controller);
-
+//payment
+const payment_controller = require('./guest/payment_controllers');
+router.use('/', payment_controller);
 
 
 //home(host)

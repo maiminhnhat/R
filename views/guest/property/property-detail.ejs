@@ -117,35 +117,35 @@
                         </div>
 
                         <div class="form-group input-dates">
-                            <input class="form-control" type="text" name="dates" placeholder="When..">
+                            <input class="form-control" type="text" name="dates" id="dates" placeholder="When..">
                             <i class="icon_calendar"></i>
                         </div>
 
                         <div class="panel-dropdown">
-                            <a href="#">Guests <span class="qtyTotal">1</span></a>
+                            <a href="#">Guests<span class="qtyTotal">1</span></a>
                             <div class="panel-dropdown-content right">
                                 <div class="qtyButtons">
                                     <label>Adults</label>
-                                    <input type="text" name="qtyInput" value="1">
+                                    <input type="text" name="qtyInput" id="adults" value="0">
                                 </div>
                                 <div class="qtyButtons">
                                     <label>Childrens</label>
-                                    <input type="text" name="qtyInput" value="0">
+                                    <input type="text" name="qtyInput" id="children" value="0">
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group clearfix">
                             <div class="custom-select-form">
-                                <select class="wide">
+                                <select class="wide" name="room" id="room">
                                 <option>Room Type</option>	
-                                <option>Single Room</option>
-                                <option>Double Room</option>
-                                <option>Suite Room</option>
+                                <option value="Single Room">Single Room</option>
+                                <option value="Double Room">Double Room</option>
+                                <option value="Suite Room">Suite Room</option>
                             </select>
                             </div>
                         </div>
-                        <a href="cart-1.html" class=" add_top_30 btn_1 full-width purchase">Purchase</a>
+                        <button id="purchase" class=" add_top_30 btn_1 full-width purchase">Purchase</button>
                         <%if(liked_id == user_id && user !== null ){%>
                             <button type="button" id="remove" class="btn_1 full-width outline wishlist"><i class="icon_trash"></i> Remove from wishlist</button>
                             <%}%>
