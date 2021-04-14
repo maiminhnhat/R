@@ -6,9 +6,18 @@ const ObjectId = mongoose.Types.ObjectId;
 var LocalStorage = require('node-localstorage').LocalStorage,
     localStorage = new LocalStorage('./scratch');
 var Cart = require("../../models/Cart");
-var User = require("../../models/User");
 var Category = require("../../models/Category");
-
+ router.get('/success', function (req, res){
+    var url = req.originalUrl.split('/');
+    var main ='cart/success';
+    var user = JSON.parse(localStorage.getItem('propertyGlobal'));
+    var email =user[0].email;
+    Category.find()
+  .populate('propertyId')
+  .exec((err, data)=>{
+   res.render("guest/index", { main: main, data:data, user: user, email:email, url: url});
+  })
+ })
 router.post('/charge', async (req, res)=>{
     // console.log(req.body.email)
     var url = req.originalUrl.split('/');
@@ -40,7 +49,7 @@ router.post('/charge', async (req, res)=>{
     }
 ]).exec(function(err, data){
     if(err) throw err
-  const amount = (data[0].total)*1000
+  const amount = (data[0].total)*100
   stripe.customers.create({
       email:email,
       source:token.id
@@ -49,15 +58,11 @@ router.post('/charge', async (req, res)=>{
      amount: amount,
      description:'Panagea booking',
      currency: 'usd',
-     customer: customer.id
+     customer: customer.id,
   }))
-  .then(charge => Category.find()
-  .populate('propertyId')
-  .exec((err, data)=>{
-   res.render("guest/index", { main: main,data:data, user: user, email:email,url: url});
-  }));
+ .then(res.send({kq:1}))
 })
-   
 
-})
+
+});
 module.exports = router;

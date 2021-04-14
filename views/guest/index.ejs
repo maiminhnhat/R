@@ -844,6 +844,10 @@
               'expire_month': expire_month,
               'expire_year':expire_year,
               'ccv': ccv
+            },
+            success: function(result) {
+              if(result.kq == 1)
+              window.location.assign('success')
             }
           })
       
