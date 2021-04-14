@@ -8,17 +8,7 @@ var LocalStorage = require('node-localstorage').LocalStorage,
 var Cart = require("../../models/Cart");
 var User = require("../../models/User");
 var Category = require("../../models/Category");
-router.get('/success', function (req, res){
-    var url = req.originalUrl.split('/');
-    var main ='cart/success';
-    var email = req.body.email;
-    var user = JSON.parse(localStorage.getItem('propertyGlobal'));
-    Category.find()
-    .populate('propertyId')
-    .exec((err, data)=>{
-     res.render("guest/index", { main: main,data:data, user: user,email:email,url: url});
-    })
-})
+
 router.post('/charge', async (req, res)=>{
     // console.log(req.body.email)
     var url = req.originalUrl.split('/');
