@@ -1,7 +1,7 @@
 <main>
-    <section class="hero_in hotels_detail">
+    <%data.forEach(e =>{ %>
+    <section class="hero_in hotels_detail" style="background: url(../img/<%=e.image[0]%>) center center no-repeat;">
         <div class="wrapper">
-            <%data.forEach(e =>{ %>
                 <div class="container">
                     <h1 class="fadeInUp"><span></span>
                         <%=e.title%>

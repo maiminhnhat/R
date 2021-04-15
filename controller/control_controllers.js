@@ -16,10 +16,6 @@ router.use('/', about_controller);
 const contact_controller = require('./guest/contact_controllers');
 router.use('/', contact_controller);
 
-//event
-const event_controller = require('./guest/event_controllers');
-router.use('/', event_controller);
-
 
 //login&register
 const login_controller = require('./guest/login_controllers');

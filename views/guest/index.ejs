@@ -88,7 +88,13 @@
           </a>
         </div>
         <ul id="top_menu">
-          <li><a href="cart" class="cart-menu-btn" title="Cart"><strong></strong></a></li>
+          <%if(quantity == null){%>
+            <li><a href="cart" class="cart-menu-btn" title="Cart"></a></li>
+       
+         <%}else{%>
+          <li><a href="cart" class="cart-menu-btn" title="Cart"><strong><%=quantity.cart.length%></strong></a></li>
+         <%}%>
+      
           <li>
             <a href="#sign-in-dialog" id="sign-in" class="login" title="Sign In"
               >Sign In</a
@@ -155,9 +161,16 @@
               <span><a href="property/1">Properties</a></span>
 
               <ul>
-                <%data.forEach(e=>{%>
-                <li><a href="<%=e.name%>/1"><%=e.name%></a></li>
-                <%})%>
+                <%if(url[1] == 'details'){%>
+                  <%menu.forEach(e=>{%>
+                    <li><a href="<%=e.name%>/1"><%=e.name%></a></li>
+                    <%})%>
+                <%}else{%>
+                  <%data.forEach(e=>{%>
+                    <li><a href="<%=e.name%>/1"><%=e.name%></a></li>
+                    <%})%>
+                <%}%>
+               
               </ul>
             </li>
           </ul>
@@ -194,7 +207,6 @@
                 <li><a href="about">About</a></li>
                 <li><a href="login">Login</a></li>
                 <li><a href="register">Register</a></li>
-                <li><a href="event">News &amp; Events</a></li>
                 <li><a href="contact">Contacts</a></li>
               </ul>
             </div>
@@ -696,6 +708,9 @@
       });
       $(document).ready(function(){
         $('#purchase').click(function(){
+          if (localStorage.getItem("propertyGlobal")== null) {
+           window.location.assign('login')
+          } else{
           var idproperty,date,adults,children,room,iduser
           var url = window.location.href;
           iduser = JSON.parse(localStorage.getItem("propertyGlobal"));
@@ -704,6 +719,7 @@
           children =$('#children').val();
           room =$('#room').val();
           idproperty = url.split("/");
+         
           $.ajax({
             url: "api/ProcessAddCart",
             type: "POST",
@@ -718,6 +734,7 @@
             success: function (result) {
              if(result.kq ==1){
                alert("Add to your cart!")
+               window.location.reload('back')
              }
              else{
                console.log(result.err)
@@ -726,6 +743,8 @@
           });
 
           return false;
+          }
+      
         })
       })
     </script>

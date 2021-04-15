@@ -14,7 +14,6 @@ router.get('/property(/:page)?', async (req, res) => {
     var main = 'property/main-property';
     var user;
     var limit, skip, totalData, page;
-
     totalData = await Property.find();
     totalData = totalData.length;
     limit = 6;
@@ -26,51 +25,98 @@ router.get('/property(/:page)?', async (req, res) => {
     }
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
+        var quantity = null
+        var totalPage = Math.ceil(totalData / limit);
+        var property = '';
+        //lấy toàn bộ property
+        Property.find()
+            .sort({ _id: -1 })
+            .limit(limit)
+            .skip(skip)
+            .exec((err, data) => {
+                data.forEach(e => {
+                    property += ` <div class="col-xl-4 col-lg-6 col-md-6 isotope-item popular">
+                    <div class="box_grid" id="box_grid">
+                        <figure>
+                        
+                            <a href="details/` + e._id + `"><img src="img/` + e.image[0] + `" class="img-fluid" alt="" width="800" height="533">
+                                <div class="read_more"><span>Read more</span></div>
+                            </a>
+                            <small>` + e.title + `</small>
+                        </figure>
+                        <div class="wrapper">
+                            <div class="cat_star"><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i></div>
+                            <h3><a href="details/` + e._id + `">` + e.title + `</a></h3>
+                            <p>` + e.description + `</p>
+                            <span class="price">From <strong>` + e.price + `</strong> /per person</span>
+                        </div>
+                        <ul>
+                            <li><i class="ti-eye"></i> 164 views</li>
+                            <li>
+                                <div class="score"><span>Superb<em>350 Reviews</em></span><strong>8.9</strong></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>`
+                })
+                
+            })
+            Category.find()
+            .populate('propertyId')
+            .exec((err, data)=>{
+                    res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, property: property, url: url,page: page, totalPage: totalPage })
+          })
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
-    }
-     // tổng số trang
-    var totalPage = Math.ceil(totalData / limit);
-    var property = '';
-    //lấy toàn bộ property
-    Property.find()
-        .sort({ _id: -1 })
-        .limit(limit)
-        .skip(skip)
-        .exec((err, data) => {
-            data.forEach(e => {
-                 
-                property += ` <div class="col-xl-4 col-lg-6 col-md-6 isotope-item popular">
-                <div class="box_grid" id="box_grid">
-                    <figure>
-                      
-                        <a href="details/` + e._id + `"><img src="img/` + e.image[0] + `" class="img-fluid" alt="" width="800" height="533">
-                            <div class="read_more"><span>Read more</span></div>
-                        </a>
-                        <small>` + e.title + `</small>
-                    </figure>
-                    <div class="wrapper">
-                        <div class="cat_star"><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i></div>
-                        <h3><a href="details/` + e._id + `">` + e.title + `</a></h3>
-                        <p>` + e.description + `</p>
-                        <span class="price">From <strong>` + e.price + `</strong> /per person</span>
+           // tổng số trang
+        var totalPage = Math.ceil(totalData / limit);
+        var property = '';
+        //lấy toàn bộ property
+        Property.find()
+            .sort({ _id: -1 })
+            .limit(limit)
+            .skip(skip)
+            .exec((err, data) => {
+                data.forEach(e => {
+                    
+                    property += ` <div class="col-xl-4 col-lg-6 col-md-6 isotope-item popular">
+                    <div class="box_grid" id="box_grid">
+                        <figure>
+                        
+                            <a href="details/` + e._id + `"><img src="img/` + e.image[0] + `" class="img-fluid" alt="" width="800" height="533">
+                                <div class="read_more"><span>Read more</span></div>
+                            </a>
+                            <small>` + e.title + `</small>
+                        </figure>
+                        <div class="wrapper">
+                            <div class="cat_star"><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i></div>
+                            <h3><a href="details/` + e._id + `">` + e.title + `</a></h3>
+                            <p>` + e.description + `</p>
+                            <span class="price">From <strong>` + e.price + `</strong> /per person</span>
+                        </div>
+                        <ul>
+                            <li><i class="ti-eye"></i> 164 views</li>
+                            <li>
+                                <div class="score"><span>Superb<em>350 Reviews</em></span><strong>8.9</strong></div>
+                            </li>
+                        </ul>
                     </div>
-                    <ul>
-                        <li><i class="ti-eye"></i> 164 views</li>
-                        <li>
-                            <div class="score"><span>Superb<em>350 Reviews</em></span><strong>8.9</strong></div>
-                        </li>
-                    </ul>
-                </div>
-            </div>`
+                </div>`
+                })
+                
             })
+            Category.find()
+            .populate('propertyId')
+            .exec((err, data)=>{
+                User.findOne({_id:user[0].id})
+                .populate('cart')
+                .exec(function(err,quantity){
+                    res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, property: property, url: url,page: page, totalPage: totalPage })
+                })
             
-        })
-        Category.find()
-        .populate('propertyId')
-        .exec((err, data)=>{
-            res.render('guest/index', { main: main, user: user, data:data, property: property, url: url,page: page, totalPage: totalPage })
-        })
+            })
+    }
+  
 
 });
 //house
@@ -90,20 +136,38 @@ router.get('/House(/:page)?', async (req, res) => {
     }
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
+       var quantity = null
+        var totalPage = Math.ceil(totalData / limit);
+        //lấy toàn bộ property
+        Category.find()
+            .populate('propertyId')
+            .sort({ _id: 1 })
+            .limit(limit)
+            .skip(skip)
+            .exec((err, data) => {
+                 var house = data.filter(c => c.name == 'House' )
+                 res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, house: house, url: url,page: page, totalPage: totalPage })
+            })
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
+        var totalPage = Math.ceil(totalData / limit);
+        //lấy toàn bộ property
+        Category.find()
+            .populate('propertyId')
+            .sort({ _id: 1 })
+            .limit(limit)
+            .skip(skip)
+            .exec((err, data) => {
+                 var house = data.filter(c => c.name == 'House' )
+                 User.findOne({_id:user[0].id})
+                 .populate('cart')
+                 .exec(function(err,quantity){
+                    res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, house: house, url: url,page: page, totalPage: totalPage })
+                 })
+     
+            })
     }
-    var totalPage = Math.ceil(totalData / limit);
-    //lấy toàn bộ property
-    Category.find()
-        .populate('propertyId')
-        .sort({ _id: 1 })
-        .limit(limit)
-        .skip(skip)
-        .exec((err, data) => {
-             var house = data.filter(c => c.name == 'House' )
-            res.render('guest/index', { main: main, user: user, data:data, house: house, url: url,page: page, totalPage: totalPage })
-        })
+  
 
 
 });
@@ -125,21 +189,40 @@ router.get('/Flat(/:page)?', async (req, res) => {
     }
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
+       var quantity = null
+        var totalPage = Math.ceil(totalData / limit);
+        //lấy toàn bộ property
+        Category.find()
+        .populate('propertyId')
+        .sort({ _id: 1 })
+        .limit(limit)
+        .skip(skip)
+        .exec((err, data) => {
+            var flat = data.filter(c => c.name == 'Flat' )
+            res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, flat: flat, url: url,page: page, totalPage: totalPage })             
+       });
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
+        var totalPage = Math.ceil(totalData / limit);
+        //lấy toàn bộ property
+        Category.find()
+        .populate('propertyId')
+        .sort({ _id: 1 })
+        .limit(limit)
+        .skip(skip)
+        .exec((err, data) => {
+            var flat = data.filter(c => c.name == 'Flat' )
+            User.findOne({_id:user[0].id})
+            .populate('cart')
+            .exec(function(err,quantity){
+                res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, flat: flat, url: url,page: page, totalPage: totalPage })
+
+            })
+            
+        });
   
     }
-    var totalPage = Math.ceil(totalData / limit);
-      //lấy toàn bộ property
-      Category.find()
-      .populate('propertyId')
-      .sort({ _id: 1 })
-      .limit(limit)
-      .skip(skip)
-      .exec((err, data) => {
-          var flat = data.filter(c => c.name == 'Flat' )
-          res.render('guest/index', { main: main, user: user, data:data, flat: flat, url: url,page: page, totalPage: totalPage })
-      });
+ 
 
 });
 //unique stay
@@ -160,20 +243,39 @@ router.get('/Unique(/:page)?', async (req, res) => {
     }
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
+       var quantity = null
+        var totalPage = Math.ceil(totalData / limit);
+        //lấy toàn bộ property
+        Category.find()
+            .populate('propertyId')
+            .sort({ _id: 1 })
+            .limit(limit)
+            .skip(skip)
+            .exec((err, data) => {
+                var unique = data.filter(c => c.name == 'Unique' )
+              res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, unique: unique, url: url,page: page, totalPage: totalPage });
+            });
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
+        var totalPage = Math.ceil(totalData / limit);
+        //lấy toàn bộ property
+        Category.find()
+            .populate('propertyId')
+            .sort({ _id: 1 })
+            .limit(limit)
+            .skip(skip)
+            .exec((err, data) => {
+                var unique = data.filter(c => c.name == 'Unique' )
+                User.findOne({_id:user[0].id})
+                .populate('cart')
+                .exec(function(err,quantity){
+                    res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, unique: unique, url: url,page: page, totalPage: totalPage })
+                })
+               
+               
+            });
     }
-    var totalPage = Math.ceil(totalData / limit);
-    //lấy toàn bộ property
-    Category.find()
-        .populate('propertyId')
-        .sort({ _id: 1 })
-        .limit(limit)
-        .skip(skip)
-        .exec((err, data) => {
-            var unique = data.filter(c => c.name == 'Unique' )
-            res.render('guest/index', { main: main, user: user, data:data, unique: unique, url: url,page: page, totalPage: totalPage })
-        });
+
 
 
 });
@@ -194,10 +296,9 @@ router.get('/Hotel(/:page)?',async (req, res) => {
     }
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
-    } else {
-        user = JSON.parse(localStorage.getItem('propertyGlobal'));
-    }
-      //lấy toàn bộ property
+       var quantity = null
+        var totalPage = Math.ceil(totalData / limit);
+        //lấy toàn bộ property
       Category.find()
       .populate('propertyId')
       .sort({ _id: 1 })
@@ -205,8 +306,28 @@ router.get('/Hotel(/:page)?',async (req, res) => {
         .skip(skip)
       .exec((err, data) => {
         var hotel = data.filter(c => c.name == 'Hotel' )
-          res.render('guest/index', { main: main, user: user, data:data, hotel: hotel, url: url,page: page, totalPage: totalPage })
+         res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, hotel: hotel, url: url,page: page, totalPage: totalPage })
       });
+    } else {
+        user = JSON.parse(localStorage.getItem('propertyGlobal'));
+        var totalPage = Math.ceil(totalData / limit);
+        //lấy toàn bộ property
+      Category.find()
+      .populate('propertyId')
+      .sort({ _id: 1 })
+        .limit(limit)
+        .skip(skip)
+      .exec((err, data) => {
+        var hotel = data.filter(c => c.name == 'Hotel' )
+        User.findOne({_id:user[0].id})
+        .populate('cart')
+        .exec(function(err,quantity){
+            res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, hotel: hotel, url: url,page: page, totalPage: totalPage })
+        })
+       
+      });
+    }
+      
 
 });
 
@@ -217,6 +338,7 @@ router.get('/details/:id', (req, res) => {
     var user_id;
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null;
+        var quantity = null
         user_id = 0;
         Comment.aggregate([{
                     $match: { property: ObjectId(req.params.id) }
@@ -264,8 +386,14 @@ router.get('/details/:id', (req, res) => {
                         var img = data[0].image;
                         var liked = data[0].liked_user
                         var liked_id = liked.toString()
-                        res.render('guest/index', { main: main, user: user, rate: rate, str: str, liked_id: liked_id, user_id: user_id, data: data, img: img, url: url })
-                            // res.send({ count: count })
+                        Category.find()
+                        .populate('propertyId')
+                        .exec((err, menu)=>{
+                           res.render('guest/index', { main: main, user: user,menu:menu, rate: rate,quantity:quantity, str: str, liked_id: liked_id, user_id: user_id, data: data, img: img, url: url })
+                       
+                     
+                        })
+                      
                     })
 
 
@@ -321,8 +449,18 @@ router.get('/details/:id', (req, res) => {
                         var img = data[0].image;
                         var liked = data[0].liked_user
                         var liked_id = liked.toString()
-                        res.render('guest/index', { main: main, user: user, rate: rate, str: str, liked_id: liked_id, user_id: user_id, data: data, img: img, url: url })
-                            // res.send({ count: count })
+                        Category.find()
+                        .populate('propertyId')
+                        .exec((err, menu)=>{
+                            User.findOne({_id:user[0].id})
+                                .populate('cart')
+                                .exec(function(err,quantity){
+                                    res.render('guest/index', { main: main, user: user,menu:menu, rate: rate,quantity:quantity, str: str, liked_id: liked_id, user_id: user_id, data: data, img: img, url: url })
+                                })
+                     
+                        })
+                     
+                       
                     })
 
 
@@ -478,6 +616,7 @@ router.get('/cart',(req, res)=>{
     var user;
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
+        quantity = null
         var error = '';
         error += `<div class="row justify-content-center text-center">
         <div class="col-xl-7 col-lg-9">
@@ -489,7 +628,7 @@ router.get('/cart',(req, res)=>{
     Category.find()
     .populate('propertyId')
     .exec((err, data)=>{
-     res.render("guest/index", { main: main,data:data, user: user,error:error,url: url});
+     res.render("guest/index", { main: main,data:data,quantity:quantity, user: user,error:error,url: url});
     })
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
@@ -550,7 +689,12 @@ router.get('/cart',(req, res)=>{
                 Category.find()
                 .populate('propertyId')
                 .exec((err, data)=>{
-                 res.render("guest/index", { main: main, user: user, data: data,Data:Data, order:order, cart_detail: cart_detail,url: url});
+                    User.findOne({_id:user[0].id})
+                    .populate('cart')
+                    .exec(function(err,quantity){
+                        res.render("guest/index", { main: main, user: user, data: data,quantity:quantity,Data:Data, order:order, cart_detail: cart_detail,url: url});
+                    })
+                
                 })
         
             })
@@ -607,7 +751,12 @@ router.get('/checkout', (req, res)=>{
                 Category.find()
                 .populate('propertyId')
                 .exec((err, data)=>{
-                 res.render("guest/index", { main: main, user: user, data: data, Data:Data, cart_detail: cart_detail,url: url});
+                    User.findOne({_id:user[0].id})
+                    .populate('cart')
+                    .exec(function(err,quantity){
+                        res.render("guest/index", { main: main, user: user, data: data,quantity:quantity, Data:Data, cart_detail: cart_detail,url: url});
+                    })
+               
                 })
         
             })
