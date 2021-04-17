@@ -135,7 +135,7 @@ router.post('/api/paypal',(req,res)=>{
                               }
                         })
                     },
-                    "description": "Payment description"
+                    "description": "Panagea booking"
                 }
             ]
             }
