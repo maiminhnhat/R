@@ -25,7 +25,6 @@ router.get('/property(/:page)?', async (req, res) => {
     }
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
-        var quantity = null
         var totalPage = Math.ceil(totalData / limit);
         var property = '';
         //lấy toàn bộ property
@@ -64,7 +63,7 @@ router.get('/property(/:page)?', async (req, res) => {
             Category.find()
             .populate('propertyId')
             .exec((err, data)=>{
-                    res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, property: property, url: url,page: page, totalPage: totalPage })
+                    res.render('guest/index', { main: main, user: user, data:data, property: property, url: url,page: page, totalPage: totalPage })
           })
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
@@ -136,7 +135,6 @@ router.get('/House(/:page)?', async (req, res) => {
     }
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
-       var quantity = null
         var totalPage = Math.ceil(totalData / limit);
         //lấy toàn bộ property
         Category.find()
@@ -162,7 +160,7 @@ router.get('/House(/:page)?', async (req, res) => {
                  User.findOne({_id:user[0].id})
                  .populate('cart')
                  .exec(function(err,quantity){
-                    res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, house: house, url: url,page: page, totalPage: totalPage })
+                    res.render('guest/index', { main: main, user: user, data:data, house: house, url: url,page: page, totalPage: totalPage })
                  })
      
             })
@@ -189,7 +187,6 @@ router.get('/Flat(/:page)?', async (req, res) => {
     }
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
-       var quantity = null
         var totalPage = Math.ceil(totalData / limit);
         //lấy toàn bộ property
         Category.find()
@@ -199,7 +196,7 @@ router.get('/Flat(/:page)?', async (req, res) => {
         .skip(skip)
         .exec((err, data) => {
             var flat = data.filter(c => c.name == 'Flat' )
-            res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, flat: flat, url: url,page: page, totalPage: totalPage })             
+            res.render('guest/index', { main: main, user: user, data:data,flat: flat, url: url,page: page, totalPage: totalPage })             
        });
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
@@ -243,7 +240,6 @@ router.get('/Unique(/:page)?', async (req, res) => {
     }
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
-       var quantity = null
         var totalPage = Math.ceil(totalData / limit);
         //lấy toàn bộ property
         Category.find()
@@ -253,7 +249,7 @@ router.get('/Unique(/:page)?', async (req, res) => {
             .skip(skip)
             .exec((err, data) => {
                 var unique = data.filter(c => c.name == 'Unique' )
-              res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, unique: unique, url: url,page: page, totalPage: totalPage });
+              res.render('guest/index', { main: main, user: user, data:data, unique: unique, url: url,page: page, totalPage: totalPage });
             });
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
@@ -296,7 +292,7 @@ router.get('/Hotel(/:page)?',async (req, res) => {
     }
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
-       var quantity = null
+      
         var totalPage = Math.ceil(totalData / limit);
         //lấy toàn bộ property
       Category.find()
@@ -306,7 +302,7 @@ router.get('/Hotel(/:page)?',async (req, res) => {
         .skip(skip)
       .exec((err, data) => {
         var hotel = data.filter(c => c.name == 'Hotel' )
-         res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, hotel: hotel, url: url,page: page, totalPage: totalPage })
+         res.render('guest/index', { main: main, user: user, data:data, hotel: hotel, url: url,page: page, totalPage: totalPage })
       });
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
@@ -338,7 +334,7 @@ router.get('/details/:id', (req, res) => {
     var user_id;
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null;
-        var quantity = null
+      
         user_id = 0;
         Comment.aggregate([{
                     $match: { property: ObjectId(req.params.id) }
@@ -389,7 +385,7 @@ router.get('/details/:id', (req, res) => {
                         Category.find()
                         .populate('propertyId')
                         .exec((err, menu)=>{
-                           res.render('guest/index', { main: main, user: user,menu:menu, rate: rate,quantity:quantity, str: str, liked_id: liked_id, user_id: user_id, data: data, img: img, url: url })
+                           res.render('guest/index', { main: main, user: user,menu:menu, rate: rate, str: str, liked_id: liked_id, user_id: user_id, data: data, img: img, url: url })
                        
                      
                         })
@@ -616,7 +612,6 @@ router.get('/cart',(req, res)=>{
     var user;
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
-        quantity = null
         var error = '';
         error += `<div class="row justify-content-center text-center">
         <div class="col-xl-7 col-lg-9">
@@ -628,7 +623,7 @@ router.get('/cart',(req, res)=>{
     Category.find()
     .populate('propertyId')
     .exec((err, data)=>{
-     res.render("guest/index", { main: main,data:data,quantity:quantity, user: user,error:error,url: url});
+     res.render("guest/index", { main: main,data:data, user: user,error:error,url: url});
     })
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
@@ -651,10 +646,10 @@ router.get('/cart',(req, res)=>{
         if (err) throw err
         User.findOne({_id: user[0].id})
             .populate('cart')
-            .exec(function(err, data){
+            .exec(function(err, user_cart){
                 var order ='';
                 var cart_detail ='';
-                data.cart.forEach(e=>{
+                user_cart.cart.forEach(e=>{
                     order += `<tbody>
                     <tr>
                         <td>
@@ -692,7 +687,7 @@ router.get('/cart',(req, res)=>{
                     User.findOne({_id:user[0].id})
                     .populate('cart')
                     .exec(function(err,quantity){
-                        res.render("guest/index", { main: main, user: user, data: data,quantity:quantity,Data:Data, order:order, cart_detail: cart_detail,url: url});
+                        res.render("guest/index", { main: main, user: user,user_cart:user_cart, data: data,quantity:quantity,Data:Data, order:order, cart_detail: cart_detail,url: url});
                     })
                 
                 })
@@ -729,9 +724,9 @@ router.get('/checkout', (req, res)=>{
         if (err) throw err
         User.findOne({_id: user[0].id})
             .populate('cart')
-            .exec(function(err, data){
+            .exec(function(err, user_cart){
                 var cart_detail ='';
-                data.cart.forEach(e=>{
+                user_cart.cart.forEach(e=>{
                 cart_detail += `<div id="property-name" style="color: white;
                 font-size: 33px;
                 text-align: center;
@@ -754,7 +749,7 @@ router.get('/checkout', (req, res)=>{
                     User.findOne({_id:user[0].id})
                     .populate('cart')
                     .exec(function(err,quantity){
-                        res.render("guest/index", { main: main, user: user, data: data,quantity:quantity, Data:Data, cart_detail: cart_detail,url: url});
+                        res.render("guest/index", { main: main, user: user,user_cart:user_cart, data: data,quantity:quantity, Data:Data, cart_detail: cart_detail,url: url});
                     })
                
                 })

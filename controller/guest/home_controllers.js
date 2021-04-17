@@ -11,7 +11,6 @@ router.get("/home", (req, res) => {
     var user;
     if (localStorage.getItem('propertyGlobal') == null) {
         user = null
-        quantity = null
         var prop = '';
         //lấy toàn bộ property
         Property.find()
@@ -45,7 +44,7 @@ router.get("/home", (req, res) => {
         Category.find()
         .populate('propertyId')
         .exec((err, data)=>{
-                res.render("guest/index", { main: main, user: user,quantity:quantity, data: data, url: url, prop: prop});
+                res.render("guest/index", { main: main, user: user, data: data, url: url, prop: prop});
         })
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));

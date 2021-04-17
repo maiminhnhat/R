@@ -88,7 +88,7 @@
           </a>
         </div>
         <ul id="top_menu">
-          <%if(quantity == null){%>
+          <%if(user == null){%>
             <li><a href="cart" class="cart-menu-btn" title="Cart"></a></li>
        
          <%}else{%>
@@ -839,7 +839,8 @@
     <script src="/js/mapmarker_func.jquery.js"></script>
     <% break; 
     case 'checkout':%>
-    <script src="https://js.stripe.com/v3/"></script>
+     <!-- STRIPE API PAYMENT -->
+  <script src="https://js.stripe.com/v3/"></script>
   <script>   
     $(document).ready(function(){
       var stripe = Stripe('pk_test_51Ig3TKHDgdUfZ7e8cWb6HrW7DhrpXtVfZ6qx36Ml0WO7h84jHDpqS8ofPWGgmKjcwdPz3ja1vg5jTSBXpNpATKGL009Lp839fl')
@@ -872,8 +873,8 @@
       
       })
 })
-  
-  </script>
+</script>
+   
     <% break;}%>
   </body>
 </html>

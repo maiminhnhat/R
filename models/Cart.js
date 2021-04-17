@@ -1,7 +1,7 @@
 // gọi mongoose
 const mongoose = require('mongoose');
  const SchemaCart = new mongoose.Schema({
-     item:{
+  item:{
          type:String
      },
    price:{
