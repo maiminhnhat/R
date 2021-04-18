@@ -625,7 +625,7 @@ router.get('/cart',(req, res)=>{
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
         Cart.aggregate([{
-            $match: { user: ObjectId(user[0].id) }
+            $match: { $and:[{user: ObjectId(user[0].id)}, {state:"pending"}] }
         },
         {
             $group: {
@@ -703,7 +703,7 @@ router.get('/checkout', (req, res)=>{
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
         Cart.aggregate([{
-            $match: { user: ObjectId(user[0].id) }
+            $match: {  $and:[{user: ObjectId(user[0].id)}, {state:"pending"}]}
         },
         {
             $group: {
@@ -738,7 +738,9 @@ router.get('/checkout', (req, res)=>{
                 <li>Adults <span>`+e.cart_details.adults+`</span></li>
                 <li>Childs <span>`+e.cart_details.children+`</span></li>
                 <li>Room Type <span>`+e.cart_details.room+`</span></li>
-            </ul>`
+            </ul>
+            `
+            
                 })
                 Category.find()
                 .populate('propertyId')

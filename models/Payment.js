@@ -5,4 +5,5 @@ const mongoose = require('mongoose');
    state:String,
    payment:String
  });
+ 
  module.exports = mongoose.model('Payment', SchemaPayment);

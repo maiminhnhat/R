@@ -66,15 +66,21 @@ router.post('/api/charge', async (req, res)=>{
      description:'Panagea booking',
      currency: 'usd',
      customer: customer.id,
+  },function(err,data){
+    const timeElapsed = Date.now();
+    const today = new Date(timeElapsed);
+      Cart.updateMany({createdAt:{$gte:today.toISOString().substring(0, 10)}},{$set:{state:"completed",payment_id:data.id,payment:"Visa"}},function(err,data){
+        if(err) throw err
+    })
   }))
   .then(User.updateOne({_id:user[0].id},{
     $set:{cart: []}
 }, function(err, data) {
     if(err) throw err
 }))
-  .then(Cart.deleteMany({user:user[0].id},function(err,data){
-    if(err) throw err
-}))
+//   .then(Cart.deleteMany({user:user[0].id},function(err,data){
+//     if(err) throw err
+// }))
  .then(res.send({kq:1}))
 })
 });
@@ -91,7 +97,7 @@ router.post('/api/paypal',(req,res)=>{
     .exec(function(err,order){
         var Order = JSON.parse(JSON.stringify(order.cart))
         Cart.aggregate([{
-            $match: { user: ObjectId(user[0].id) }
+            $match: { $and:[{user: ObjectId(user[0].id)}, {state:"pending"}] }
         },
         {
             $group: {
