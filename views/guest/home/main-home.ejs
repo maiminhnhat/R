@@ -42,7 +42,6 @@
         </div>
     </section>
     <!-- /hero_single -->
-
     <div class="container container-custom margin_80_0">
         <div class="main_title_2">
             <span><em></em></span>
@@ -58,80 +57,40 @@
         <hr class="large ">
     </div>
     <!-- /container -->
-
-  <%-place%>
-    <!-- /container -->
-
-    <div class="bg_color_1 ">
-        <div class="container margin_80_55 ">
-            <div class="main_title_2 ">
-                <span><em></em></span>
-                <h3>News and Events</h3>
-                <p>Cum doctus civibus efficiantur in imperdiet deterruisset.</p>
-            </div>
-            <div class="row ">
-                <div class="col-lg-6 ">
-                    <a class="box_news " href="event-post">
-                        <figure><img src="img/news_home_1.jpg " alt=" ">
-                            <figcaption><strong>28</strong>Dec</figcaption>
-                        </figure>
-                        <ul>
-                            <li>Mark Twain</li>
-                            <li>20.11.2017</li>
-                        </ul>
-                        <h4>Pri oportere scribentur eu</h4>
-                        <p>Cu eum alia elit, usu in eius appareat, deleniti sapientem honestatis eos ex. In ius esse ullum vidisse....</p>
-                    </a>
+    <div class="container container-custom margin_30_95 ">
+        <div class="container container-custom margin_30_95 ">
+            <section class="add_bottom_45 ">
+              <%data.forEach(e=>{%>
+                <div class="main_title_3 ">
+                    <span><em></em></span>
+                    <h2><%=e.name%></h2>
+                        <div class="row">
+                            <%e.propertyId.forEach(r=>{%>
+                            <div class="col-xl-3 col-lg-6 col-md-6 ">
+                                <a href="details/<%=r._id%>" class="grid_item ">
+                                    <figure>
+                                        <div class="score"><strong><%=r.rate%></strong></div>
+                                        <img src="/img/<%=r.image[0]%>" class="img-fluid " alt=" ">
+                                        <div class="info ">
+                                            
+                                            <h3>
+                                                <%=r.title%>
+                                            </h3>
+                                        </div>
+                                    </figure>
+                                </a>
+                            </div> 
+                            <%})%>
+                    </div>
+                    <!-- /row -->
+                    <a href="<%=e.name%>"><strong>View all<i class="arrow_carrot-right "></i></strong></a>
+                   
                 </div>
-                <!-- /box_news -->
-                <div class="col-lg-6 ">
-                    <a class="box_news " href="event-post">
-                        <figure><img src="img/news_home_2.jpg " alt=" ">
-                            <figcaption><strong>28</strong>Dec</figcaption>
-                        </figure>
-                        <ul>
-                            <li>Jhon Doe</li>
-                            <li>20.11.2017</li>
-                        </ul>
-                        <h4>Duo eius postea suscipit ad</h4>
-                        <p>Cu eum alia elit, usu in eius appareat, deleniti sapientem honestatis eos ex. In ius esse ullum vidisse....</p>
-                    </a>
-                </div>
-                <!-- /box_news -->
-                <div class="col-lg-6 ">
-                    <a class="box_news " href="event-post">
-                        <figure><img src="img/news_home_3.jpg " alt=" ">
-                            <figcaption><strong>28</strong>Dec</figcaption>
-                        </figure>
-                        <ul>
-                            <li>Luca Robinson</li>
-                            <li>20.11.2017</li>
-                        </ul>
-                        <h4>Elitr mandamus cu has</h4>
-                        <p>Cu eum alia elit, usu in eius appareat, deleniti sapientem honestatis eos ex. In ius esse ullum vidisse....</p>
-                    </a>
-                </div>
-                <!-- /box_news -->
-                <div class="col-lg-6 ">
-                    <a class="box_news " href="event-post">
-                        <figure><img src="img/news_home_4.jpg " alt=" ">
-                            <figcaption><strong>28</strong>Dec</figcaption>
-                        </figure>
-                        <ul>
-                            <li>Paula Rodrigez</li>
-                            <li>20.11.2017</li>
-                        </ul>
-                        <h4>Id est adhuc ignota delenit</h4>
-                        <p>Cu eum alia elit, usu in eius appareat, deleniti sapientem honestatis eos ex. In ius esse ullum vidisse....</p>
-                    </a>
-                </div>
-                <!-- /box_news -->
-            </div>
-            <!-- /row -->
-            <p class="btn_home_align "><a href="event " class="btn_1 rounded ">View all news</a></p>
+             
+              <%})%>
+              
+            </section>
         </div>
-        <!-- /container -->
     </div>
-    <!-- /bg_color_1 -->
-
+    <!-- /container -->
 </main>

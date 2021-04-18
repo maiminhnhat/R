@@ -1327,7 +1327,6 @@ header.sticky .hamburger-inner::after {
 }
 
 .hero_in.hotels_detail:before {
-    background: url(../img/hero_in_hotels_detail.jpg) center center no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

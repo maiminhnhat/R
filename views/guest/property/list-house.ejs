@@ -11,16 +11,7 @@
     <div class="filters_listing sticky_horizontal">
         <div class="container">
             <ul class="clearfix">
-                <li>
-                    <div class="switch-field">
-                        <input type="radio" id="all" name="listing_filter" value="all" checked data-filter="*" class="selected">
-                        <label for="all">All</label>
-                        <input type="radio" id="popular" name="listing_filter" value="popular" data-filter=".popular">
-                        <label for="popular">Popular</label>
-                        <input type="radio" id="latest" name="listing_filter" value="latest" data-filter=".latest">
-                        <label for="latest">Latest</label>
-                    </div>
-                </li>
+        
 
                 <li>
                     <a class="btn_map" data-toggle="collapse" href="#collapseMap" aria-expanded="false" aria-controls="collapseMap" data-text-swap="Hide map" data-text-original="View on map">View on map</a>
@@ -70,13 +61,90 @@
 
         <div class="isotope-wrapper">
             <div class="row">
-                <%-house%>
+                <%house.forEach(e=>{%>
+                     <%e.propertyId.forEach(c=>{%>
+                        <div class="col-xl-4 col-lg-6 col-md-6 isotope-item popular">
+                            <div class="box_grid">
+                                <figure>
+                                   
+                                    <a href="details/<%=c._id%>"><img src="img/<%=c.image[0]%>" class="img-fluid" alt="" width="800" height="533">
+                                        <div class="read_more"><span>Read more</span></div>
+                                    </a>
+                                    <small><%=c.title%></small>
+                                </figure>
+                                <div class="wrapper">
+                                    <div class="cat_star"><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i></div>
+                                    <h3><a href="details/<%=c._id%>"><%=c.title%></a></h3>
+                                    <p><%=c.description%></p>
+                                    <span class="price">From <strong><%=c.price%></strong> /per person</span>
+                                </div>
+                                <ul>
+                                   
+                                        <div class="score"><strong><%=c.rate%></strong></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <%})%>
+                <%})%>
             </div>
             <!-- /row -->
         </div>
         <!-- /isotope-wrapper -->
 
-        <p class="text-center"><a href="#0" class="btn_1 rounded add_top_30">Load more</a></p>
+        <nav aria-label="...">
+            <ul class="pagination pagination-sm add_bottom_30">
+                <% if (totalPage > 0) { %>
+                    <ul class="pagination text-center">
+                        <% if (page == 1) { %>
+                            <li class="page-item disabled ">
+                                <a class="page-link" href="" tabindex="-1">First</a>
+                                </li>
+                        <% } else { %>
+                            <li class="page-item">
+                                <a class="page-link"  href="House/1" tabindex="-1">First</a>
+                                </li>
+                        <% } %>
+                        <% var i = (Number(page) > 5 ? Number(page) - 4 : 1) %>
+                        <% if (i !== 1) { %>
+                            <li class="page-item disabled ">
+                                <a>...</a>
+                                </li>
+                        <% } %>
+                        <% for (; i <= (Number(page) + 4) && i <= totalPage; i++) { %>
+                            <% if (i == page) { %>
+                                <li class="page-item active">
+                                    <a class="page-link" href="House/<%=i%>">
+                                        <%=i%>
+                                    </a>
+                                </li>
+                            <% } else { %>
+                                <li class="page-item">
+                                    <a class="page-link" href="House/<%=i%>">
+                                        <%=i%>
+                                    </a>
+                                </li>
+                            <% } %>
+                            <% if (i == Number(page) + 4 && i < totalPage) { %>
+                                <li class="page-item disabled">
+                                    <a>...</a>
+                                    </li>
+                            <% } %>
+                        <% } %>
+                        <% if (page == totalPage) { %>
+                            <li class="page-item disabled">
+                                <a class="page-link"  href="" tabindex="-1">last</a>
+                                </li>
+                        <% } else { %>
+                            <li class="page-item">
+                                <a class="page-link"  href="House/<%=totalPage%>" tabindex="-1">last</a>
+                                </li>
+                        <% } %>
+                    </ul>
+                <% } %>
+                   
+            </ul>
+        </nav>
 
     </div>
     <!-- /container -->

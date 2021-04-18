@@ -16,10 +16,6 @@ router.use('/', about_controller);
 const contact_controller = require('./guest/contact_controllers');
 router.use('/', contact_controller);
 
-//event
-const event_controller = require('./guest/event_controllers');
-router.use('/', event_controller);
-
 
 //login&register
 const login_controller = require('./guest/login_controllers');
@@ -30,7 +26,9 @@ router.use('/', google_controller);
 //user
 const user_controller = require('./guest/user_controllers');
 router.use('/', user_controller);
-
+//payment
+const payment_controller = require('./guest/payment_controllers');
+router.use('/', payment_controller);
 
 
 //home(host)

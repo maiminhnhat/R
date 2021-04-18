@@ -177,31 +177,9 @@ router.get('/list(/:page)?', async(req, res) => {
             if (err) {
                 res.send({ kq: 0, err, err });
             } else {
-                // view pagination
-                var pa = '';
-
                 // tổng số trang
                 var totalPage = Math.ceil(totalData / limit);
-
-                for (let i = 1; i <= totalPage; i++) {
-                    //console.log(page);
-
-                    // active
-                    (page == undefined) ? xd = 1: xd = page;
-
-                    (i == xd) ? active = 'active': active = '';
-
-                    pa += `
-                    <li class="page-item ` + active + `">
-                        <a class="page-link" href="list/` + i + `">
-                            ` + i + `
-                        </a>
-                    </li>
-                `;
-                }
-
                 var str = '';
-
                 data.forEach(e => {
                   
                     str += `
@@ -235,7 +213,7 @@ router.get('/list(/:page)?', async(req, res) => {
 
                 // views
                 var main = 'listing/listing';
-                res.render('host/index', { main: main, url: url, str: str, pa: pa });
+                res.render('host/index', { main: main, url: url, str: str, page: page, totalPage: totalPage});
             }
         })
 });

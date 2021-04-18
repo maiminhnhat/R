@@ -98,7 +98,7 @@
                     </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Bookmarks">
-                    <a class="nav-link" href="list">
+                    <a class="nav-link" href="list/1">
                         <i class="fa fa-fw fa-heart"></i>
                         <span class="nav-link-text">Listing</span>
                     </a>
@@ -338,30 +338,7 @@
                                         });
                                     </script>
                                     <%}%> -->
-                        <% if(url[2] == 'list') {%>
-                            <script>
-                                $(document).ready(function() {
-                                    var pageItem = $(".pagination li").not("#prev-btn,#prev-btn");
-                                    var prev = $("#prev-btn");
-                                    var next = $("#prev-btn");
-
-                                    pageItem.click(function() {
-                                        pageItem.removeClass("active");
-                                    });
-
-                                    next.click(function() {
-                                        $('li.active').removeClass('active').next().addClass('active');
-                                    });
-
-                                    prev.click(function() {
-                                        $('li.active').removeClass('active').prev().addClass('active');
-                                    });
-
-
-                                });
-                            </script>
-                            <%}%>
-
+                      
 
 </body>
 
