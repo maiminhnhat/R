@@ -9,6 +9,7 @@ var LocalStorage = require('node-localstorage').LocalStorage,
 var Cart = require("../../models/Cart");
 var Category = require("../../models/Category");
 var User = require("../../models/User");
+var Payment = require("../../models/Payment");
 // STRIPE API PAYMENT
  router.get('/success', function (req, res){
     var url = req.originalUrl.split('/');
@@ -71,7 +72,7 @@ router.post('/api/charge', async (req, res)=>{
 }, function(err, data) {
     if(err) throw err
 }))
-.then(Cart.deleteMany({user:user[0].id},function(err,data){
+  .then(Cart.deleteMany({user:user[0].id},function(err,data){
     if(err) throw err
 }))
  .then(res.send({kq:1}))
@@ -112,7 +113,7 @@ router.post('/api/paypal',(req,res)=>{
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": "http://localhost:4500/success",
+                "return_url": "http://localhost:4500/paypal/success",
                 "cancel_url": "http://localhost:4500/cart"
             },
             "transactions": [
@@ -139,22 +140,135 @@ router.post('/api/paypal',(req,res)=>{
                 }
             ]
             }
-            console.log(create_payment_json.transactions[0].item_list)
+            // console.log(create_payment_json.transactions[0].item_list)
             paypal.payment.create(create_payment_json, function(err,payment){
             if(err){
                 throw err
             } else{
-              console.log("Create Payment Successfully")
-              console.log(payment)
-               res.send("Test")
-            }
+                for(let i = 0;i < payment.links.length;i++){
+                    if(payment.links[i].rel === 'approval_url'){
+                      res.redirect(payment.links[i].href);
+                    }
+                  }
+                }
          })
          
     })
     })
   
+router.get('/paypal/success',(req,res)=>{
+    var url = req.originalUrl.split('/');
+    var main ='cart/success_paypal';
+    var user = JSON.parse(localStorage.getItem('propertyGlobal'));
+    const payerId = req.query.PayerID;
+    const paymentId = req.query.paymentId; 
+      Cart.aggregate([{
+        $match: { user: ObjectId(user[0].id) }
+    },
+    {
+        $group: {
+            _id: '',
+            total: { $sum: '$price' }
+        }
+     }, {
+        $project: {
+            _id: 0,
+            total: '$total'
+        }
 
-       
-  
+    }
+]).exec(function(err,data){
+    const Amount = data[0].total.toFixed(2)
+    const execute_payment_json = {
+        "payer_id": payerId,
+        "transactions": [{
+            "amount": {
+                "currency": "USD",
+                "total": Amount
+            }
+        }]
+      };
+      paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+        if (error) {
+            console.log(error.response);
+            throw error;
+        } else {
+            console.log(payment.transactions[0].related_resources[0].sale.id); 
+            console.log(payment.transactions[0].related_resources[0].sale.state); 
+            // console.log(payment.transactions[0].amount); 
+            // console.log(payment.transactions[0].payee); 
+            // console.log(payment.transactions[0].item_list); 
+            var obj_insert = {
+                'sale_id':payment.transactions[0].related_resources[0].sale.id,
+                'state':payment.transactions[0].related_resources[0].sale.state,
+                'payment':'Paypal'
+            }
+           Payment.create(obj_insert, function(err,data){
+               if (err) throw err
+               console.log(data)
+           })
+            Category.find()
+            .populate('propertyId')
+            .exec((err, data)=>{
+              User.findOne({_id:user[0].id})
+              .populate('cart')
+              .exec(function(err,quantity){
+                  res.render("guest/index", { main: main, data:data, quantity:quantity, user: user, url: url});
+              })
+              })
+              User.updateOne({_id:user[0].id},{
+                $set:{cart: []}
+            }, function(err, data) {
+                if(err) throw err
+            })
+            Cart.deleteMany({user:user[0].id},function(err,data){
+                if(err) throw err
+            })
+        }
+    });
+})
+
+})  
+})
+router.post('/api/paypal_refund',(req,res)=>{
+//     var user = JSON.parse(localStorage.getItem('propertyGlobal'));
+//     Cart.aggregate([{
+//         $match: { user: ObjectId(user[0].id) }
+//     },
+//     {
+//         $group: {
+//             _id: '',
+//             total: { $sum: '$price' }
+//         }
+//      }, {
+//         $project: {
+//             _id: 0,
+//             total: '$total'
+//         }
+
+//     }
+// ]).exec(function(err,data){
+    // const Amount = data[0].total.toFixed(2)
+    var refund_details = {
+        "amount": {
+            "currency": "USD",
+            "total": "99.00"
+        }
+    };
+    
+    paypal.sale.refund("8L748823RC8288907", refund_details, function (error, refund) {
+        if (error) {
+            console.error(error);
+        } else {
+            if (error) {
+                throw error;
+            } else {
+                console.log("Refund Sale Response");
+                console.log(refund);
+            }
+        }
+    });
+// })
+    
 })
 module.exports = router;

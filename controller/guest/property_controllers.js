@@ -44,15 +44,14 @@ router.get('/property(/:page)?', async (req, res) => {
                             <small>` + e.title + `</small>
                         </figure>
                         <div class="wrapper">
-                            <div class="cat_star"><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i></div>
+    
                             <h3><a href="details/` + e._id + `">` + e.title + `</a></h3>
                             <p>` + e.description + `</p>
-                            <span class="price">From <strong>` + e.price + `</strong> /per person</span>
+                            <span class="price">From <strong>` + e.price + `$</strong> /per person</span>
                         </div>
                         <ul>
-                            <li><i class="ti-eye"></i> 164 views</li>
                             <li>
-                                <div class="score"><span>Superb<em>350 Reviews</em></span><strong>8.9</strong></div>
+                                <div class="score"><span><em>350 Reviews</em></span><strong>` + e.rate + `</strong></div>
                             </li>
                         </ul>
                     </div>
@@ -88,15 +87,13 @@ router.get('/property(/:page)?', async (req, res) => {
                             <small>` + e.title + `</small>
                         </figure>
                         <div class="wrapper">
-                            <div class="cat_star"><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i><i class="icon_star"></i></div>
                             <h3><a href="details/` + e._id + `">` + e.title + `</a></h3>
                             <p>` + e.description + `</p>
-                            <span class="price">From <strong>` + e.price + `</strong> /per person</span>
+                            <span class="price">From <strong>` + e.price + `$</strong> /per person</span>
                         </div>
                         <ul>
-                            <li><i class="ti-eye"></i> 164 views</li>
                             <li>
-                                <div class="score"><span>Superb<em>350 Reviews</em></span><strong>8.9</strong></div>
+                                <div class="score"><span><em>350 Reviews</em></span><strong>` + e.rate + `</strong></div>
                             </li>
                         </ul>
                     </div>
@@ -659,7 +656,7 @@ router.get('/cart',(req, res)=>{
                             <strong>`+e.price+`</strong>
                         </td>
                         <td class="options" style="width:5%; text-align:center;">
-                            <a href="#"><i class="icon-trash"></i></a>
+                            <a href="delete/`+e._id+`"><i class="icon-trash"></i></a>
                         </td>
                     </tr>
                 
@@ -798,5 +795,19 @@ router.post('/api/ProcessAddCart',(req, res)=>{
      })
      
     })
+})
+router.get('/delete/:id',(req,res)=>{
+    var url = req.originalUrl.split('/');
+    user = JSON.parse(localStorage.getItem('propertyGlobal'));
+    Cart.findByIdAndDelete({_id:req.params.id},(err,data)=>{
+        if(err) throw err
+    })
+    User.updateOne({_id:user[0].id},{
+        "$pull":{ "cart": req.params.id }
+    },function(err,data){
+      if(err) throw err
+      res.redirect("back")
+    })
+
 })
 module.exports = router;
