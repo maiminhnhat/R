@@ -78,9 +78,6 @@ router.post('/api/charge', async (req, res)=>{
 }, function(err, data) {
     if(err) throw err
 }))
-//   .then(Cart.deleteMany({user:user[0].id},function(err,data){
-//     if(err) throw err
-// }))
  .then(res.send({kq:1}))
 })
 });
