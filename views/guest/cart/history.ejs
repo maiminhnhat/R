@@ -1,0 +1,52 @@
+<main>
+    <section class="hero_in tours">
+        <div class="wrapper">
+            <div class="container">
+                <h1 class="fadeInUp"><span></span>Your Cart History</h1>
+            </div>
+        </div>
+    </section>
+    <%if(user == null){%>
+        <%-error%>
+        <%}else{%>
+            <div class="bg_color_1">
+                <div class="container margin_60_35">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="box_cart">
+                            <table class="table table-striped cart-list">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Cart ID
+                                        </th>
+                                        <th>
+                                           Status
+                                        </th>
+                                        <th>
+                                            Method
+                                        </th>
+                                        <th>
+                                            Price
+                                        </th>
+                                        <th>
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <%-history%>
+                            </table>
+                          
+                        </div>
+                        </div>
+                        <!-- /col -->
+                        
+                        
+                    </div>
+                    <!-- /row -->
+                </div>
+                <!-- /container -->
+            </div>
+        <%}%>
+  
+</main>

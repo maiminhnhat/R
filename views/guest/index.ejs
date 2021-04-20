@@ -92,7 +92,9 @@
             <li><a href="cart" class="cart-menu-btn" title="Cart"></a></li>
        
          <%}else{%>
-          <li><a href="cart" class="cart-menu-btn" title="Cart"><strong><%=quantity.cart.length%></strong></a></li>
+          <li>
+            <a href="cart" class="cart-menu-btn" title="Cart"><strong><%=quantity.cart.length%></strong></a>
+          </li>
          <%}%>
       
           <li>
@@ -172,6 +174,9 @@
                 <%}%>
                
               </ul>
+            </li>
+            <li>
+              <span><a href="history">Cart History</a></span>
             </li>
           </ul>
         </nav>

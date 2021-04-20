@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+var fs = require('fs');
 var Property = require('../../models/Property');
 var Category = require("../../models/Category");
 const { MulterError } = require('multer');
@@ -53,6 +54,11 @@ router.get('/delete/:id', (req, res) => {
     var url = req.originalUrl.split('/');
     Property.findByIdAndDelete({ _id: req.params.id }, (err, data) => {
         if (err) console.log(err)
+        Category.updateOne({name: data.category.cate_name},{ 
+            "$pull": { "propertyId": data._id}
+        },function(err, data) {
+                if (err) throw err;
+            })
         res.redirect('back')
 
     });
@@ -103,9 +109,9 @@ Category.findOne({name:req.body.category})
     };
     if (iduser == '') {
         try {
-            const property = await Property.create(obj_insert,(err,data)=>{
+            const property = await Property.create(obj_insert,(err,Data)=>{
                 Category.updateOne({name:req.body.category},{ 
-                    "$push": { "propertyId": data._id }
+                    "$push": { "propertyId": Data._id }
                 },function(err, data) {
                         if (err) throw err;
                     })

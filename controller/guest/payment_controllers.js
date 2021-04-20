@@ -9,7 +9,6 @@ var LocalStorage = require('node-localstorage').LocalStorage,
 var Cart = require("../../models/Cart");
 var Category = require("../../models/Category");
 var User = require("../../models/User");
-var Payment = require("../../models/Payment");
 // STRIPE API PAYMENT
  router.get('/success', function (req, res){
     var url = req.originalUrl.split('/');
@@ -166,7 +165,7 @@ router.get('/paypal/success',(req,res)=>{
     const payerId = req.query.PayerID;
     const paymentId = req.query.paymentId; 
       Cart.aggregate([{
-        $match: { user: ObjectId(user[0].id) }
+        $match: {  $and:[{user: ObjectId(user[0].id)}, {state:"pending"}] }
     },
     {
         $group: {
@@ -196,20 +195,11 @@ router.get('/paypal/success',(req,res)=>{
             console.log(error.response);
             throw error;
         } else {
-            console.log(payment.transactions[0].related_resources[0].sale.id); 
-            console.log(payment.transactions[0].related_resources[0].sale.state); 
-            // console.log(payment.transactions[0].amount); 
-            // console.log(payment.transactions[0].payee); 
-            // console.log(payment.transactions[0].item_list); 
-            var obj_insert = {
-                'sale_id':payment.transactions[0].related_resources[0].sale.id,
-                'state':payment.transactions[0].related_resources[0].sale.state,
-                'payment':'Paypal'
-            }
-           Payment.create(obj_insert, function(err,data){
-               if (err) throw err
-               console.log(data)
-           })
+            const timeElapsed = Date.now();
+            const today = new Date(timeElapsed);
+              Cart.updateMany({createdAt:{$gte:today.toISOString().substring(0, 10)}},{$set:{state:"completed",payment_id:payment.transactions[0].related_resources[0].sale.id,payment:"Paypal"}},function(err,data){
+                if(err) throw err
+            })
             Category.find()
             .populate('propertyId')
             .exec((err, data)=>{
@@ -224,54 +214,124 @@ router.get('/paypal/success',(req,res)=>{
             }, function(err, data) {
                 if(err) throw err
             })
-            Cart.deleteMany({user:user[0].id},function(err,data){
-                if(err) throw err
-            })
+           
         }
     });
 })
 
 })  
 })
-router.post('/api/paypal_refund',(req,res)=>{
-//     var user = JSON.parse(localStorage.getItem('propertyGlobal'));
-//     Cart.aggregate([{
-//         $match: { user: ObjectId(user[0].id) }
-//     },
-//     {
-//         $group: {
-//             _id: '',
-//             total: { $sum: '$price' }
-//         }
-//      }, {
-//         $project: {
-//             _id: 0,
-//             total: '$total'
-//         }
+router.get('/history',(req,res)=>{
+    var url = req.originalUrl.split('/');
+    var main ='cart/history';
+    var user;
+ if (localStorage.getItem('propertyGlobal') == null) {
+     user == null
+     var error = '';
+     error += `<div class="row justify-content-center text-center">
+     <div class="col-xl-7 col-lg-9">
+         <h2>404 <i class="icon_error-triangle_alt"></i></h2>
+         <p>We're sorry, but you have to sign-in to see your cart.</p>
+      
+     </div>
+ </div>`
+        Category.find()
+        .populate('propertyId')
+        .exec((err, data)=>{
+        res.render("guest/index", { main: main,data:data, user: user,error:error,url: url});
+        })
+ }else{
+    user = JSON.parse(localStorage.getItem('propertyGlobal'));
+    Cart.find({ $and:[{user:user[0].id}, {state:"completed"}]})
+    .exec(function(err,user_cart){
+        var history ='';
+      user_cart.forEach(e=>{
+          history += `<tbody>
+          <tr>
+          <td>
+                  <span class="item_cart">`+e.payment_id+`</span>
+              </td>
+              <td>
+                  <span class="item_cart">`+e.state+`</span>
+              </td>
+          <td>
+                  <strong>`+e.payment+`</strong>
+              </td>
+              
+              <td>
+                  <strong>`+e.price+`</strong>
+              </td>
+              <td class="options" style="width:5%; text-align:center;">
+              <form action="/api/paypal_refund"  method="POST">
+              <button type="submit" class="btn_1 outline">Refund</button>
+             </form>
+            
+              </td>
+          </tr>
+      
+          </tr>
+      </tbody>`;
 
-//     }
-// ]).exec(function(err,data){
-    // const Amount = data[0].total.toFixed(2)
+      })
+      Category.find()
+      .populate('propertyId')
+      .exec((err, data)=>{
+        User.findOne({_id:user[0].id})
+        .populate('cart')
+        .exec(function(err,quantity){
+            res.render("guest/index", { main: main, data:data, quantity:quantity, history:history, user: user,  url: url});
+        })
+        })
+
+    })
+  
+    
+
+ }
+   
+})
+router.post('/api/paypal_refund',(req,res)=>{
+    var user = JSON.parse(localStorage.getItem('propertyGlobal'));
+    Cart.aggregate([{
+        $match: {  $and:[{user: ObjectId(user[0].id)}, {state:"pending"}] }
+    },
+    {
+        $group: {
+            _id: '',
+            total: { $sum: '$price' }
+        }
+     }, {
+        $project: {
+            _id: 0,
+            total: '$total'
+        }
+
+    }
+]).exec(function(err,data){
+    const Amount = data[0].total.toFixed(2)
     var refund_details = {
         "amount": {
             "currency": "USD",
-            "total": "99.00"
+            "total": Amount
         }
     };
-    
-    paypal.sale.refund("8L748823RC8288907", refund_details, function (error, refund) {
-        if (error) {
-            console.error(error);
-        } else {
+    Cart.findOne({user:user[0].id})
+    .exec(function(err,data){
+        paypal.sale.refund(data.payment_id, refund_details, function (error, refund) {
             if (error) {
-                throw error;
+                console.error(error);
             } else {
-                console.log("Refund Sale Response");
-                console.log(refund);
+                if (error) {
+                    throw error;
+                } else {
+                    console.log("Refund Sale Response");
+                    console.log(refund);
+                }
             }
-        }
-    });
-// })
+        });
+    })
+
+})
     
 })
 module.exports = router;

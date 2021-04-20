@@ -157,7 +157,7 @@ router.get('/House(/:page)?', async (req, res) => {
                  User.findOne({_id:user[0].id})
                  .populate('cart')
                  .exec(function(err,quantity){
-                    res.render('guest/index', { main: main, user: user, data:data, house: house, url: url,page: page, totalPage: totalPage })
+                    res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, house: house, url: url,page: page, totalPage: totalPage })
                  })
      
             })
