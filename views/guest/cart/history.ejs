@@ -14,29 +14,33 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="box_cart">
-                            <table class="table table-striped cart-list">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            Cart ID
-                                        </th>
-                                        <th>
-                                           Status
-                                        </th>
-                                        <th>
-                                            Method
-                                        </th>
-                                        <th>
-                                            Price
-                                        </th>
-                                        <th>
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <%-history%>
-                            </table>
-                          
+                                <table class="table table-striped cart-list">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Cart ID
+                                            </th>
+                                            <th>
+                                                Date
+                                            </th>
+                                            <th>
+                                                Method
+                                            </th>
+                                            <th>
+                                                Price
+                                            </th>
+                                     
+                                        </tr>
+                                    </thead>
+                                    <%-history%>
+                                </table>
+                            
+                            <form action="/api/paypal_refund"  method="POST">
+                                <div class="float-right fix_mobile">
+                                    <button type="submit" class="btn_1 outline">Refund</button>
+                                </div>
+                            </form>
+                        
                         </div>
                         </div>
                         <!-- /col -->

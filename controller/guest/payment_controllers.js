@@ -244,33 +244,35 @@ router.get('/history',(req,res)=>{
     user = JSON.parse(localStorage.getItem('propertyGlobal'));
     Cart.find({ $and:[{user:user[0].id}, {state:"completed"}]})
     .exec(function(err,user_cart){
+      
         var history ='';
       user_cart.forEach(e=>{
-          history += `<tbody>
+        const timeElapsed =e.createdAt;
+        const today = new Date(timeElapsed);
+          history += ` <tbody>
           <tr>
           <td>
                   <span class="item_cart">`+e.payment_id+`</span>
-              </td>
-              <td>
-                  <span class="item_cart">`+e.state+`</span>
-              </td>
-          <td>
+         </td>
+
+
+         <td>
+         <strong>`+today.toISOString().substring(0, 10)+`</strong>
+         </td>
+
+         <td>
                   <strong>`+e.payment+`</strong>
-              </td>
+         </td>
               
-              <td>
+         <td>
                   <strong>`+e.price+`</strong>
-              </td>
-              <td class="options" style="width:5%; text-align:center;">
-              <form action="/api/paypal_refund"  method="POST">
-              <button type="submit" class="btn_1 outline">Refund</button>
-             </form>
-            
-              </td>
+           </td>
+          
           </tr>
       
           </tr>
-      </tbody>`;
+      </tbody>
+         `;
 
       })
       Category.find()
@@ -293,7 +295,7 @@ router.get('/history',(req,res)=>{
 router.post('/api/paypal_refund',(req,res)=>{
     var user = JSON.parse(localStorage.getItem('propertyGlobal'));
     Cart.aggregate([{
-        $match: {  $and:[{user: ObjectId(user[0].id)}, {state:"pending"}] }
+        $match: {  $and:[{user: ObjectId(user[0].id)}, {state:"completed"}] }
     },
     {
         $group: {
@@ -324,8 +326,12 @@ router.post('/api/paypal_refund',(req,res)=>{
                 if (error) {
                     throw error;
                 } else {
-                    console.log("Refund Sale Response");
-                    console.log(refund);
+                    // console.log("Refund Sale Response");
+                    // console.log(refund);
+                    Cart.updateMany({user:user[0].id},{$set:{state:"refunded"}},function(err,data){
+                        if(err) throw err
+                    })
+                    res.redirect('home')
                 }
             }
         });
