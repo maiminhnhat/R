@@ -104,11 +104,9 @@ router.get('/property(/:page)?', async (req, res) => {
             Category.find()
             .populate('propertyId')
             .exec((err, data)=>{
-                User.findOne({_id:user[0].id})
-                .populate('cart')
-                .exec(function(err,quantity){
-                    res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, property: property, url: url,page: page, totalPage: totalPage })
-                })
+              
+           res.render('guest/index', { main: main, user: user, data:data, property: property, url: url,page: page, totalPage: totalPage })
+             
             
             })
     }
@@ -141,7 +139,7 @@ router.get('/House(/:page)?', async (req, res) => {
             .skip(skip)
             .exec((err, data) => {
                  var house = data.filter(c => c.name == 'House' )
-                 res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, house: house, url: url,page: page, totalPage: totalPage })
+                 res.render('guest/index', { main: main, user: user, data:data, house: house, url: url,page: page, totalPage: totalPage })
             })
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
@@ -154,11 +152,8 @@ router.get('/House(/:page)?', async (req, res) => {
             .skip(skip)
             .exec((err, data) => {
                  var house = data.filter(c => c.name == 'House' )
-                 User.findOne({_id:user[0].id})
-                 .populate('cart')
-                 .exec(function(err,quantity){
-                    res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, house: house, url: url,page: page, totalPage: totalPage })
-                 })
+                    res.render('guest/index', { main: main, user: user, data:data, house: house, url: url,page: page, totalPage: totalPage })
+                 
      
             })
     }
@@ -206,12 +201,9 @@ router.get('/Flat(/:page)?', async (req, res) => {
         .skip(skip)
         .exec((err, data) => {
             var flat = data.filter(c => c.name == 'Flat' )
-            User.findOne({_id:user[0].id})
-            .populate('cart')
-            .exec(function(err,quantity){
-                res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, flat: flat, url: url,page: page, totalPage: totalPage })
+           
+                res.render('guest/index', { main: main, user: user, data:data, flat: flat, url: url,page: page, totalPage: totalPage })
 
-            })
             
         });
   
@@ -259,11 +251,8 @@ router.get('/Unique(/:page)?', async (req, res) => {
             .skip(skip)
             .exec((err, data) => {
                 var unique = data.filter(c => c.name == 'Unique' )
-                User.findOne({_id:user[0].id})
-                .populate('cart')
-                .exec(function(err,quantity){
-                    res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, unique: unique, url: url,page: page, totalPage: totalPage })
-                })
+               
+                    res.render('guest/index', { main: main, user: user, data:data, unique: unique, url: url,page: page, totalPage: totalPage })
                
                
             });
@@ -312,11 +301,9 @@ router.get('/Hotel(/:page)?',async (req, res) => {
         .skip(skip)
       .exec((err, data) => {
         var hotel = data.filter(c => c.name == 'Hotel' )
-        User.findOne({_id:user[0].id})
-        .populate('cart')
-        .exec(function(err,quantity){
-            res.render('guest/index', { main: main, user: user, data:data,quantity:quantity, hotel: hotel, url: url,page: page, totalPage: totalPage })
-        })
+       
+            res.render('guest/index', { main: main, user: user, data:data, hotel: hotel, url: url,page: page, totalPage: totalPage })
+      
        
       });
     }
@@ -445,11 +432,9 @@ router.get('/details/:id', (req, res) => {
                         Category.find()
                         .populate('propertyId')
                         .exec((err, menu)=>{
-                            User.findOne({_id:user[0].id})
-                                .populate('cart')
-                                .exec(function(err,quantity){
-                                    res.render('guest/index', { main: main, user: user,menu:menu, rate: rate,quantity:quantity, str: str, liked_id: liked_id, user_id: user_id, data: data, img: img, url: url })
-                                })
+                         
+                                    res.render('guest/index', { main: main, user: user,menu:menu, rate: rate, str: str, liked_id: liked_id, user_id: user_id, data: data, img: img, url: url })
+                               
                      
                         })
                      
@@ -477,14 +462,21 @@ router.get('/wishlist', (req, res) => {
           
         </div>
     </div>`
-        res.render('guest/index', { main: main, error: error, user: user, url: url })
+    Category.find()
+    .populate('propertyId')
+    .exec((err, data)=>{
+ res.render('guest/index', { main: main, error: error,data:data, user: user, url: url })
+       
+ 
+    })
+        
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
         User.findOne({ _id: user[0].id }).
         populate('wishlist').
-        exec(function(err, user) {
+        exec(function(err, user_wish) {
             var wish = '';
-            user.wishlist.forEach(e => {
+            user_wish.wishlist.forEach(e => {
                 wish += `  <div class="col-xl-4 col-lg-6 col-md-6">
             <div class="box_grid">
                 <figure>
@@ -505,7 +497,14 @@ router.get('/wishlist', (req, res) => {
             </div>
         </div>`
             });
-            res.render('guest/index', { main: main, user: user, wish: wish, url: url })
+            Category.find()
+            .populate('propertyId')
+            .exec((err, data)=>{
+               res.render('guest/index', { main: main, user: user,data:data, wish: wish, url: url })
+                
+         
+            })
+          
         });
     }
 
@@ -603,97 +602,7 @@ router.post('/api/processComment', (req, res) => {
 
     });
 });
-router.get('/cart',(req, res)=>{
-    var url = req.originalUrl.split('/');
-    var main = 'cart/cart';
-    var user;
-    if (localStorage.getItem('propertyGlobal') == null) {
-        user = null
-        var error = '';
-        error += `<div class="row justify-content-center text-center">
-        <div class="col-xl-7 col-lg-9">
-            <h2>404 <i class="icon_error-triangle_alt"></i></h2>
-            <p>We're sorry, but you have to sign-in to see your cart.</p>
-         
-        </div>
-    </div>`
-    Category.find()
-    .populate('propertyId')
-    .exec((err, data)=>{
-     res.render("guest/index", { main: main,data:data, user: user,error:error,url: url});
-    })
-    } else {
-        user = JSON.parse(localStorage.getItem('propertyGlobal'));
-        Cart.aggregate([{
-            $match: { $and:[{user: ObjectId(user[0].id)}, {state:"pending"}] }
-        },
-        {
-            $group: {
-                _id: '',
-                total: { $sum: '$price' }
-            }
-         }, {
-            $project: {
-                _id: 0,
-                total: '$total'
-            }
-    
-        }
-    ]).exec(function(err, Data){
-        if (err) throw err
-        User.findOne({_id: user[0].id})
-            .populate('cart')
-            .exec(function(err, user_cart){
-                var order ='';
-                var cart_detail ='';
-                user_cart.cart.forEach(e=>{
-                    order += `<tbody>
-                    <tr>
-                        <td>
-                            <span class="item_cart">`+e.item+`</span>
-                        </td>
-                        <td>
-                            <strong>`+e.price+`</strong>
-                        </td>
-                        <td class="options" style="width:5%; text-align:center;">
-                            <a href="delete/`+e._id+`"><i class="icon-trash"></i></a>
-                        </td>
-                    </tr>
-                
-                    </tr>
-                </tbody>` 
-                cart_detail += `<div id="property-name" style="color: white;
-                font-size: 33px;
-                text-align: center;
-                text-transform: uppercase;
-                font-weight: 400;
-                border: 0;
-                padding-top: 0;">
-                `+e.item+`
-            </div>
-            <ul class="cart_details">
-                <li>From <span>`+e.cart_details.date+`</span></li>
-                <li>Adults <span>`+e.cart_details.adults+`</span></li>
-                <li>Childs <span>`+e.cart_details.children+`</span></li>
-                <li>Room Type <span>`+e.cart_details.room+`</span></li>
-            </ul>`
-                })
-                Category.find()
-                .populate('propertyId')
-                .exec((err, data)=>{
-                    User.findOne({_id:user[0].id})
-                    .populate('cart')
-                    .exec(function(err,quantity){
-                        res.render("guest/index", { main: main, user: user,user_cart:user_cart, data: data,quantity:quantity,Data:Data, order:order, cart_detail: cart_detail,url: url});
-                    })
-                
-                })
-        
-            })
-          
-    })
-    } 
-})
+
 router.get('/checkout', (req, res)=>{
     var url = req.originalUrl.split('/');
     var main = 'cart/checkout';
@@ -745,11 +654,9 @@ router.get('/checkout', (req, res)=>{
                 Category.find()
                 .populate('propertyId')
                 .exec((err, data)=>{
-                    User.findOne({_id:user[0].id})
-                    .populate('cart')
-                    .exec(function(err,quantity){
-                        res.render("guest/index", { main: main, user: user,user_cart:user_cart, data: data,quantity:quantity, Data:Data, cart_detail: cart_detail,url: url});
-                    })
+                   
+                        res.render("guest/index", { main: main, user: user,user_cart:user_cart, data: data,Data:Data, cart_detail: cart_detail,url: url});
+                  
                
                 })
         
@@ -759,19 +666,38 @@ router.get('/checkout', (req, res)=>{
     } 
 })
 router.post('/api/ProcessAddCart',(req, res)=>{
+    //tính số tiền
+    function DayCal(date){
+        var months = ["Jan","Feb","March","April","May","Jun","July","Aug","Sep","Oct","Nov","Dec"]
+        var arr = date.split(" > ");
+          var arr1= [];
+          arr.forEach(e=>{
+            const splitDateString = e.split("-")
+            var monthNum = parseInt(splitDateString[0],10);
+            var actualMonth =  months[monthNum - 1] 
+            var newMonth =` ${actualMonth}-${splitDateString[1]}-${splitDateString[2]}`
+            var Day = new Date(newMonth)
+            var Time = Day.getTime()
+            arr1.push(Time)
+            
+          })
+          var minus = (arr1[1] - arr1[0])/8.64e+7
+          return minus
+      }
     var idproperty = req.body.idproperty
     var iduser = req.body.iduser
-    var date = req.body.date
+    const date = req.body.date
     var adults = req.body.adults
     var children = req.body.children
     var room = req.body.room
+    var Day = DayCal(date)
     Property.find({ _id: idproperty})
     .exec(function(err, data) {
         if(err) throw err;
      data.forEach(e=>{
         var obj_insert ={
             'item':e.title,
-            'price':e.price,
+            'price':e.price * Day,
             'cart_details':{
                 'date': date,
                 'adults': adults,
@@ -786,7 +712,8 @@ router.post('/api/ProcessAddCart',(req, res)=>{
                 res.send({kq:0,err:err})
             }
             else{
-                res.send({kq:1})
+                res.send({kq:1, data:data});
+                localStorage.setItem('CartID',data._id)   
                 User.updateOne({ _id: iduser }, {
                     "$push": { "cart": data._id }
                 }, function(err, data) {
@@ -797,19 +724,5 @@ router.post('/api/ProcessAddCart',(req, res)=>{
      })
      
     })
-})
-router.get('/delete/:id',(req,res)=>{
-    var url = req.originalUrl.split('/');
-    user = JSON.parse(localStorage.getItem('propertyGlobal'));
-    Cart.findByIdAndDelete({_id:req.params.id},(err,data)=>{
-        if(err) throw err
-    })
-    User.updateOne({_id:user[0].id},{
-        "$pull":{ "cart": req.params.id }
-    },function(err,data){
-      if(err) throw err
-      res.redirect("back")
-    })
-
 })
 module.exports = router;

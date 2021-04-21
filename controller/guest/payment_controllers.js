@@ -66,9 +66,10 @@ router.post('/api/charge', async (req, res)=>{
      currency: 'usd',
      customer: customer.id,
   },function(err,data){
-    const timeElapsed = Date.now();
-    const today = new Date(timeElapsed);
-      Cart.updateMany({createdAt:{$gte:today.toISOString().substring(0, 10)}},{$set:{state:"completed",payment_id:data.id,payment:"Visa"}},function(err,data){
+    // const timeElapsed = Date.now();
+    // const today = new Date(timeElapsed);
+    var cartid = localStorage.getItem('CartID')
+      Cart.updateOne({_id: cartid},{$set:{state:"completed",payment_id:data.id,payment:"Visa"}},function(err,data){
         if(err) throw err
     })
   }))
@@ -116,7 +117,7 @@ router.post('/api/paypal',(req,res)=>{
             },
             "redirect_urls": {
                 "return_url": "http://localhost:4500/paypal/success",
-                "cancel_url": "http://localhost:4500/cart"
+                "cancel_url": "http://localhost:4500/home"
             },
             "transactions": [
                 {
@@ -195,9 +196,8 @@ router.get('/paypal/success',(req,res)=>{
             console.log(error.response);
             throw error;
         } else {
-            const timeElapsed = Date.now();
-            const today = new Date(timeElapsed);
-              Cart.updateMany({createdAt:{$gte:today.toISOString().substring(0, 10)}},{$set:{state:"completed",payment_id:payment.transactions[0].related_resources[0].sale.id,payment:"Paypal"}},function(err,data){
+            var cartid = localStorage.getItem('CartID');
+              Cart.updateOne({_id: cartid},{$set:{state:"completed",payment_id:payment.transactions[0].related_resources[0].sale.id,payment:"Paypal"}},function(err,data){
                 if(err) throw err
             })
             Category.find()
@@ -244,22 +244,22 @@ router.get('/history',(req,res)=>{
     user = JSON.parse(localStorage.getItem('propertyGlobal'));
     Cart.find({ $and:[{user:user[0].id}, {state:"completed"}]})
     .exec(function(err,user_cart){
-      
         var history ='';
       user_cart.forEach(e=>{
         const timeElapsed =e.createdAt;
         const today = new Date(timeElapsed);
-          history += ` <tbody>
+          history += `<tbody>
           <tr>
           <td>
-                  <span class="item_cart">`+e.payment_id+`</span>
+                <span class="item_cart" id="cart_id" payment_id="`+e.payment_id+`">`+e.payment_id+`</span>
          </td>
-
-
+    
          <td>
          <strong>`+today.toISOString().substring(0, 10)+`</strong>
          </td>
-
+         <td>
+         <span class="item_cart">`+e.item+`</span>
+           </td>
          <td>
                   <strong>`+e.payment+`</strong>
          </td>
@@ -267,7 +267,10 @@ router.get('/history',(req,res)=>{
          <td>
                   <strong>`+e.price+`</strong>
            </td>
-          
+           <td class="options" style="width:5%; text-align:center;">
+           
+           <button type="button" id="refund" class="btn_1 outline">Refund</button>
+           
           </tr>
       
           </tr>
@@ -294,8 +297,10 @@ router.get('/history',(req,res)=>{
 })
 router.post('/api/paypal_refund',(req,res)=>{
     var user = JSON.parse(localStorage.getItem('propertyGlobal'));
+    var paymentid = req.body.paymentid;
+   
     Cart.aggregate([{
-        $match: {  $and:[{user: ObjectId(user[0].id)}, {state:"completed"}] }
+        $match: {payment_id:paymentid}
     },
     {
         $group: {
@@ -317,7 +322,8 @@ router.post('/api/paypal_refund',(req,res)=>{
             "total": Amount
         }
     };
-    Cart.findOne({user:user[0].id})
+    
+    Cart.findOne({payment_id:paymentid})
     .exec(function(err,data){
         paypal.sale.refund(data.payment_id, refund_details, function (error, refund) {
             if (error) {
@@ -331,7 +337,7 @@ router.post('/api/paypal_refund',(req,res)=>{
                     Cart.updateMany({user:user[0].id},{$set:{state:"refunded"}},function(err,data){
                         if(err) throw err
                     })
-                    res.redirect('home')
+                  res.send({kq:1})
                 }
             }
         });

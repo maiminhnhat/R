@@ -5839,7 +5839,7 @@ span.infobox_rate {
 .bs-wizard>.bs-wizard-step {
     padding: 0;
     position: relative;
-    width: 33.33%;
+    width: 50%;
     float: left;
 }
 

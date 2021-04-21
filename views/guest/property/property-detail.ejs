@@ -105,61 +105,61 @@
                     </div>
                 </div>
                 <!-- /col -->
-
                 <aside class="col-lg-4" id="sidebar">
-                    <div class="box_detail booking">
-                        <div class="price">
-                            <%data.forEach(e => { %>
-                                <span><%=e.price%><small>person</small></span>
-                                <div class="score"><span>Good<em>350 Reviews</em></span><strong>7.0</strong></div>
-                                <%})%>
-
-                        </div>
-
-                        <div class="form-group input-dates">
-                            <input class="form-control" type="text" name="dates" id="dates" placeholder="When..">
-                            <i class="icon_calendar"></i>
-                        </div>
-
-                        <div class="panel-dropdown">
-                            <a href="#">Guests<span class="qtyTotal">1</span></a>
-                            <div class="panel-dropdown-content right">
-                                <div class="qtyButtons">
-                                    <label>Adults</label>
-                                    <input type="text" name="qtyInput" id="adults" value="0">
-                                </div>
-                                <div class="qtyButtons">
-                                    <label>Childrens</label>
-                                    <input type="text" name="qtyInput" id="children" value="0">
+                    <form action="" id="booking_form"  method="POST" >
+                        <div class="box_detail booking">
+                            <div class="price">
+                                <%data.forEach(e => { %>
+                                    <span><%=e.price%>$<small>/Day</small></span>
+                                    <div class="score"><span>Good<em>350 Reviews</em></span><strong>7.0</strong></div>
+                                    <%})%>
+    
+                            </div>
+                      
+                            <div class="form-group input-dates">
+                                <input class="form-control" type="text" name="dates" id="dates" placeholder="When.." required>
+                                <i class="icon_calendar"></i>
+                            </div>
+    
+                            <div class="panel-dropdown">
+                                <a href="#">Guests<span class="qtyTotal">1</span></a>
+                                <div class="panel-dropdown-content right">
+                                    <div class="qtyButtons">
+                                        <label>Adults</label>
+                                        <input type="text" name="qtyInput" id="adults" value="0" required>
+                                    </div>
+                                    <div class="qtyButtons">
+                                        <label>Childrens</label>
+                                        <input type="text" name="qtyInput" id="children" value="0" required>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="form-group clearfix">
-                            <div class="custom-select-form">
-                                <select class="wide" name="room" id="room">
-                                <option>Room Type</option>	
-                                <option value="Single Room">Single Room</option>
-                                <option value="Double Room">Double Room</option>
-                                <option value="Suite Room">Suite Room</option>
-                            </select>
+    
+                            <div class="form-group clearfix">
+                                <div class="custom-select-form">
+                                    <select class="wide" name="room" id="room" required>
+                                    <option>Room Type</option>	
+                                    <option value="Single Room">Single Room</option>
+                                    <option value="Double Room">Double Room</option>
+                                    <option value="Suite Room">Suite Room</option>
+                                </select>
+                                </div>
                             </div>
+                            <button type="submit" id="purchase" class=" add_top_30 btn_1 full-width purchase">Booking Now</button>
+                            <%if(liked_id == user_id && user !== null ){%>
+                                <button type="button" id="remove" class="btn_1 full-width outline wishlist"><i class="icon_trash"></i> Remove from wishlist</button>
+                                <%}%>
+                                    <%if(user === null || liked_id !== user_id || user_id == 0){%>
+                                        <button type="button" id="wishlist" class="btn_1 full-width outline wishlist"><i class="icon_heart"></i> Add to wishlist</button>
+                                        <%}%>
+                                            <div class="text-center"><small>No money charged in this step</small></div>
                         </div>
-                        <button id="purchase" class=" add_top_30 btn_1 full-width purchase">Purchase</button>
-                        <%if(liked_id == user_id && user !== null ){%>
-                            <button type="button" id="remove" class="btn_1 full-width outline wishlist"><i class="icon_trash"></i> Remove from wishlist</button>
-                            <%}%>
-                                <%if(user === null || liked_id !== user_id || user_id == 0){%>
-                                    <button type="button" id="wishlist" class="btn_1 full-width outline wishlist"><i class="icon_heart"></i> Add to wishlist</button>
-                                    <%}%>
-                                        <div class="text-center"><small>No money charged in this step</small></div>
-                    </div>
-                    <ul class="share-buttons">
-                        <li><a class="fb-share" href="#0"><i class="social_facebook"></i> Share</a></li>
-                        <li><a class="twitter-share" href="#0"><i class="social_twitter"></i> Tweet</a></li>
-                        <li><a class="gplus-share" href="#0"><i class="social_googleplus"></i> Share</a></li>
-                    </ul>
-                </aside>
+                    </form>
+                 
+               
+                </aside>  
+                
+              
             </div>
             <!-- /row -->
         </div>
