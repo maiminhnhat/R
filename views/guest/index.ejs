@@ -887,7 +887,26 @@
   <script>   
    $(document).ready(function(){
      $("#refund").click(function(e){
-       var paymentid = document.getElementById("cart_id").getAttribute("payment_id")
+       var payment = document.getElementById("payment").getAttribute("payment")
+       if (payment == "Visa") {
+        var paymentid = document.getElementById("cart_id").getAttribute("payment_id")
+     
+      $.ajax({
+        url:"api/charge_refund",
+        type:"POST",
+        data: {
+          'paymentid':paymentid
+        },
+        success:function(result){
+          if(result.kq==1)
+          {
+            window.location.href='home'
+          }
+        }
+
+      })
+       } else{
+        var paymentid = document.getElementById("cart_id").getAttribute("payment_id")
       //  console.log(paymentid)
       $.ajax({
         url:"api/paypal_refund",
@@ -903,6 +922,8 @@
         }
 
       })
+       }
+     
      })
    })
  </script>

@@ -30,10 +30,12 @@ router.get('/property(/:page)?', async (req, res) => {
         //lấy toàn bộ property
         Property.find()
             .sort({ _id: -1 })
+            .populate('comment')
             .limit(limit)
             .skip(skip)
             .exec((err, data) => {
                 data.forEach(e => {
+
                     property += ` <div class="col-xl-4 col-lg-6 col-md-6 isotope-item popular">
                     <div class="box_grid" id="box_grid">
                         <figure>
@@ -47,11 +49,11 @@ router.get('/property(/:page)?', async (req, res) => {
     
                             <h3><a href="details/` + e._id + `">` + e.title + `</a></h3>
                             <p>` + e.description + `</p>
-                            <span class="price">From <strong>` + e.price + `$</strong> /per person</span>
+                            <span class="price">From <strong>` + e.price + `$</strong> /per day</span>
                         </div>
                         <ul>
                             <li>
-                                <div class="score"><span><em>350 Reviews</em></span><strong>` + e.rate + `</strong></div>
+                                <div class="score"><span><em>` + e.comment.length + ` Reviews</em></span><strong>` + e.rate + `</strong></div>
                             </li>
                         </ul>
                     </div>
@@ -89,11 +91,11 @@ router.get('/property(/:page)?', async (req, res) => {
                         <div class="wrapper">
                             <h3><a href="details/` + e._id + `">` + e.title + `</a></h3>
                             <p>` + e.description + `</p>
-                            <span class="price">From <strong>` + e.price + `$</strong> /per person</span>
+                            <span class="price">From <strong>` + e.price + `$</strong> /per day</span>
                         </div>
                         <ul>
                             <li>
-                                <div class="score"><span><em>350 Reviews</em></span><strong>` + e.rate + `</strong></div>
+                                <div class="score"><span><em>` + e.comment.length + ` Reviews</em></span><strong>` + e.rate + `</strong></div>
                             </li>
                         </ul>
                     </div>
@@ -488,10 +490,10 @@ router.get('/wishlist', (req, res) => {
                 <div class="wrapper">
                     <h3><a href="details/` + e._id + `">` + e.title + `</a></h3>
                     <p>` + e.description + `</p>
-                    <span class="price">From <strong>` + e.price + `</strong> /per person</span>
+                    <span class="price">From <strong>` + e.price + `</strong> /per day</span>
                 </div>
                 <ul>
-                        <div class="score"><span>Superb<em>350 Reviews</em></span><strong>8.9</strong></div>
+                        <div class="score"><span><em>` + e.comment.length + ` Reviews</em></span><strong>` + e.rate + `</strong></div>
                     </li>
                 </ul>
             </div>
@@ -681,8 +683,8 @@ router.post('/api/ProcessAddCart',(req, res)=>{
             arr1.push(Time)
             
           })
-          var minus = (arr1[1] - arr1[0])/8.64e+7
-          return minus
+          var dayNum = (arr1[1] - arr1[0])/8.64e+7
+          return dayNum
       }
     var idproperty = req.body.idproperty
     var iduser = req.body.iduser

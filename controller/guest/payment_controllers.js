@@ -39,7 +39,7 @@ router.post('/api/charge', async (req, res)=>{
         },
       });
     Cart.aggregate([{
-        $match: { user: ObjectId(user[0].id) }
+        $match: {  $and:[{user: ObjectId(user[0].id)}, {state:"pending"}] }
     },
     {
         $group: {
@@ -81,6 +81,24 @@ router.post('/api/charge', async (req, res)=>{
  .then(res.send({kq:1}))
 })
 });
+router.post('/api/charge_refund', async(req,res)=>{
+    var paymentid = req.body.paymentid
+    Cart.findOne({payment_id:paymentid})
+    .exec(async function(err,data){
+        const refund = await stripe.refunds.create({
+            charge: data.payment_id,
+          },function(err,Data){
+              if (err) throw err
+              console.log(Data)
+          })
+          .then(Cart.updateOne({payment_id:paymentid},{$set:{state:"refunded"}},function(err,data){
+            if(err) throw err
+        }))
+        .then(res.send({kq:1}))
+    
+    })
+   
+})
 // PAYPAL API PAYMENT
 paypal.configure({
   'mode': 'sandbox', //sandbox or live
@@ -230,9 +248,7 @@ router.get('/history',(req,res)=>{
      var error = '';
      error += `<div class="row justify-content-center text-center">
      <div class="col-xl-7 col-lg-9">
-         <h2>404 <i class="icon_error-triangle_alt"></i></h2>
          <p>We're sorry, but you have to sign-in to see your cart.</p>
-      
      </div>
  </div>`
         Category.find()
@@ -245,48 +261,46 @@ router.get('/history',(req,res)=>{
     Cart.find({ $and:[{user:user[0].id}, {state:"completed"}]})
     .exec(function(err,user_cart){
         var history ='';
-      user_cart.forEach(e=>{
-        const timeElapsed =e.createdAt;
-        const today = new Date(timeElapsed);
-          history += `<tbody>
-          <tr>
-          <td>
-                <span class="item_cart" id="cart_id" payment_id="`+e.payment_id+`">`+e.payment_id+`</span>
-         </td>
-    
-         <td>
-         <strong>`+today.toISOString().substring(0, 10)+`</strong>
-         </td>
-         <td>
-         <span class="item_cart">`+e.item+`</span>
-           </td>
-         <td>
-                  <strong>`+e.payment+`</strong>
-         </td>
+            user_cart.forEach(e=>{
+                const timeElapsed =e.createdAt;
+                const today = new Date(timeElapsed);
+                  history += `<tbody>
+                  <tr>
+                  <td>
+                        <span class="item_cart" id="cart_id" payment_id="`+e.payment_id+`">`+e.payment_id+`</span>
+                 </td>
+            
+                 <td>
+                 <strong>`+today.toISOString().substring(0, 10)+`</strong>
+                 </td>
+                 <td>
+                 <span class="item_cart">`+e.item+`</span>
+                   </td>
+                 <td>
+                          <strong id="payment" payment="`+e.payment+`">`+e.payment+`</strong>
+                 </td>
+                      
+                 <td>
+                          <strong>`+e.price+`$</strong>
+                   </td>
+                   <td class="options" style="width:5%; text-align:center;">
+                   
+                   <button type="button" id="refund" class="btn_1 outline">Refund</button>
+                   
+                  </tr>
               
-         <td>
-                  <strong>`+e.price+`</strong>
-           </td>
-           <td class="options" style="width:5%; text-align:center;">
-           
-           <button type="button" id="refund" class="btn_1 outline">Refund</button>
-           
-          </tr>
-      
-          </tr>
-      </tbody>
-         `;
-
-      })
-      Category.find()
-      .populate('propertyId')
-      .exec((err, data)=>{
-        User.findOne({_id:user[0].id})
-        .populate('cart')
-        .exec(function(err,quantity){
-            res.render("guest/index", { main: main, data:data, quantity:quantity, history:history, user: user,  url: url});
-        })
-        })
+                  </tr>
+              </tbody>
+                 `;
+        
+              })
+              Category.find()
+              .populate('propertyId')
+              .exec((err, data)=>{
+                    res.render("guest/index", { main: main, data:data, history:history, user: user,  url: url});
+                })
+        
+    
 
     })
   
@@ -334,7 +348,7 @@ router.post('/api/paypal_refund',(req,res)=>{
                 } else {
                     // console.log("Refund Sale Response");
                     // console.log(refund);
-                    Cart.updateMany({user:user[0].id},{$set:{state:"refunded"}},function(err,data){
+                    Cart.updateOne({payment_id:paymentid},{$set:{state:"refunded"}},function(err,data){
                         if(err) throw err
                     })
                   res.send({kq:1})
