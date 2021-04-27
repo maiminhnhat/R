@@ -10,8 +10,10 @@ const schemaUser = new mongoose.Schema({
         type: String
     },
     role: {
-        type: Array,
-        default: [1]
+     type: String,
+     default: "Member",
+     ref: "User_type"
+      
     },
     active: {
         type: Boolean,
@@ -19,6 +21,15 @@ const schemaUser = new mongoose.Schema({
     },
     activeToken: String,
     activeExpires: Date,
+    resetPasswordToken: {
+        type: String,
+        required: false
+    },
+
+    resetPasswordExpires: {
+        type: Date,
+        required: false
+    },
     status: {
         type: Boolean,
         default: 1

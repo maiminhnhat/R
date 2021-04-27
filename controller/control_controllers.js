@@ -23,9 +23,7 @@ router.use('/', login_controller);
 
 const google_controller = require('./guest/google-login_controller');
 router.use('/', google_controller);
-//user
-const user_controller = require('./guest/user_controllers');
-router.use('/', user_controller);
+
 //payment
 const payment_controller = require('./guest/payment_controllers');
 router.use('/', payment_controller);
@@ -33,15 +31,33 @@ router.use('/', payment_controller);
 
 //home(host)
 const host_home_controller = require('./host/home_controllers');
-router.use('/host', host_home_controller);
+router.use('/manager', host_home_controller);
+//profile(host)
+const host_profile_controller = require('./host/profile_controller');
+router.use('/manager', host_profile_controller);
 //add(host)
 const host_add_controller = require('./host/add_controllers');
-router.use('/host', host_add_controller);
+router.use('/manager', host_add_controller);
 
 
-//add(admin)
+//addCate(admin)
 const category_controller = require('./admin/category_controller');
 router.use('/admin', category_controller);
+//addType(admin)
+const type_controller = require('./admin/type_controller');
+router.use('/admin', type_controller);
+//viewCate(admin)
+const user_admin_controller = require('./admin/user_controllers');
+router.use('/admin',user_admin_controller);
+//profile(host)
+const admin_profile_controller = require('./admin/profile_controller');
+router.use('/admin', admin_profile_controller);
+//addProperty
+const property_admin_controller = require('./admin/property-controller');
+router.use('/admin',property_admin_controller);
+//home(admin)
+const admin_home_controller = require('./admin/home-controller');
+router.use('/admin',admin_home_controller);
 module.exports = router;
 
 

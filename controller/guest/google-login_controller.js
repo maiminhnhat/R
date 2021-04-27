@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 var User = require('../../models/User');
+var Type = require("../../models/User_type");
 // localstorage
 var LocalStorage = require('node-localstorage').LocalStorage,
     localStorage = new LocalStorage('./scratch');
@@ -86,7 +87,14 @@ router.post('/api/google/getUserInfo', (req, res) => {
                         'email': data.email,
                         'active': data.verified_email
                     }
-                    const user = await User.create(obj_insert);
+                    const user = await User.create(obj_insert,(err,data)=>{
+                        Type.updateOne({type:"Member"},{ 
+                            "$push": { "UserId": data._id}
+                        },function(err, Data) {
+                                if (err) throw err;
+                                
+                            })
+                    });
                     propertyGlobal = [{
                         name: data.name,
                         email: data.email,

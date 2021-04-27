@@ -89,7 +89,7 @@ router.post('/api/charge_refund', async(req,res)=>{
             charge: data.payment_id,
           },function(err,Data){
               if (err) throw err
-              console.log(Data)
+              
           })
           .then(Cart.updateOne({payment_id:paymentid},{$set:{state:"refunded"}},function(err,data){
             if(err) throw err
@@ -267,7 +267,7 @@ router.get('/history',(req,res)=>{
                   history += `<tbody>
                   <tr>
                   <td>
-                        <span class="item_cart" id="cart_id" payment_id="`+e.payment_id+`">`+e.payment_id+`</span>
+                    <span class="item_cart" id="cart_id" payment_id="`+e.payment_id+`">`+e.payment_id+`</span>
                  </td>
             
                  <td>
@@ -277,11 +277,11 @@ router.get('/history',(req,res)=>{
                  <span class="item_cart">`+e.item+`</span>
                    </td>
                  <td>
-                          <strong id="payment" payment="`+e.payment+`">`+e.payment+`</strong>
+                    <strong id="payment" payment="`+e.payment+`">`+e.payment+`</strong>
                  </td>
                       
                  <td>
-                          <strong>`+e.price+`$</strong>
+                     <strong>`+e.price+`$</strong>
                    </td>
                    <td class="options" style="width:5%; text-align:center;">
                    

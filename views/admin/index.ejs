@@ -44,7 +44,7 @@
                 <%}%>
                     <!-- Your custom styles -->
                     <link href="/css/custom.css" rel="stylesheet">
-                    <base href="http://localhost:4500/manager/">
+                    <base href="http://localhost:4500/admin/">
 </head>
 
 <body class="fixed-nav sticky-footer" id="page-top">
@@ -100,13 +100,49 @@
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Bookmarks">
                     <a class="nav-link" href="list/1">
                         <i class="fa fa-fw fa-heart"></i>
-                        <span class="nav-link-text">Listing</span>
+                        <span class="nav-link-text">List Property</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Bookmarks">
+                    <a class="nav-link" href="viewCate/1">
+                        <i class="fa fa-fw fa-heart"></i>
+                        <span class="nav-link-text">List Category</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Bookmarks">
+                    <a class="nav-link" href="viewType/1">
+                        <i class="fa fa-fw fa-heart"></i>
+                        <span class="nav-link-text">List User Type</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Bookmarks">
+                    <a class="nav-link" href="viewUser/1">
+                        <i class="fa fa-fw fa-heart"></i>
+                        <span class="nav-link-text">List User</span>
                     </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Add listing">
                     <a class="nav-link" href="add">
                         <i class="fa fa-fw fa-plus-circle"></i>
-                        <span class="nav-link-text">Add listing</span>
+                        <span class="nav-link-text">Add Property</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Add listing">
+                    <a class="nav-link" href="addCate">
+                        <i class="fa fa-fw fa-plus-circle"></i>
+                        <span class="nav-link-text">Add Category</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Add listing">
+                    <a class="nav-link" href="addType">
+                        <i class="fa fa-fw fa-plus-circle"></i>
+                        <span class="nav-link-text">Add User Type</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Add listing">
+                    <a class="nav-link" href="addUser">
+                        <i class="fa fa-fw fa-plus-circle"></i>
+                        <span class="nav-link-text">Add User</span>
                     </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="My profile">
@@ -278,6 +314,7 @@
         <script src="/vendor/jquery.magnific-popup.min.js"></script>
         <!-- Custom scripts for all pages-->
         <script src="/js/admin.js"></script>
+        
         <% if(url[2] == 'home') {%>
             <!-- Custom scripts for this page-->
             <script src="/js/admin-charts.js"></script>
@@ -312,69 +349,164 @@
                       });
                     </script>
                 <%}%>
-                <%if(url[2] == 'profile'){%>
+                <%if(url[2] == 'addCate' || url[2] == 'editCate'){%>
                     <script>
-                    $(document).ready(function(){
-                            $('#profile_form').on('submit',function(e){
+                        $(document).ready(function(){
+                            $('#category_form').on('submit',function(e){
                                 e.preventDefault();
-                                var name,email
-                                name = $("#user_name").val()
-                                email = $("#email").val()
+                                var name, iduser;
+                                name = $("#category_name").val()
+                                iduser = $("#iduser").val()
                                 $.ajax({
-                                    url:"api/UpdateProfile",
+                                    url:"api/add_category",
                                     type:"POST",
                                     data: {
                                         'name':name,
-                                        'email':email,
+                                        'iduser':iduser
                                     },
                                     success:function(result){
-                                        if(result.kq === 1){
-                                        alert("Your Profile Has Been Updated");
-                                        propertyGlobal = [{
-                                                name: result.data.name,
-                                                email: result.data.email,
-                                                id: result.data._id
-                                            }];
-                                        localStorage.setItem('propertyGlobal', JSON.stringify(propertyGlobal));
-                                        window.location.href ='/manager/home'
+                                        if(result.status === 400){
+                                            throw Error('Category already exists!');
+                                        }else if(result.status === 500){
+                                            throw Error('Server Error');
+                                        }else{
+                                            alert("Category created")
+                                            window.location.href ='/admin/viewCate/1'
                                         }
                                     }
                                 })
-                            })
-                        })
-
-
-                        $(document).ready(function(){
-                            $('#Change_pass_form').on('submit',function(e){
-                                e.preventDefault();
-                                var name,email
-                                new_pass = $("#new_password").val()
-                                re_pass = $("#re_password").val()
-                                if (new_pass !== re_pass) {
-                                    alert("Your password not match")
-                                }else{
-                                    $.ajax({
-                                    url:"api/changePass",
-                                    type:"POST",
-                                    data: {
-                                        'new_pass':new_pass,
-                                      
-                                    },
-                                    success:function(result){
-                                        if(result.kq === 1){
-                                        alert("Your Password Has Been Updated");
-                                      
-                                        window.location.href ='/manager/home'
-                                        }
-                                    }
-                                })
-                                }
-                               
                             })
                         })
                     </script>
-                <%}%>
-                        
+                    <%}%>
+                    <%if(url[2] == 'addType' || url[2] == 'editType'){%>
+                        <script>
+                            $(document).ready(function(){
+                                $('#type_form').on('submit',function(e){
+                                    e.preventDefault();
+                                    var name, iduser;
+                                    name = $("#type_name").val()
+                                    iduser = $("#iduser").val()
+                                    $.ajax({
+                                        url:"api/add_type",
+                                        type:"POST",
+                                        data: {
+                                            'name':name,
+                                            'iduser':iduser
+                                        },
+                                        success:function(result){
+                                            if(result.status === 400){
+                                                throw Error('Type already exists!');
+                                            }else if(result.status === 500){
+                                                throw Error('Server Error');
+                                            }else{
+                                                alert("New Type created")
+                                                window.location.href ='/admin/viewType/1'
+                                            }
+                                        }
+                                    })
+                                })
+                            })
+                        </script>
+                        <%}%>
+                        <%if(url[2] == 'addUser' || url[2] == 'editUser'){%>
+                            <script>
+                             $(function(){
+                            $("#user_type").val("<%=data[0].role%>").attr("selected","selected");
+                             });
+                                $(document).ready(function(){
+                                    $('#user_form').on('submit',function(e){
+                                        e.preventDefault();
+                                        var name, iduser,email,password,type;
+                                        name = $("#user_name").val()
+                                        email = $("#email").val()
+                                        password = $("#password").val()
+                                        type = $("#user_type").val()
+                                        iduser = $("#iduser").val()
+                                        $.ajax({
+                                            url:"api/ProccessAddStaffs",
+                                            type:"POST",
+                                            data: {
+                                                'name':name,
+                                                'email':email,
+                                                'password':password,
+                                                'type':type,
+                                                'iduser':iduser
+                                            },
+                                            success:function(result){
+                                                if(result.kq === 1){
+                                                   alert("New User Added/Updated");
+                                                   window.location.href ='/admin/viewUser/1'
+                                                }
+                                            }
+                                        })
+                                    })
+                                })
+                            </script>
+                            <%}%>
+                            <%if(url[2] == 'profile'){%>
+                                <script>
+                                $(document).ready(function(){
+                                        $('#profile_form').on('submit',function(e){
+                                            e.preventDefault();
+                                            var name,email
+                                            name = $("#user_name").val()
+                                            email = $("#email").val()
+                                            $.ajax({
+                                                url:"api/UpdateProfile",
+                                                type:"POST",
+                                                data: {
+                                                    'name':name,
+                                                    'email':email,
+                                                },
+                                                success:function(result){
+                                                    if(result.kq === 1){
+                                                    alert("Your Profile Has Been Updated");
+                                                    propertyGlobal = [{
+                                                            name: result.data.name,
+                                                            email: result.data.email,
+                                                            id: result.data._id
+                                                        }];
+                                                    localStorage.setItem('propertyGlobal', JSON.stringify(propertyGlobal));
+                                                    window.location.href ='/admin/home'
+                                                    }
+                                                }
+                                            })
+                                        })
+                                    })
+            
+            
+                                    $(document).ready(function(){
+                                        $('#Change_pass_form').on('submit',function(e){
+                                            e.preventDefault();
+                                            var name,email
+                                            new_pass = $("#new_password").val()
+                                            re_pass = $("#re_password").val()
+                                            if (new_pass !== re_pass) {
+                                                alert("Your password not match")
+                                            }else{
+                                                $.ajax({
+                                                url:"api/changePass",
+                                                type:"POST",
+                                                data: {
+                                                    'new_pass':new_pass,
+                                                  
+                                                },
+                                                success:function(result){
+                                                    if(result.kq === 1){
+                                                    alert("Your Password Has Been Updated");
+                                                  
+                                                    window.location.href ='/admin/home'
+                                                    }
+                                                }
+                                            })
+                                            }
+                                           
+                                        })
+                                    })
+                                </script>
+                            <%}%>
+                                    
                       
 
 </body>

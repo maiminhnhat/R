@@ -1,0 +1,37 @@
+<div class="content-wrapper">
+    <form action="" method="POST" enctype="multipart/form-data" id="type_form">
+        <div class="container-fluid">
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="home">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active">Add Category</li>
+            </ol>
+            <div class="box_general padding_bottom">
+                <div class="header_box version_2">
+                    <h2><i class="fa fa-file"></i>Info</h2>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                      
+                        <div class="form-group">
+                            <input type="hidden" id="iduser" value="<%=data[0]._id%>">
+                            <label>Type</label>
+                            <input type="text" class="form-control" placeholder="Hotel" id="type_name" name="type_name" value="<%=data[0].type%>">
+                        </div>
+                    </div>
+                
+                </div>
+                <!-- /row-->
+
+        
+
+     
+            <!-- /box_general-->
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </form>
+
+    <!-- /.container-fluid-->
+</div>

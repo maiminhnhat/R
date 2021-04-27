@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 var Property = require("../../models/Property");
 var User = require("../../models/User");
-var Category = require("../../models/Category");
-router.get('/api/add_category', async function(req, res){
+var Type = require("../../models/User_type");
+router.get('/api/add_type', async function(req, res){
     try {
-        const category = await Category.find();
+        const category = await Type.find();
         return res.status(200).json({
             success: true,
             count: category.length,
@@ -16,59 +16,59 @@ router.get('/api/add_category', async function(req, res){
         res.status(500).json({ err: 'Server err' })
     }
 })
-router.get('/deleteCate/:id', (req, res) => {
+router.get('/deleteType/:id', (req, res) => {
     var url = req.originalUrl.split('/');
-    Category.findByIdAndDelete({ _id: req.params.id }, (err, data) => {
+    Type.findByIdAndDelete({ _id: req.params.id }, (err, data) => {
         if (err) console.log(err)
-        data.propertyId.forEach(e=>{
-            Property.deleteMany({_id: e},function(err, Data) {
-                if (err) throw err;
-                console.log(Data)
-            })
-        })
+        // data.propertyId.forEach(e=>{
+        //     User.deleteMany({_id: e},function(err, Data) {
+        //         if (err) throw err;
+        //         console.log(Data)
+        //     })
+        // })
         
         res.redirect('back')
 
     });
 });
-router.get('/editCate/:id', (req, res) => {
+router.get('/editType/:id', (req, res) => {
     var url = req.originalUrl.split('/');
-    Category.find({ _id: req.params.id })
+    Type.find({ _id: req.params.id })
         .exec((err, data) => {
             // views
-            var main = 'add_cate/edit_cate';
+            var main = 'add_type/edit_type';
             res.render('admin/index', { main: main, url: url, data: data });
 
         });
 
 });
-router.get('/addCate', (req, res) => {
+router.get('/addType', (req, res) => {
     var url = req.originalUrl.split('/');
-    var main = 'add_cate/add_cate';
+    var main = 'add_type/add_type';
     res.render('admin/index', { main: main, url: url })
 });
-router.post('/api/add_category', async(req, res) => {
+router.post('/api/add_type', async(req, res) => {
     var iduser = req.body.iduser;
     var obj_insert ={
-        'name':req.body.name
+        'type':req.body.name
     }
    if (iduser == '') {
     try {
-        const category = await Category.create(obj_insert);
+        const type = await Type.create(obj_insert);
         return res.status(201).json({
             success: true,
-            data: category
+            data: type
         });
     } catch (err) {
         console.error(err);
         if (err.code === 11000) {
-            return res.status(400).json({ error: 'This category already exists' });
+            return res.status(400).json({ error: 'This Type already exists' });
         }
         res.status(500).json({ error: 'Server error' });
     }
    }else{
        try {
-        const property = await Category.updateMany({_id: req.body.iduser},{
+        const type = await Type.updateMany({_id: req.body.iduser},{
             $set: obj_insert
          },function(err,data){
              if (err) throw err
@@ -76,7 +76,7 @@ router.post('/api/add_category', async(req, res) => {
          })
          return res.status(201).json({
             success: true,
-            data: property
+            data: type
         });
        } catch (err) {
         console.error(err);
@@ -88,11 +88,11 @@ router.post('/api/add_category', async(req, res) => {
 
 
 });
-router.get('/viewCate(/:page)?',async (req,res)=>{
+router.get('/viewType(/:page)?',async (req,res)=>{
     var url = req.originalUrl.split('/');
     var url = req.originalUrl.split('/');
     var limit, skip, totalData, page;
-    totalData = await Category.find();
+    totalData = await Type.find();
     totalData = totalData.length;
     limit = 3
     page = req.params.page;
@@ -102,7 +102,7 @@ router.get('/viewCate(/:page)?',async (req,res)=>{
         skip = (page - 1) * limit;
     }
       // lấy toàn bộ property
-      Category.find()
+      Type.find()
       .sort({ _id: -1 })
       .limit(limit)
       .skip(skip)
@@ -117,7 +117,7 @@ router.get('/viewCate(/:page)?',async (req,res)=>{
                 
                   str += `
                   <tr>
-                  <td>`+e.name+`</td>
+                  <td>`+e.type+`</td>
                   <td>
                   <div class="modal fade" role="dialog" tabindex="-1" id="MyModal">
                       <div class="modal-dialog" role="document">
@@ -128,10 +128,10 @@ router.get('/viewCate(/:page)?',async (req,res)=>{
                               <div class="modal-body">
                                   <p>Are you sure?</p>
                               </div>
-                              <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">No</button><a href="deleteCate/` + e._id + `" class="btn btn-primary">Delete</a></div></div>
+                              <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">No</button><a href="deleteType/` + e._id + `" class="btn btn-primary">Delete</a></div></div>
                           </div>
                       </div>
-                  </div><a class="btn btn-primary" href="editCate/` + e._id + `" role="button" style="background: var(--teal);"><i class="fa fa-plus"></i>&nbsp;Update</a>&nbsp; &nbsp;<button class="btn btn-primary" type="button" style="background: var(--danger);"
+                  </div><a class="btn btn-primary" href="editType/` + e._id + `" role="button" style="background: var(--teal);"><i class="fa fa-plus"></i>&nbsp;Update</a>&nbsp; &nbsp;<button class="btn btn-primary" type="button" style="background: var(--danger);"
                       data-toggle="modal" data-target="#MyModal"><i class="fa fa-trash-o"></i>&nbsp;Delete</button>
               </td>
                   </tr>
@@ -140,7 +140,7 @@ router.get('/viewCate(/:page)?',async (req,res)=>{
               });
 
               // views
-              var main = 'add_cate/view_cate';
+              var main = 'add_type/view_type';
               res.render('admin/index', { main: main, url: url, str: str, page: page, totalPage: totalPage});
           }
       })

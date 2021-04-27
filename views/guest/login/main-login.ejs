@@ -41,6 +41,28 @@
                     <button type="submit" class="btn_1 rounded full-width">Login to Panagea</button>
                     <div class="text-center add_top_10">New to Panagea? <strong><a href="register">Sign up!</a></strong></div>
                 </form>
+                <form action="" method="POST" id="forgot_form">
+                    <div id="forgot_pw">
+                        <div class="form-group">
+                          <label>Please confirm login email below</label>
+                          <input
+                            type="email"
+                            class="form-control"
+                            name="email_forgot"
+                            id="email_forgot"
+                          />
+                          <i class="icon_mail_alt"></i>
+                        </div>
+                        <p>
+                          You will receive an email containing a link allowing you to reset
+                          your password to a new preferred one.
+                        </p>
+                        <div class="text-center">
+                          <input type="submit" value="Reset Password" class="btn_1" />
+                        </div>
+                      </div>
+                </form>
+            
                 <div class="copy">© 2018 Panagea</div>
             </aside>
         </div>
@@ -56,7 +78,6 @@
         $(document).ready(function() {
             $('#login_form').on('submit', function(e) {
                 e.preventDefault();
-
                 // khai báo
                 var password, email, iduser
                     // lấy dữ liệu
@@ -74,12 +95,35 @@
                     },
                     success: function(result) {
                         if (result.kq == 1) {
-                            propertyGlobal = [{
+                            if(result.type == "Admin"){
+                                propertyGlobal = [{
                                 name: result.name,
-                                id: result.id
+                                email: result.email,
+                                id: result.id,
+                                type: result.type
+                            }]
+                            localStorage.setItem('propertyGlobal', JSON.stringify(propertyGlobal));
+                            window.location.href = 'admin/home';
+                            } else if(result.type == "Manager"){
+                                propertyGlobal = [{
+                                name: result.name,
+                                email: result.email,
+                                id: result.id,
+                                type: result.type
+                            }]
+                            localStorage.setItem('propertyGlobal', JSON.stringify(propertyGlobal));
+                            window.location.href = 'manager/home';
+                            } else{
+                                propertyGlobal = [{
+                                name: result.name,
+                                email: result.email,
+                                id: result.id,
+                                type: result.type
                             }]
                             localStorage.setItem('propertyGlobal', JSON.stringify(propertyGlobal));
                             window.location.href = 'home';
+                            }
+                          
 
                         } else {
                             alert(result.err);
@@ -102,5 +146,24 @@
             },
 
         });
+    </script>
+    <script>
+        $(document).ready(function(){
+            $("#forgot_form").on('submit',function(e){
+                e.preventDefault()
+                var email_forgot;
+                email_forgot = $('#email_forgot').val()
+              $.ajax({
+                  url:'api/ResetPassword',
+                  type: 'POST',
+                  data:{
+                      'email_forgot':email_forgot
+                  },success: function(result) {
+                        alert(result)
+                       
+                    }
+              })
+            })
+        })
     </script>
 </body>

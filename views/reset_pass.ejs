@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>* {box-sizing: border-box}
+
+		/* Add padding to containers */
+		.container {
+		  padding: 16px;
+		}
+		
+		/* Full-width input fields */
+		input[type=text], input[type=password] {
+		  width: 100%;
+		  padding: 15px;
+		  margin: 5px 0 22px 0;
+		  display: inline-block;
+		  border: none;
+		  background: #f1f1f1;
+		}
+		
+		input[type=text]:focus, input[type=password]:focus {
+		  background-color: #ddd;
+		  outline: none;
+		}
+		
+		/* Overwrite default styles of hr */
+		hr {
+		  border: 1px solid #f1f1f1;
+		  margin-bottom: 25px;
+		}
+		
+		/* Set a style for the submit/register button */
+		.registerbtn {
+		  background-color: #4CAF50;
+		  color: white;
+		  padding: 16px 20px;
+		  margin: 8px 0;
+		  border: none;
+		  cursor: pointer;
+		  width: 100%;
+		  opacity: 0.9;
+		}
+		
+		.registerbtn:hover {
+		  opacity:1;
+		}
+		
+		/* Add a blue text color to links */
+		a {
+		  color: dodgerblue;
+		}
+		
+		/* Set a grey background color and center the text of the "sign in" section */
+		.signin {
+		  background-color: #f1f1f1;
+		  text-align: center;
+		}</style>
+</head>
+<body>
+	<form action="" method="POST" id="change_form">
+		<div class="container">
+		  <h1>Set new password</h1>
+		
+		  <hr>
+	  
+		
+		  <label for="psw"><b>Password</b></label>
+		  <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+	  
+		  <label for="psw-repeat"><b>Repeat Password</b></label>
+		  <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required>
+		  <hr>
+	  
+		  <button type="submit" class="registerbtn">Change</button>
+		</div>
+	  
+	  </form>
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	  <script>
+		  $(document).ready(function(){
+			  $("#change_form").on('submit',function(e){
+				  e.preventDefault();
+				  var new_password, re_password;
+				  var url = window.location.href;
+				  var token = url.split("/")
+				  new_password =$('#psw').val()
+				  re_password =$('#psw-repeat').val()
+				  if (new_password !== re_password) {
+                         alert("Your password not match")
+               }else{
+				     $.ajax({
+					url: "reset",
+                   type: "POST",
+				   data:{
+					   'new_password':new_password,
+					   'token':token[4],
+					   're_password':re_password
+				   },
+				   success:function(result){
+					   if(result.kq === 1){
+						   alert("Your Password Has Been Reset")
+						   window.location.href ='/login'
+					   }
+				   }
+				 })
+			   }
+			   
+			  })
+		  })
+	  </script>
+</body>
+
+</html>

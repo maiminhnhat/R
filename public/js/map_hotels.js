@@ -7,7 +7,7 @@ $('#collapseMap').on('shown.bs.collapse', function(e) {
         center: [106.68644, 10.74401]
     });
     async function getProperties() {
-        const res = await fetch('/host/api/properties');
+        const res = await fetch('/admin/api/properties');
         const data = await res.json();
         console.log(data);
         const houses = data.data.map(property => {
@@ -21,8 +21,9 @@ $('#collapseMap').on('shown.bs.collapse', function(e) {
                     ]
                 },
                 properties: {
-                    propertyId: property.propertyId,
+                    price: property.price,
                     image: property.image[0],
+                    description: property.description,
                     Address: property.location.formattedAddress,
                     icon: 'shop'
                 }
@@ -61,6 +62,7 @@ $('#collapseMap').on('shown.bs.collapse', function(e) {
                 var description = e.features[0].properties.description;
                 var address = e.features[0].properties.Address;
                 var img = e.features[0].properties.image;
+                var price = e.features[0].properties.price;
 
                 // Ensure that if the map is zoomed out such that multiple
                 // copies of the feature are visible, the popup appears
@@ -71,7 +73,7 @@ $('#collapseMap').on('shown.bs.collapse', function(e) {
 
                 new mapboxgl.Popup()
                     .setLngLat(coordinates)
-                    .setHTML('<img src="/img/' + img + ' " alt="" style ="max-width:100%;"> <br> <h1 style="font-size: 22px;">' + address + ' </h1> <br> <h4><b>17$</b>/night</h4>')
+                    .setHTML('<img src="/img/' + img + ' " alt="" style ="max-width:100%;"> <br> <h1 style="font-size: 22px;">' + address + ' </h1> <br><p>'+description+'</p> <h4><b>'+price+'$</b>/day</h4>')
                     .addTo(map);
             });
 

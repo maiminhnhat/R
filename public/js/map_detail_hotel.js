@@ -9,7 +9,7 @@ async function getProperties() {
     var url = window.location.href;
     var idproperty = url.split('/')
         // console.log(idproperty[4]);
-    const res = await fetch("host/api/property?idproperty=" + idproperty[4] + "");
+    const res = await fetch("admin/api/property?idproperty=" + idproperty[4] + "");
     const data = await res.json();
 
     const houses = data.data.map(property => {
@@ -25,6 +25,7 @@ async function getProperties() {
             properties: {
                 propertyId: property.propertyId,
                 image: property.image[0],
+                description: property.description,
                 Address: property.location.formattedAddress,
                 icon: 'shop'
             }
@@ -73,7 +74,7 @@ function loadMap(houses) {
 
             new mapboxgl.Popup()
                 .setLngLat(coordinates)
-                .setHTML('<img src="/img/' + img + ' " alt="" style ="max-width:100%;"> <br> <h1 style="font-size: 22px;">' + address + ' </h1> <br> <h4><b>17$</b>/night</h4>')
+                .setHTML('<img src="/img/' + img + ' " alt="" style ="max-width:100%;"> <br> <h1 style="font-size: 22px;">' + address + ' </h1> <br><p>'+description+'</p> <h4><b>'+price+'$</b>/day</h4>')
                 .addTo(map);
         });
 
