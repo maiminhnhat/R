@@ -9,7 +9,7 @@ async function getProperties() {
     var url = window.location.href;
     var idproperty = url.split('/')
         // console.log(idproperty[4]);
-    const res = await fetch("admin/api/property?idproperty=" + idproperty[4] + "");
+    const res = await fetch("/admin/api/property?idproperty=" + idproperty[4] + "");
     const data = await res.json();
 
     const houses = data.data.map(property => {
@@ -23,7 +23,7 @@ async function getProperties() {
                 ]
             },
             properties: {
-                propertyId: property.propertyId,
+                price: property.price,
                 image: property.image[0],
                 description: property.description,
                 Address: property.location.formattedAddress,
@@ -64,7 +64,7 @@ function loadMap(houses) {
             var description = e.features[0].properties.description;
             var address = e.features[0].properties.Address;
             var img = e.features[0].properties.image;
-
+            var price = e.features[0].properties.price;
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
             // over the copy being pointed to.
