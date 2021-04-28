@@ -564,7 +564,7 @@ router.post('/api/processComment', (req, res) => {
     Comment.create(obj_insert, (err, data) => {
         console.error(err)
         if (err.code === 11000) {
-            res.status(400).json({  error: 'This category already exists'  })
+            res.status(400).json({  error: 'You already add your review'  })
         }else if(err.code !== 11000){
             res.status(500).json({ error: 'Server error' });
         }
