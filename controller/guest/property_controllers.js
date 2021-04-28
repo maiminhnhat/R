@@ -563,7 +563,7 @@ router.post('/api/processComment', (req, res) => {
     }
     try {
         const comment =Comment.create(obj_insert,(err,data)=>{
-           
+            res.send({ kq: 1 })
             Property.updateOne({ _id: idproperty }, {
                 "$push": { "comment": data._id }
             }, function(err, data) {
@@ -591,7 +591,7 @@ router.post('/api/processComment', (req, res) => {
                     })
                 });
         });
-        res.send({ kq: 1 })
+   
     } catch (err) {
         console.error(err)
         if (err.code === 11000) {
