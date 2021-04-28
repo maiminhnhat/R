@@ -24,6 +24,7 @@ app.use('/', control_controllers);
 
 //gọi đến dbconnect
 require('./dbconnect')
-app.listen(4500, () => {
-    console.log('Server On!');
-});
+// app.listen(4500, () => {
+//     console.log('Server On!');
+// });
+app.listen(process.env.PORT || 4500)
