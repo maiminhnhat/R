@@ -81,13 +81,8 @@ router.get("/home", (req, res) => {
         Category.find()
         .populate('propertyId')
         .exec((err, data)=>{
-          
-            
                 res.render("guest/index", { main: main, user: user,
-                     data: data, url: url, prop: prop});
-         
-                
-     
+                     data: data, url: url, prop: prop});       
         })
     }
 });
@@ -134,7 +129,8 @@ router.post('/property/search',(req,res)=>{
    
 })
 
-app.get('*', (req, res) => {
+router.get('*', (req, res) => {
+     var url = req.originalUrl.split('/');
     var user;
     var main ="404"
     if(localStorage.getItem('propertyGlobal') == null){
@@ -142,14 +138,14 @@ app.get('*', (req, res) => {
            Category.find()
            .populate('propertyId')
              .exec((err, data)=>{
-                res.render("guest/index", { main: main, user: user, data: data, url: url, prop: prop});
+                res.render("guest/index", { main: main, user: user,url:url, data: data});
         })
     }else{
       user = JSON.parse(localStorage.getItem('propertyGlobal'));
            Category.find()
            .populate('propertyId')
              .exec((err, data)=>{
-                res.render("guest/index", { main: main, user: user, data: data, url: url, prop: prop});
+                res.render("guest/index", { main: main, user: user,url:url, data: data});
         })
     }
 
