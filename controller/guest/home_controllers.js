@@ -79,7 +79,12 @@ router.get("/home", (req, res) => {
            
         });
         Category.find()
-        .populate('propertyId')
+        .populate({
+        path:'propertyId',
+        options: {
+           limit: 4,
+           }
+        })
         .exec((err, data)=>{
                 res.render("guest/index", { main: main, user: user,
                      data: data, url: url, prop: prop});       
