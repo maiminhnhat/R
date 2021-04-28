@@ -12,9 +12,9 @@ router.use('/', property_controller);
 const about_controller = require('./guest/about_controllers');
 router.use('/', about_controller);
 
-//contact
-const contact_controller = require('./guest/contact_controllers');
-router.use('/', contact_controller);
+//feedback
+const feedback_controller = require('./guest/feedback_controllers');
+router.use('/', feedback_controller);
 
 
 //login&register

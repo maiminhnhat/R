@@ -211,7 +211,7 @@
                 <li><a href="about">About</a></li>
                 <li><a href="login">Login</a></li>
                 <li><a href="register">Register</a></li>
-                <li><a href="contact">Contacts</a></li>
+                <li><a href="feedback">Feedback</a></li>
               </ul>
             </div>
             <div class="col-lg-3 col-md-6">
@@ -524,6 +524,9 @@ $.ajax({
     success:function(result){
       if(result.kq == 1){
         $("#reccomended").html(result.data);
+      }
+      else{
+        alert(result.message)
       }
     }
 })
@@ -843,11 +846,44 @@ $.ajax({
       })
     </script>
 
-    <% break; case 'contact':%>
+    <% break; case 'feedback':%>
     <!-- SPECIFIC SCRIPTS -->
-    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB1Is5XGywaMj01UtR9CLQZBLJGVbGrNoA"></script>
-    <script src="/js/mapmarker.jquery.js"></script>
-    <script src="/js/mapmarker_func.jquery.js"></script>
+   <script>  
+   $(document).ready(function(){
+   $("#feedback_form").on("submit",function(e){
+     e.preventDefault()
+     if(localStorage.getItem("propertyGlobal") == null){
+        alert("You have to log-in")
+     }else{
+       // khai báo
+     var name_feedback,feedback
+      var user = JSON.parse(localStorage.getItem("propertyGlobal"));
+      name_feedback= user[0].name;
+      feedback = $("#feedback").val()
+    
+      $.ajax({
+          url: "api/ProcessAddFeedback",
+          type: "POST",
+          data: {
+            'name_feedback': name_feedback,
+            'feedback': feedback,
+            
+          },
+          success: function(result) {
+          if(result.kq==1){
+            alert("We have your feedback!")
+            window.location.href = "home"
+          }
+          }
+        })
+     }
+     
+    
+ 
+})
+   })
+     
+</script>
     <% break; 
     case 'checkout':%>
      <!-- STRIPE API PAYMENT -->
@@ -883,6 +919,12 @@ $.ajax({
           })
       
       })
+})
+$(document).ready(function(){
+  $("#cancel").click(function(){
+    $.post("/cancel");
+window.location.href= 'home'
+  })
 })
 </script>
     <% break;

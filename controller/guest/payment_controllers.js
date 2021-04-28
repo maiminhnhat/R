@@ -99,6 +99,19 @@ router.post('/api/charge_refund', async(req,res)=>{
     })
    
 })
+router.post('/cancel', async function(req, res) {
+    var cartid = localStorage.getItem('CartID')
+    var user = JSON.parse(localStorage.getItem('propertyGlobal'));
+    Cart.findByIdAndDelete({_id: cartid},function(err,data){
+        if(err) throw err;
+    })
+    User.updateOne({_id:user[0].id},{
+        $set:{cart: []}
+    }, function(err, data) {
+        if(err) throw err
+    })
+ 
+});
 // PAYPAL API PAYMENT
 paypal.configure({
   'mode': 'sandbox', //sandbox or live

@@ -4,6 +4,7 @@ var Cart = require("../../models/Cart");
 var Property = require("../../models/Property");
 var User = require("../../models/User");
 var Comment = require("../../models/Comment");
+var Feedback = require("../../models/Feedback")
 router.get('/home', (req, res) => {
     var url = req.originalUrl.split('/');
     var main = 'home/main-home';
@@ -46,7 +47,11 @@ router.get('/home', (req, res) => {
                   `;
 
               });
-              res.render('host/index', { main: main,comment:comment,property:property,str:str,cart:cart,url: url })
+              Feedback.find()
+              .sort({$natural:-1})
+              .exec(function(err,feedback){
+                  res.render('host/index', { main: main,comment:comment,feedback:feedback,property:property,str:str,cart:cart,url: url })
+              })
            })
            })
        })
@@ -187,6 +192,35 @@ router.get('/refunded(/:page)?',async (req,res)=>{
         var refunded = data.filter(p=> p.state =="refunded")
         var totalPage = Math.ceil(totalData / limit);
         res.render('host/index', {main: main,refunded:refunded,url: url,page: page, totalPage: totalPage })
+    })
+})
+router.get('/feedback(/:page)?',async (req,res)=>{
+    var url = req.originalUrl.split('/');
+    var main = 'listing/feedback';
+    totalData = await Feedback.find();
+    totalData = totalData.length;
+    limit = 3
+    page = req.params.page;
+    if (page == undefined) {
+        skip = 0;
+    } else {
+        skip = (page - 1) * limit;
+    }
+    Feedback.find()
+    .populate('user')
+    .sort({ _id: 1 })
+    .limit(limit)
+    .skip(skip)
+    .exec(function(err,data){
+        var str ='';
+        var totalPage = Math.ceil(totalData / limit);
+        data.forEach(e=>{
+            str += `<li>
+            <h4>`+e.username+`</h4>
+            <p>`+e.feeback+`</p>
+        </li>`
+        })
+        res.render('host/index', { main: main,str:str,url: url,page: page, totalPage: totalPage })
     })
 })
 router.post('/logout', function(req, res) {
