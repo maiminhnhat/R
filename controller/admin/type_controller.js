@@ -16,6 +16,45 @@ router.get('/api/add_type', async function(req, res){
         res.status(500).json({ err: 'Server err' })
     }
 })
+//Search
+router.post('/type/search', (req, res) => {
+    Type.find({ 'type': { '$regex': req.body.search } })
+        .exec((err, data) => {
+            if (err) {
+                res.send({ kq: 0, err: err });
+            } else {
+
+                var str = '';
+
+                data.forEach(e => {
+                    str += `    <tr>
+                    <td>`+e.type+`</td>
+                    <td>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="MyModal">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">ATTENTION!!!!</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure?</p>
+                                </div>
+                                <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">No</button><a href="deleteType/` + e._id + `" class="btn btn-primary">Delete</a></div></div>
+                            </div>
+                        </div>
+                    </div><a class="btn btn-primary" href="editType/` + e._id + `" role="button" style="background: var(--teal);"><i class="fa fa-plus"></i>&nbsp;Update</a>&nbsp; &nbsp;<button class="btn btn-primary" type="button" style="background: var(--danger);"
+                        data-toggle="modal" data-target="#MyModal"><i class="fa fa-trash-o"></i>&nbsp;Delete</button>
+                </td>
+                    </tr>
+                   
+                `;
+
+                });
+
+                res.send({ kq: 1, data: str });
+            }
+        });
+});
 router.get('/deleteType/:id', (req, res) => {
     var url = req.originalUrl.split('/');
     Type.findByIdAndDelete({ _id: req.params.id }, (err, data) => {
@@ -89,7 +128,6 @@ router.post('/api/add_type', async(req, res) => {
 
 });
 router.get('/viewType(/:page)?',async (req,res)=>{
-    var url = req.originalUrl.split('/');
     var url = req.originalUrl.split('/');
     var limit, skip, totalData, page;
     totalData = await Type.find();

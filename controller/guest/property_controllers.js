@@ -16,7 +16,7 @@ router.get('/property(/:page)?', async (req, res) => {
     var limit, skip, totalData, page;
     totalData = await Property.find();
     totalData = totalData.length;
-    limit = 6;
+    limit = 3;
     page = req.params.page;
     if (page == undefined) {
         skip = 0;
@@ -29,43 +29,40 @@ router.get('/property(/:page)?', async (req, res) => {
         var property = '';
         //lấy toàn bộ property
         Property.find()
-            .sort({ _id: -1 })
-            .populate('comment')
-            .limit(limit)
-            .skip(skip)
-            .exec((err, data) => {
-                data.forEach(e => {
-
-                    property += ` <div class="col-xl-4 col-lg-6 col-md-6 isotope-item popular">
-                    <div class="box_grid" id="box_grid">
-                        <figure>
-                        
-                            <a href="details/` + e._id + `"><img src="img/` + e.image[0] + `" class="img-fluid" alt="" width="800" height="533">
-                                <div class="read_more"><span>Read more</span></div>
-                            </a>
-                            <small>` + e.title + `</small>
-                        </figure>
-                        <div class="wrapper">
-    
-                            <h3><a href="details/` + e._id + `">` + e.title + `</a></h3>
-                            <p>` + e.description + `</p>
-                            <span class="price">From <strong>` + e.price + `$</strong> /per day</span>
-                        </div>
-                        <ul>
-                            <li>
-                                <div class="score"><span><em>` + e.comment.length + ` Reviews</em></span><strong>` + e.rate + `</strong></div>
-                            </li>
-                        </ul>
+        .sort({ _id: -1 })
+        .limit(limit)
+        .skip(skip)
+        .exec((err, data) => {
+            data.forEach(e => {
+                property += ` <div class="col-xl-4 col-lg-6 col-md-6 isotope-item popular">
+                <div class="box_grid" id="box_grid">
+                    <figure>
+                    
+                        <a href="details/` + e._id + `"><img src="img/` + e.image[0] + `" class="img-fluid" alt="" width="800" height="533">
+                            <div class="read_more"><span>Read more</span></div>
+                        </a>
+                        <small>` + e.title + `</small>
+                    </figure>
+                    <div class="wrapper">
+                        <h3><a href="details/` + e._id + `">` + e.title + `</a></h3>
+                        <p>` + e.description + `</p>
+                        <span class="price">From <strong>` + e.price + `$</strong> /per day</span>
                     </div>
-                </div>`
-                })
-                
+                    <ul>
+                        <li>
+                            <div class="score"><span><em>` + e.comment.length + ` Reviews</em></span><strong>` + e.rate + `</strong></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>`
             })
-            Category.find()
-            .populate('propertyId')
-            .exec((err, data)=>{
-                    res.render('guest/index', { main: main, user: user, data:data, property: property, url: url,page: page, totalPage: totalPage })
-          })
+            
+        })
+        Category.find()
+        .populate('propertyId')
+        .exec((err, data)=>{
+          res.render('guest/index', { main: main, user: user, data:data, property: property, url: url,page: page, totalPage: totalPage })    
+        })
     } else {
         user = JSON.parse(localStorage.getItem('propertyGlobal'));
            // tổng số trang
@@ -78,7 +75,6 @@ router.get('/property(/:page)?', async (req, res) => {
             .skip(skip)
             .exec((err, data) => {
                 data.forEach(e => {
-                    
                     property += ` <div class="col-xl-4 col-lg-6 col-md-6 isotope-item popular">
                     <div class="box_grid" id="box_grid">
                         <figure>
@@ -727,4 +723,5 @@ router.post('/api/ProcessAddCart',(req, res)=>{
      
     })
 })
+
 module.exports = router;

@@ -2,13 +2,7 @@ const mongoose = require('mongoose');
 const geocoder = require('../utils/geocoder');
 
 const PropertySchema = new mongoose.Schema({
-    propertyId: {
-        type: String,
-        required: [true, 'Please add a ID'],
-        unique: true,
-        trim: true,
-        maxlength: [10, 'ID must be less than 10 chars']
-    },
+   
     title: {
         type: String,
         required: [true, 'Please add a title'],
@@ -74,9 +68,6 @@ PropertySchema.pre('save', async function(next) {
         formattedAddress: loc[0].formattedAddress
     };
 
-
-    // Do not save address
-    this.address = undefined;
     next();
 });
 

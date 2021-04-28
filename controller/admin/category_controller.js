@@ -88,8 +88,46 @@ router.post('/api/add_category', async(req, res) => {
 
 
 });
+//Search
+router.post('/category/search', (req, res) => {
+    Category.find({ 'name': { '$regex': req.body.search } })
+        .exec((err, data) => {
+            if (err) {
+                res.send({ kq: 0, err: err });
+            } else {
+
+                var str = '';
+
+                data.forEach(e => {
+                    str += `      <tr>
+                    <td>`+e.name+`</td>
+                    <td>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="MyModal">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">ATTENTION!!!!</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure?</p>
+                                </div>
+                                <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">No</button><a href="deleteCate/` + e._id + `" class="btn btn-primary">Delete</a></div></div>
+                            </div>
+                        </div>
+                    </div><a class="btn btn-primary" href="editCate/` + e._id + `" role="button" style="background: var(--teal);"><i class="fa fa-plus"></i>&nbsp;Update</a>&nbsp; &nbsp;<button class="btn btn-primary" type="button" style="background: var(--danger);"
+                        data-toggle="modal" data-target="#MyModal"><i class="fa fa-trash-o"></i>&nbsp;Delete</button>
+                </td>
+                    </tr>
+                   
+                `;
+
+                });
+
+                res.send({ kq: 1, data: str });
+            }
+        });
+});
 router.get('/viewCate(/:page)?',async (req,res)=>{
-    var url = req.originalUrl.split('/');
     var url = req.originalUrl.split('/');
     var limit, skip, totalData, page;
     totalData = await Category.find();

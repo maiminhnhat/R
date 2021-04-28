@@ -37,15 +37,23 @@ router.get('/api/property', async(req, res) => {
 router.get('/add', (req, res) => {
     var url = req.originalUrl.split('/');
     var main = 'add/add';
-    res.render('admin/index', { main: main, url: url })
+    Category.find()
+    .exec(function(err,data){
+        res.render('admin/index', { main: main, url: url, data:data })
+    })
+ 
 });
 router.get('/edit/:id', (req, res) => {
     var url = req.originalUrl.split('/');
     Property.find({ _id: req.params.id })
         .exec((err, data) => {
-            // views
+            Category.find()
+            .exec(function(err,cate){
+            
             var main = 'add/edit';
-            res.render('admin/index', { main: main, url: url, data: data });
+             res.render('admin/index', { main: main, url: url, data:data,cate:cate })
+            })
+            
 
         });
 
@@ -96,7 +104,6 @@ Property.findOne({_id: iduser})
 Category.findOne({name:req.body.category})
 .exec(async function(err, data){
     var obj_insert = {
-        'propertyId': req.body.propertyId,
         'title': req.body.title,
         'address': req.body.address,
         'category':{
@@ -190,7 +197,6 @@ router.get('/list(/:page)?', async(req, res) => {
                   
                     str += `
                     <li>
-                        <figure><img src="/img/` + e.image[0] + `" alt=""></figure>
                         <small>` + e.category.cate_name + `</small>
                         <h4>` + e.title + `</h4>
                         <p>` + e.description + `</p>

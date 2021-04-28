@@ -494,41 +494,44 @@
     <script src="/js/input_qty.js"></script>
 
     <!-- Autocomplete -->
-    <script>
-      function initMap() {
-        var input = document.getElementById("autocomplete");
-        var autocomplete = new google.maps.places.Autocomplete(input);
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css" type="text/css">
+<!-- Promise polyfill script required to use Mapbox GL Geocoder in IE 11 -->
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+<script>
+	// TO MAKE THE MAP APPEAR YOU MUST
+	// ADD YOUR ACCESS TOKEN FROM
+	// https://account.mapbox.com
+mapboxgl.accessToken = 'pk.eyJ1IjoibW1uaGF0IiwiYSI6ImNra3o5NHdpYTA5ajYyeW55eTc2ejlobnAifQ.qQBw5oTAA0KlC6ctu7j6zg';
+var geocoder = new MapboxGeocoder({
+accessToken: mapboxgl.accessToken,
+mapboxgl: mapboxgl
+});
+geocoder.addTo('#geocoder');
 
-        autocomplete.addListener("place_changed", function () {
-          var place = autocomplete.getPlace();
-          if (!place.geometry) {
-            window.alert("Autocomplete's returned place contains no geometry");
-            return;
-          }
+ 
+// Add geocoder result to container.
+geocoder.on('result', function (e) {
+const result =JSON.parse(JSON.stringify(e.result, null, 2)) 
 
-          var address = "";
-          if (place.address_components) {
-            address = [
-              (place.address_components[0] &&
-                place.address_components[0].short_name) ||
-                "",
-              (place.address_components[1] &&
-                place.address_components[1].short_name) ||
-                "",
-              (place.address_components[2] &&
-                place.address_components[2].short_name) ||
-                "",
-            ].join(" ");
-          }
-        });
+$.ajax({
+    url :'property/search',
+    type:'POST',
+    data:{
+      'result':result.place_name
+    },
+    success:function(result){
+      if(result.kq == 1){
+        $("#reccomended").html(result.data);
       }
-    </script>
+    }
+})
+});
 
-    <script
-      async
-      defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1Is5XGywaMj01UtR9CLQZBLJGVbGrNoA&libraries=places&callback=initMap"
-    ></script>
+ 
+ 
+</script>
     <% break; case 'property':%>
     <!-- Map -->
 
@@ -552,7 +555,9 @@
         });
       });
     </script>
+   <script>
    
+   </script>
 
     <% break; case 'House':%>
     <!-- Map -->

@@ -1,5 +1,4 @@
 const propertyForm = document.getElementById('property_form');
-const propertyId = document.getElementById('property_id');
 const propertyAddress = document.getElementById('property_address');
 const propertyTitle = document.getElementById('property_title');
 const propertyDescription = document.getElementById('property_descript');
@@ -29,13 +28,12 @@ function uploadFile(e) {
 };
 // Send POST to API to add property
 async function addProperty(Fname) {
-    if (propertyId.value === '' || propertyAddress.value === '' || propertyTitle.value === '' || propertyPrice.value === '' || propertyCategory.value === '') {
+    if ( propertyAddress.value === '' || propertyTitle.value === '' || propertyPrice.value === '' || propertyCategory.value === '') {
         alert('Please fill in fields');
     } else {
 
         const sendBody = {
             _id: ObjectId.value,
-            propertyId: propertyId.value,
             title: propertyTitle.value,
             address: propertyAddress.value,
             category: propertyCategory.value,

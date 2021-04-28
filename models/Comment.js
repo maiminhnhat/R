@@ -13,7 +13,6 @@ const SchemaComment = new mongoose.Schema({
     property: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Property",
-
     },
     rating: {
         type: Number,

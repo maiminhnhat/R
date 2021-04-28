@@ -1,0 +1,89 @@
+<div class="content-wrapper">
+    <div class="container-fluid">
+      <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">Bookings list</li>
+      </ol>
+		<div class="box_general">
+			<div class="header_box">
+				<h2 class="d-inline-block">Bookings list</h2>
+				
+			</div>
+			<div class="list_general">
+				<ul>
+					<%refunded.forEach(e=>{%>
+                        <li>
+                            <h4><%=e.item%> <i class="pending"><%=e.state%></i></h4>
+                            <ul class="booking_list">
+                                <li><strong>Date</strong><%=e.cart_details.date%></li>
+                                <li><strong>Booking details</strong><%=e.cart_details.adults + e.cart_details.children%> People</li>
+                                <li><strong>Client</strong><%=e.user.name%></li>
+                            </ul>
+                        </li>
+                    <%})%>
+                  
+				</ul>
+			</div>
+		</div>
+		<!-- /box_general-->
+        <nav aria-label="...">
+            <ul class="pagination pagination-sm add_bottom_30">
+               
+                <% if (totalPage > 0) { %>
+                    <ul class="pagination text-center">
+                        <% if (page == 1) { %>
+                            <li class="page-item disabled ">
+                                <a class="page-link" href="" tabindex="-1">First</a>
+                                </li>
+                        <% } else { %>
+                            <li class="page-item">
+                                <a class="page-link"  href="refunded/1" tabindex="-1">First</a>
+                                </li>
+                        <% } %>
+                        <% var i = (Number(page) > 5 ? Number(page) - 4 : 1) %>
+                        <% if (i !== 1) { %>
+                            <li class="page-item disabled ">
+                                <a>...</a>
+                                </li>
+                        <% } %>
+                        <% for (; i <= (Number(page) + 4) && i <= totalPage; i++) { %>
+                            <% if (i == page) { %>
+                                <li class="page-item active">
+                                    <a class="page-link" href="refunded/<%=i%>">
+                                        <%=i%>
+                                    </a>
+                                </li>
+                            <% } else { %>
+                                <li class="page-item">
+                                    <a class="page-link" href="refunded/<%=i%>">
+                                        <%=i%>
+                                    </a>
+                                </li>
+                            <% } %>
+                            <% if (i == Number(page) + 4 && i < totalPage) { %>
+                                <li class="page-item disabled">
+                                    <a>...</a>
+                                    </li>
+                            <% } %>
+                        <% } %>
+                        <% if (page == totalPage) { %>
+                            <li class="page-item disabled">
+                                <a class="page-link"  href="" tabindex="-1">last</a>
+                                </li>
+                        <% } else { %>
+                            <li class="page-item">
+                                <a class="page-link"  href="refunded/<%=totalPage%>" tabindex="-1">last</a>
+                                </li>
+                        <% } %>
+                    </ul>
+                <% } %>
+                   
+            </ul>
+        </nav>
+		<!-- /pagination-->
+	  </div>
+	  <!-- /container-fluid-->
+   	</div>

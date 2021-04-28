@@ -21,7 +21,7 @@ const mongoose = require('mongoose');
    payment:String,
    user:{
     type: mongoose.Schema.Types.ObjectId,
-     ref:"User"
+     ref:"user"
    },
    createdAt: {
     type: Date,

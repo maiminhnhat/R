@@ -14,7 +14,7 @@
         <div class="card-header">
           <div class="row">
             <div class="col md-6 text-nowrap">
-              <i class="fa fa-table"></i> Data Table Example
+              <i class="fa fa-table"></i> User Table
             </div>
             <div class="col-md-6 text-nowrap">
              
@@ -23,15 +23,13 @@
          
          
         </div>
-      
-
         <div class="card-body">
           <div class="row">
             <div class="col-md-12">
               <div class="input-group">
-                <input class="form-control search-top" type="text" placeholder="Search for...">
+                <input class="form-control search-top" type="text" id="search" placeholder="Search for...">
                 <span class="input-group-btn">
-              <button class="btn btn-primary" type="button">
+              <button class="btn btn-primary" onclick="search()" type="button">
                 <i class="fa fa-search"></i>
               </button>
                </span>
@@ -125,3 +123,37 @@
 	  </div>
 	  <!-- /container-fluid-->
    	</div>
+     <script>
+      function search() {
+          // khai báo
+          var search, flag = 1,
+              err = '';
+  
+          // lấy giá trị
+          search = $('#search').val();
+  
+          // kiểm tra
+          if (search == '') {
+              flag = 0;
+              err = 'Please input to search';
+              alert(err)
+          }
+  
+          if (flag == 1) {
+              // gửi ajax
+              $.ajax({
+                  url: 'user/search',
+                  type: 'POST',
+                  data: {
+                      'search': search
+                  },
+                  success: function(result) {
+                      $('tbody').html(result.data);
+                  }
+              });
+              return false;
+          } else {
+              alert(err);
+          }
+      }
+  </script>

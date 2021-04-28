@@ -90,9 +90,47 @@ router.get("/home", (req, res) => {
      
         })
     }
-   
-   
+  
+    // Property.find({"address":{ '$regex': 'Nguyễn Cư Trinh, Quận 1' }})
+    // .exec((err,data)=>{
+    //     console.log(data)
+    // })
 
 });
+router.post('/property/search',(req,res)=>{
+    const result = req.body.result
+   
+    var arr= result.split(",")
+    Property.find({"address":{ '$regex': arr[0] }})
+    .exec((err,data)=>{
+        var prop = '';
+     data.forEach(e=>{
+        prop += ` <div class="item">
+        <div class="box_grid">
+            <figure>
+            
+                <a href="details/` + e._id + `"><img src="img/` + e.image[0] + `" class="img-fluid" alt="" width="800" height="533">
+                    <div class="read_more"><span>Read more</span></div>
+                </a>
+               
+            </figure>
+            <div class="wrapper">
+                <h3><a href="details/` + e._id + `">` + e.title + `</a></h3>
+                <p>` + e.description + `</p>
+                <span class="price">From <strong>` + e.price + `</strong> /per person</span>
+            </div>
+            <ul>
+               
+                <li>
+                    <div class="score"><strong>` + e.rate + `</strong></div>
+                </li>
+            </ul>
+        </div>
+    </div>`
+     })
+     res.send({ kq: 1, data: prop });
 
+    })
+   
+})
 module.exports = router;

@@ -69,7 +69,7 @@ router.get('/addUser',(req,res)=>{
     var main = 'add_user/add_user';
     Type.find()
     .exec(function(err,data){
-        res.render('admin/index', { main: main, url: url,data })
+        res.render('admin/index', { main: main, url: url, data:data })
     })
     
 })
@@ -120,7 +120,6 @@ router.post('/api/ProccessAddStaffs',async(req,res)=>{
 });
 router.get('/viewUser(/:page)?',async (req,res)=>{
     var url = req.originalUrl.split('/');
-    var url = req.originalUrl.split('/');
     var limit, skip, totalData, page;
     totalData = await User.find();
     totalData = totalData.length;
@@ -144,7 +143,6 @@ router.get('/viewUser(/:page)?',async (req,res)=>{
               var totalPage = Math.ceil(totalData / limit);
               var str = '';
               data.forEach(e => {
-                
                   str += `
                   <tr>
                   <td>`+e.name+`</td>

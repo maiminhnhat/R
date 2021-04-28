@@ -2751,7 +2751,7 @@ video {
 .custom-search-input-2 input {
     border: 0;
     height: 50px;
-    padding-left: 15px;
+   
     border-right: 1px solid #d2d8dd;
     font-weight: 500;
 }
