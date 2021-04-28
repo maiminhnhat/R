@@ -565,7 +565,7 @@ router.post('/api/processComment', (req, res) => {
         console.error(err)
         if (err.code === 11000) {
             res.send({kq:2,  error: 'You already add your review'  })
-        }else if(err.code !== 11000){
+        }else if(err){
             res.send({ kq:0, err: err });
         }
          else {
