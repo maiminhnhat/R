@@ -104,7 +104,7 @@ router.post('/api/register', (req, res) => {
             User.activeToken = buf.toString('hex');
             // Set expiration time is 24 hours.
             User.activeExpires = Date.now() + 24 * 3600 * 1000;
-            var link = 'http://localhost:4500/active/' +
+            var link = 'https://projecyundergraduate.herokuapp.com/active/' +
              User.activeToken;
              bcrypt.genSalt(saltRounds, function(err, salt) {
                 bcrypt.hash(password, salt, async function(err, hash) {

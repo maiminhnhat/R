@@ -10,7 +10,7 @@ var LocalStorage = require('node-localstorage').LocalStorage,
 const googleConfig = {
     clientId: '16491659698-1aptk9c1a33fpnisu1lqij009jt2jivb.apps.googleusercontent.com', // e.g. asdfghjkljhgfdsghjk.apps.googleusercontent.com
     clientSecret: 'u42W1mVNpuWsyIbsbEhryWWC', // e.g. _ASDFA%DFASDFASDFASD#FAD-
-    redirect: 'http://localhost:4500/home' // this must match your google api settings
+    redirect: 'https://projecyundergraduate.herokuapp.com/home' // this must match your google api settings
 };
 const defaultScope = [
     'https://www.googleapis.com/auth/userinfo.profile',

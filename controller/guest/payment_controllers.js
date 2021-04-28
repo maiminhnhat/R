@@ -147,8 +147,8 @@ router.post('/api/paypal',(req,res)=>{
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": "http://localhost:4500/paypal/success",
-                "cancel_url": "http://localhost:4500/home"
+                "return_url": "https://projecyundergraduate.herokuapp.com/paypal/success",
+                "cancel_url": "https://projecyundergraduate.herokuapp.com/home"
             },
             "transactions": [
                 {
