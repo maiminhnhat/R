@@ -3,16 +3,17 @@ const mongoose = require('mongoose');
 const SchemaComment = new mongoose.Schema({
     username: {
         type: String,
-        ref: "User",
+        ref: "user",
     },
     email: {
         type: String,
-        unique: true,
-        ref: "User",
+       
+        ref: "user",
     },
     property: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Property",
+        unique: true,
     },
     rating: {
         type: Number,

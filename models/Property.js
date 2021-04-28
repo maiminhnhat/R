@@ -46,7 +46,7 @@ const PropertySchema = new mongoose.Schema({
     },
     liked_user: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "user",
 
     }],
     rate: {

@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
      },
    UserId:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "user",
      }]
  });
  module.exports = mongoose.model('Type', SchemaType);
