@@ -561,15 +561,9 @@ router.post('/api/processComment', (req, res) => {
         'property': idproperty,
         'comment': text
     }
-    Comment.create(obj_insert, (err, data) => {
-        console.error(err)
-        if (err.code === 11000) {
-            res.send({kq:2,  error: 'You already add your review'  })
-        }else if(err){
-            res.send({ kq:0, err: err });
-        }
-         else {
-            res.send({ kq: 1 })
+    try {
+        const comment =Comment.create(obj_insert,(err,data)=>{
+           
             Property.updateOne({ _id: idproperty }, {
                 "$push": { "comment": data._id }
             }, function(err, data) {
@@ -596,10 +590,25 @@ router.post('/api/processComment', (req, res) => {
                         if (err) throw err;
                     })
                 });
-
+        });
+        res.send({ kq: 1 })
+    } catch (err) {
+        console.error(err)
+        if (err.code === 11000) {
+           return res.send({kq:2,  error: 'You already add your review'  })
         }
+        res.send({ kq:0, err: err });
+    }
+    // Comment.create(obj_insert, (err, data) => {
+    //     else if(err){
+           
+    //     }
+    //      else {
+            
 
-    });
+    //     }
+
+    // });
 });
 
 router.get('/checkout', (req, res)=>{
