@@ -133,4 +133,25 @@ router.post('/property/search',(req,res)=>{
     })
    
 })
+
+app.get('*', (req, res) => {
+    var user;
+    var main ="404"
+    if(localStorage.getItem('propertyGlobal') == null){
+          user = null
+           Category.find()
+           .populate('propertyId')
+             .exec((err, data)=>{
+                res.render("guest/index", { main: main, user: user, data: data, url: url, prop: prop});
+        })
+    }else{
+      user = JSON.parse(localStorage.getItem('propertyGlobal'));
+           Category.find()
+           .populate('propertyId')
+             .exec((err, data)=>{
+                res.render("guest/index", { main: main, user: user, data: data, url: url, prop: prop});
+        })
+    }
+
+});
 module.exports = router;
