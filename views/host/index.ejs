@@ -180,7 +180,7 @@
             $("#logout").click(function (e) {
               localStorage.removeItem("propertyGlobal");
               $.post("/logout");
-              window.location.href ='/login'
+              window.location.href ='/admin/login'
             });
           });</script>
         <% if(url[2] == 'home') {%>

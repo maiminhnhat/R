@@ -58,6 +58,9 @@ router.use('/admin',property_admin_controller);
 //home(admin)
 const admin_home_controller = require('./admin/home-controller');
 router.use('/admin',admin_home_controller);
+//login(admin)
+const admin_login_controller = require('./admin/login_admin_controller');
+router.use('/admin',admin_login_controller);
 module.exports = router;
 
 

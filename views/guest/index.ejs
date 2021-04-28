@@ -317,7 +317,11 @@
           <div class="text-center">
             Don’t have an account? <a href="register">Sign up</a>
           </div>
-          <div id="forgot_pw">
+       
+        </div>
+      </form>
+      <form action="" method="POST" id="forgot_form">
+        <div id="forgot_pw">
             <div class="form-group">
               <label>Please confirm login email below</label>
               <input
@@ -336,8 +340,7 @@
               <input type="submit" value="Reset Password" class="btn_1" />
             </div>
           </div>
-        </div>
-      </form>
+    </form>
       <!--form -->
     </div>
     <!-- /Sign In Popup -->
@@ -386,6 +389,7 @@
                     name: result.name,
                     email: result.email,
                     id: result.id,
+                     type: result.type
                   },
                 ];
                 localStorage.setItem(
@@ -457,6 +461,26 @@
           },
         });
       }
+      //FORGOT_PASSWORD
+      $(document).ready(function(){
+            $("#forgot_form").on('submit',function(e){
+                e.preventDefault()
+              
+                var email_forgot;
+                email_forgot = $('#email_forgot').val()
+               
+              $.ajax({
+                  url:'api/ResetPassword',
+                  type: 'POST',
+                  data:{
+                      'email_forgot':email_forgot
+                  },success: function(result) {
+                        alert(result)
+                       
+                    }
+              })
+            })
+        })
     </script>
 
     <%switch(url[1]){ case 'home' : %>

@@ -96,23 +96,9 @@
                     success: function(result) {
                         if (result.kq == 1) {
                             if(result.type == "Admin"){
-                                propertyGlobal = [{
-                                name: result.name,
-                                email: result.email,
-                                id: result.id,
-                                type: result.type
-                            }]
-                            localStorage.setItem('propertyGlobal', JSON.stringify(propertyGlobal));
-                            window.location.href = 'admin/home';
+                             alert("Please go to admin login portal")
                             } else if(result.type == "Manager"){
-                                propertyGlobal = [{
-                                name: result.name,
-                                email: result.email,
-                                id: result.id,
-                                type: result.type
-                            }]
-                            localStorage.setItem('propertyGlobal', JSON.stringify(propertyGlobal));
-                            window.location.href = 'manager/home';
+                                alert("Please go to admin login portal")
                             } else{
                                 propertyGlobal = [{
                                 name: result.name,
