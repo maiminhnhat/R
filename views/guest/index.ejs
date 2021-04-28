@@ -821,7 +821,7 @@ $.ajax({
       $(document).ready(function () {
         $("#review_form").on("submit", function (e) {
           e.preventDefault();
-          if(localStorage.getItem("propertyGlobal")){
+          if(localStorage.getItem("propertyGlobal") == null){
            window.location.href ='login'
           }else{ // khai báo
           var username, email, rating, text, idproperty;
