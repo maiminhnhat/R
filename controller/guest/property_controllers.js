@@ -430,10 +430,8 @@ router.get('/details/:id', (req, res) => {
                         Category.find()
                         .populate('propertyId')
                         .exec((err, menu)=>{
-                         
-                                    res.render('guest/index', { main: main, user: user,menu:menu, rate: rate, str: str, liked_id: liked_id, user_id: user_id, data: data, img: img, url: url })
-                               
-                     
+                         res.render('guest/index', { main: main, user: user, menu:menu, rate: rate, str: str, liked_id: liked_id, user_id: user_id, data: data, img: img, url: url })
+
                         })
                      
                        

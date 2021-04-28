@@ -129,25 +129,5 @@ router.post('/property/search',(req,res)=>{
    
 })
 
-router.get('*', (req, res) => {
-     var url = req.originalUrl.split('/');
-    var user;
-    var main ="404"
-    if(localStorage.getItem('propertyGlobal') == null){
-          user = null
-           Category.find()
-           .populate('propertyId')
-             .exec((err, data)=>{
-                res.render("guest/index", { main: main, user: user,url:url, data: data});
-        })
-    }else{
-      user = JSON.parse(localStorage.getItem('propertyGlobal'));
-           Category.find()
-           .populate('propertyId')
-             .exec((err, data)=>{
-                res.render("guest/index", { main: main, user: user,url:url, data: data});
-        })
-    }
 
-});
 module.exports = router;
