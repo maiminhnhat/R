@@ -82,7 +82,7 @@ router.get("/home", (req, res) => {
         .populate({
         path:'propertyId',
         options: {
-           limit: 4,
+           limit:4,
            }
         })
         .exec((err, data)=>{
