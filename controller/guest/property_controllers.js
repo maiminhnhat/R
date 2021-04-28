@@ -563,9 +563,12 @@ router.post('/api/processComment', (req, res) => {
     }
     Comment.create(obj_insert, (err, data) => {
         console.error(err)
-        if (err) {
-            res.send({ kq: 0, err: err })
-        } else {
+        if (err.code === 11000) {
+            res.status(400).json({  error: 'This category already exists'  })
+        }else if(err.code !== 11000){
+            res.status(500).json({ error: 'Server error' });
+        }
+         else {
             res.send({ kq: 1 })
             Property.updateOne({ _id: idproperty }, {
                 "$push": { "comment": data._id }

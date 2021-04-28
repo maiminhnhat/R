@@ -846,11 +846,15 @@ $.ajax({
             },
 
             success: function (result) {
-              if (result.kq == 1) {
+              if (result.status === 400) {
+                throw Error('Category already exists!');
+               
+              } else if(result.status === 500){
+                throw Error('Server Error');
+              }
+              else {
                 alert("Review added!");
                 window.location.reload("back");
-              } else {
-                console.log(result.err);
               }
             },
           });
