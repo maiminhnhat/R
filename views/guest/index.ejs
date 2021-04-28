@@ -821,7 +821,9 @@ $.ajax({
       $(document).ready(function () {
         $("#review_form").on("submit", function (e) {
           e.preventDefault();
-          // khai báo
+          if(localStorage.getItem("propertyGlobal")){
+           window.location.href ='login'
+          }else{ // khai báo
           var username, email, rating, text, idproperty;
           var user = JSON.parse(localStorage.getItem("propertyGlobal"));
           // lấy dữ liệu
@@ -853,7 +855,8 @@ $.ajax({
             },
           });
 
-          return false;
+          return false;}
+         
         });
       });
     </script>
