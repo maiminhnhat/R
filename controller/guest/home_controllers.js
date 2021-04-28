@@ -90,12 +90,6 @@ router.get("/home", (req, res) => {
      
         })
     }
-  
-    // Property.find({"address":{ '$regex': 'Nguyễn Cư Trinh, Quận 1' }})
-    // .exec((err,data)=>{
-    //     console.log(data)
-    // })
-
 });
 router.post('/property/search',(req,res)=>{
     const result = req.body.result

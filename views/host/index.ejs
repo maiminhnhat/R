@@ -175,6 +175,11 @@
         <script src="/vendor/jquery.magnific-popup.min.js"></script>
         <!-- Custom scripts for all pages-->
         <script src="/js/admin.js"></script>
+        <Script>
+            if(localStorage.getItem("propertyGlobal") == null ){
+               window.location.assign('/admin/login')
+            }
+        </Script>
         <script>  
         $(document).ready(function () {
             $("#logout").click(function (e) {

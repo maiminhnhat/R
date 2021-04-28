@@ -213,6 +213,11 @@
         <script src="/vendor/jquery.magnific-popup.min.js"></script>
         <!-- Custom scripts for all pages-->
         <script src="/js/admin.js"></script>
+        <Script>
+            if(localStorage.getItem("propertyGlobal") == null ){
+               window.location.assign('login')
+            }
+        </Script>
         <script> 
         $(document).ready(function () {
             $("#logout").click(function (e) {
@@ -220,7 +225,8 @@
               $.post("/logout");
               window.location.href ='login'
             });
-          });</script>
+          });
+          </script>
         
         <% if(url[2] == 'home') {%>
             <!-- Custom scripts for this page-->
