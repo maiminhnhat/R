@@ -105,7 +105,6 @@ Property.findOne({_id: iduser})
 Category.findOne({name:req.body.category})
 .exec(async function(err, data){
     var obj_insert = {
-     
         'title': req.body.title,
         'address': req.body.address,
         'category':{

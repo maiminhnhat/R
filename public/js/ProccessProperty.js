@@ -60,7 +60,7 @@ async function addProperty(Fname) {
             }
             alert('Property added!');
             // window.location.href = 'list';
-            window.location.assign('list')
+            window.location.assign('list/1')
         } catch (err) {
             alert(err);
             return;
