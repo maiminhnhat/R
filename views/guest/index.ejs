@@ -846,11 +846,11 @@ $.ajax({
             },
 
             success: function (result) {
-              if (result.status === 400) {
-               alert('You already add your review');
+              if (result.kq == 2) {
+               alert(result.error);
                
-              } else if(result.status === 500){
-                throw Error('Server Error');
+              } else if(result.kq == 0){
+              console.log(result.err)
               }
               else {
                 alert("Review added!");
