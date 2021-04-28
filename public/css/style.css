@@ -960,7 +960,7 @@ ul#top_menu li:last-child {
 
 @media (max-width: 767px) {
     ul#top_menu li:first-child {
-        display: none;
+        display: block;
     }
 }
 
