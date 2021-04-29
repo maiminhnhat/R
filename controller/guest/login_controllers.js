@@ -11,6 +11,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 var nodemailer = require('nodemailer');
+const { resolveSoa } = require('dns');
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -98,7 +99,7 @@ var readHTMLFile = function(path, callback) {
 router.post('/api/register', (req, res) => {
     // var iduser = req.body._id
     const password = req.body.password;
-    try {
+   
         crypto.randomBytes(20, async function(err, buf) {
             // Ensure the activation code is unique.
             User.activeToken = buf.toString('hex');
@@ -117,48 +118,46 @@ router.post('/api/register', (req, res) => {
         
                     }
                     const user = await User.create(obj_insert,(err,data)=>{
-                        Type.updateOne({type:"Member"},{ 
-                            "$push": { "UserId": data._id}
-                        },function(err, Data) {
-                                if (err) throw err;
-                                
+                        if(err){
+                            res.send({kq:0,err:err})
+                        }else{
+                            Type.updateOne({type:"Member"},{ 
+                                "$push": { "UserId": data._id}
+                            },function(err, Data) {
+                                    if (err) throw err;
+                                    
                             })
+                            readHTMLFile(__dirname+'/../../public/pages/Confirmation-Job-Site.html', function(err, html) {
+                                var template = handlebars.compile(html);
+                                var replacements = {
+                                    name: req.body.name,
+                                    link: link
+                                };
+                                var htmlToSend = template(replacements);
+                                var mailOptions = {
+                                    from: 'noreply8421@gmail.com',
+                                    to: req.body.email,
+                                    subject: 'Sending Email using Node.js',
+                                    html: htmlToSend // nội dung email
+                                };
+                                transporter.sendMail(mailOptions, function(error, info) {
+                                    if (error) {
+                                        console.log(error);
+                                    } else {
+                                        res.send('The activation email has been sent to your email, please click the activation link within 24 hours.');
+                                    }
+                                });
+                            })
+                        }
+                       
                     });
                 });
             });   
-        
-            readHTMLFile(__dirname+'/../../public/pages/Confirmation-Job-Site.html', function(err, html) {
-                var template = handlebars.compile(html);
-                var replacements = {
-                    name: req.body.name,
-                    link: link
-                };
-                var htmlToSend = template(replacements);
-                var mailOptions = {
-                    from: 'noreply8421@gmail.com',
-                    to: req.body.email,
-                    subject: 'Sending Email using Node.js',
-                    html: htmlToSend // nội dung email
-                };
-                transporter.sendMail(mailOptions, function(error, info) {
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        res.send('The activation email has been sent to your email, please click the activation link within 24 hours.');
-                    }
-                });
-            })
+           
         });
 
 
-    } catch (err) {
-        console.error(err);
-        if (err.code === 11000) {
-            return res.status(400).send({ code: code, error: 'Email already exists' });
-
-        }
-        res.status(500).send({ code: code, error: 'Server error' });
-    }
+  
 });
 router.get('/active/:activeToken', (req, res, next) => {
     User.findOne({
