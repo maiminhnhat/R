@@ -563,7 +563,7 @@ router.post('/api/processComment',async (req, res) => {
     }
     try { 
         Comment.find()
-        .exec(function(err,data){
+        .exec(async function(err,data){
          data.forEach(e=>{
              if(e.property ==idproperty ){
                 res.status(400).send({ code: code, error: 'You already review' });
