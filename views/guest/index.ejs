@@ -844,18 +844,18 @@ $.ajax({
               text: text,
               idproperty: idproperty[4],
             },
-            error: function(res) {
-                        if (res.code == 400) {
-                            alert('You already add review');
-                        }
-                        if (res.code == 500) {
-                            alert('Server Error');
-                        }
-                    },
+           
              success: function (result) {
              if(result.kq ==1){
               alert("Review added!");
                 window.location.reload("back");
+             }else{
+               if(result.err.code === 11000){
+                 alert("You already review")
+               }else{
+                 console.log(result.err)
+               }
+
              }
             
              
