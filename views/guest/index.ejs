@@ -844,18 +844,21 @@ $.ajax({
               text: text,
               idproperty: idproperty[4],
             },
-
-            success: function (result) {
-              if (result.kq == 2) {
-               alert(result.error);
-               
-              } else if(result.kq == 0){
-              console.log(result.err)
-              }
-              else {
-                alert("Review added!");
+            error: function(res) {
+                        if (res.code == 400) {
+                            alert('You already add review');
+                        }
+                        if (res.code == 500) {
+                            alert('Server Error');
+                        }
+                    },
+             success: function (result) {
+             if(result.kq ==1){
+              alert("Review added!");
                 window.location.reload("back");
-              }
+             }
+            
+             
             },
           });
 
