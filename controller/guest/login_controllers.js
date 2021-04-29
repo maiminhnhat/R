@@ -120,7 +120,7 @@ router.post('/api/register', (req, res) => {
                     const user = await User.create(obj_insert,(err,data)=>{
                         if(err){
                             res.send({kq:0,err:err})
-                            
+
                         }else{
                             Type.updateOne({type:"Member"},{ 
                                 "$push": { "UserId": data._id}
@@ -183,7 +183,7 @@ router.get('/active/:activeToken', (req, res, next) => {
             // activation success
             res.render('message', {
                 title: 'activation success!',
-                content: user.name + " " + 'Please <a href="login">login</a > '
+                content: user.name + " " + 'Please <a href="https://projecyundergraduate.herokuapp.com/login">login</a > '
             })
         })
     })
@@ -200,7 +200,7 @@ router.post('/api/ResetPassword',function(req,res){
         User.resetPasswordToken = buf.toString('hex');
         // Set expiration time is 24 hours.
         User.resetPasswordExpires = Date.now() + 24 * 3600 * 1000;
-        var link = 'http://localhost:4500/reset/' +
+        var link = 'https://projecyundergraduate.herokuapp.com/reset/' +
         User.resetPasswordToken; 
          var obj_update = {
             'resetPasswordToken':  User.resetPasswordToken,
