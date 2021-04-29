@@ -120,6 +120,7 @@ router.post('/api/register', (req, res) => {
                     const user = await User.create(obj_insert,(err,data)=>{
                         if(err){
                             res.send({kq:0,err:err})
+                            
                         }else{
                             Type.updateOne({type:"Member"},{ 
                                 "$push": { "UserId": data._id}
