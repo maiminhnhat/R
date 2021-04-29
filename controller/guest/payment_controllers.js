@@ -66,8 +66,6 @@ router.post('/api/charge', async (req, res)=>{
      currency: 'usd',
      customer: customer.id,
   },function(err,data){
-    // const timeElapsed = Date.now();
-    // const today = new Date(timeElapsed);
     var cartid = localStorage.getItem('CartID')
       Cart.updateOne({_id: cartid},{$set:{state:"completed",payment_id:data.id,payment:"Visa"}},function(err,data){
         if(err) throw err
