@@ -548,7 +548,7 @@ router.post('/api/RemoveWishlist', (req, res) => {
         console.log(err)
     });
 })
-router.post('/api/processComment', (req, res) => {
+router.post('/api/processComment',async (req, res) => {
     var username = req.body.username;
     var email = req.body.email;
     var rating = req.body.rating;
@@ -562,7 +562,7 @@ router.post('/api/processComment', (req, res) => {
         'comment': text
     }
     try {
-        const comment =Comment.create(obj_insert,(err,data)=>{
+        const comment = await Comment.create(obj_insert,(err,data)=>{
             res.send({ kq: 1 })
             Property.updateOne({ _id: idproperty }, {
                 "$push": { "comment": data._id }
