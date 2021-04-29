@@ -561,42 +561,49 @@ router.post('/api/processComment',async (req, res) => {
         'property': idproperty,
         'comment': text
     }
-    try {
-        const comment = await Comment.create(obj_insert,(err,data)=>{
-            res.send({ kq: 1 })
-            Property.updateOne({ _id: idproperty }, {
-                "$push": { "comment": data._id }
-            }, function(err, data) {
-                if (err) throw err;
-            })
-            Comment.aggregate([{
-                        $group: {
-                            _id: "$property",
-                            avg: { $avg: "$rating" },
-                            count: { $sum: 1 }
-                        }
-                    },
-                    {
-                        $project: {
-                            _id: "$_id",
-                            avg: { $round: ['$avg', 1] },
-                            count: "$count"
-                        }
-                    },
-
-                ])
-                .exec(function(err, data) {
-                    Property.updateOne({ _id: data[0]._id }, { $set: { rate: data[0].avg } }, function(err, data) {
+    try { 
+        Comment.find()
+        .exec(function(err,data){
+         data.forEach(e=>{
+             if(e.property ==idproperty ){
+                res.status(400).send({ code: code, error: 'You already review' });
+             }else{
+                const comment = await Comment.create(obj_insert,(err,data)=>{
+                    res.send({ kq: 1 })
+                    Property.updateOne({ _id: idproperty }, {
+                        "$push": { "comment": data._id }
+                    }, function(err, data) {
                         if (err) throw err;
                     })
+                    Comment.aggregate([{
+                                $group: {
+                                    _id: "$property",
+                                    avg: { $avg: "$rating" },
+                                    count: { $sum: 1 }
+                                }
+                            },
+                            {
+                                $project: {
+                                    _id: "$_id",
+                                    avg: { $round: ['$avg', 1] },
+                                    count: "$count"
+                                }
+                            },
+        
+                        ])
+                        .exec(function(err, data) {
+                            Property.updateOne({ _id: data[0]._id }, { $set: { rate: data[0].avg } }, function(err, data) {
+                                if (err) throw err;
+                            })
+                        });
                 });
-        });
+             }
+         })
+        })
+       
    
     } catch (err) {
         console.error(err)
-        if (err.code === 11000) {
-            return res.status(400).send({ code: code, error: 'You already review ' });
-        }
         res.status(500).send({ code: code, error: 'Server error' });
     }
     // Comment.create(obj_insert, (err, data) => {
