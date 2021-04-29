@@ -475,10 +475,7 @@
                   data:{
                       'email_forgot':email_forgot
                   },success: function(result) {
-                      if(result.kq == 1){
-                        alert("Your Password Has Been Reset")
-                        window.location.assign('login')
-                      }
+                        alert(result)
                        
                     }
               })
