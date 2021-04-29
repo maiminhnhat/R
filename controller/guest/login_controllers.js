@@ -127,7 +127,7 @@ router.post('/api/register', (req, res) => {
                 });
             });   
         
-            readHTMLFile(__dirname+'/public/pages/Confirmation-Job-Site.html', function(err, html) {
+            readHTMLFile(__dirname+'../../public/pages/Confirmation-Job-Site.html', function(err, html) {
                 var template = handlebars.compile(html);
                 var replacements = {
                     name: req.body.name,
