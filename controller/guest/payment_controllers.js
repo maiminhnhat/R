@@ -83,7 +83,7 @@ router.post('/api/charge_refund', async(req,res)=>{
     var paymentid = req.body.paymentid
     Cart.findOne({payment_id:paymentid})
     .exec(async function(err,data){
-        const d = data.createAt;
+        const d = data.createdAt;
         const past = d.getTime();
         const present = Date.now()
         const minus = present - past;
@@ -359,7 +359,7 @@ router.post('/api/paypal_refund',(req,res)=>{
     
     Cart.findOne({payment_id:paymentid})
     .exec(function(err,data){
-        const d = data.createAt;
+        const d = data.createdAt;
         const past = d.getTime();
         const present = Date.now()
         const minus = present - past;
