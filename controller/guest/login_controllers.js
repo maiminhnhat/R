@@ -15,7 +15,7 @@ const { resolveSoa } = require('dns');
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        port: 465,
+        port: 534,
         user: 'noreply8421@gmail.com',
         pass: 'zgmfx19a'
     }
