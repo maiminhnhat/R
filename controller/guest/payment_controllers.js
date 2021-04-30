@@ -83,7 +83,14 @@ router.post('/api/charge_refund', async(req,res)=>{
     var paymentid = req.body.paymentid
     Cart.findOne({payment_id:paymentid})
     .exec(async function(err,data){
-        const refund = await stripe.refunds.create({
+        const d = data.createAt;
+        const past = d.getTime();
+        const present = Date.now()
+        const minus = present - past;
+        if(minus == 86400000){
+            res.send({kq:2})
+        }else{
+            const refund = await stripe.refunds.create({
             charge: data.payment_id,
           },function(err,Data){
               if (err) throw err
@@ -92,7 +99,8 @@ router.post('/api/charge_refund', async(req,res)=>{
           .then(Cart.updateOne({payment_id:paymentid},{$set:{state:"refunded"}},function(err,data){
             if(err) throw err
         }))
-        .then(res.send({kq:1}))
+        .then(res.send({kq:1}))}
+        
     
     })
    
@@ -340,6 +348,7 @@ router.post('/api/paypal_refund',(req,res)=>{
 
     }
 ]).exec(function(err,data){
+
     const Amount = data[0].total.toFixed(2)
     var refund_details = {
         "amount": {
@@ -350,22 +359,31 @@ router.post('/api/paypal_refund',(req,res)=>{
     
     Cart.findOne({payment_id:paymentid})
     .exec(function(err,data){
-        paypal.sale.refund(data.payment_id, refund_details, function (error, refund) {
-            if (error) {
-                console.error(error);
-            } else {
+        const d = data.createAt;
+        const past = d.getTime();
+        const present = Date.now()
+        const minus = present - past;
+        if(minus == 86400000){
+            res.send({kq:2})
+        } else{
+            paypal.sale.refund(data.payment_id, refund_details, function (error, refund) {
                 if (error) {
-                    throw error;
+                    console.error(error);
                 } else {
-                    // console.log("Refund Sale Response");
-                    // console.log(refund);
-                    Cart.updateOne({payment_id:paymentid},{$set:{state:"refunded"}},function(err,data){
-                        if(err) throw err
-                    })
-                  res.send({kq:1})
+                    if (error) {
+                        throw error;
+                    } else {
+                        // console.log("Refund Sale Response");
+                        // console.log(refund);
+                        Cart.updateOne({payment_id:paymentid},{$set:{state:"refunded"}},function(err,data){
+                            if(err) throw err
+                        })
+                      res.send({kq:1})
+                    }
                 }
-            }
-        });
+            });
+        }
+      
     })
 
 })

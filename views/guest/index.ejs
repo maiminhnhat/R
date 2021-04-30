@@ -981,6 +981,8 @@ window.location.href= 'home'
           { 
             alert("Refund complete. Please Check your account")
             window.location.href='home'
+          }else{
+            alert("Sorry It Been 24h Now. You cannot Refund")
           }
         }
 
@@ -997,7 +999,10 @@ window.location.href= 'home'
         success:function(result){
           if(result.kq==1)
           {
+            alert("Refund complete. Please Check your account")
             window.location.href='home'
+          }else{
+            alert("Sorry It Been 24h Now. You cannot Refund")
           }
         }
 
