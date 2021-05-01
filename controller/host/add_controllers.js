@@ -59,19 +59,7 @@ router.get('/edit/:id', (req, res) => {
         });
 
 });
-router.get('/delete/:id', (req, res) => {
-    var url = req.originalUrl.split('/');
-    Property.findByIdAndDelete({ _id: req.params.id }, (err, data) => {
-        if (err) console.log(err)
-        Category.updateOne({name: data.category.cate_name},{ 
-            "$pull": { "propertyId": data._id}
-        },function(err, data) {
-                if (err) throw err;
-            })
-        res.redirect('back')
 
-    });
-});
 
 
 // cấu hình lưu file và ktra file
@@ -97,6 +85,26 @@ router.post('/uploadFile', (req, res, next) => {
 
     });
 
+});
+router.get('/delete/:id', (req, res) => {
+    upload(req,res,(err)=>{
+        var url = req.originalUrl.split('/');
+        Property.findByIdAndDelete({ _id: req.params.id }, (err, data) => {
+            if (err) console.log(err)
+            Category.updateOne({name: data.category.cate_name},{ 
+                "$pull": { "propertyId": data._id}
+            },function(err, data) {
+                    if (err) throw err;
+                })  
+            fs.unlink(req.file.path, (err) => {
+                if (err) throw err
+               console.log('Deleted!')
+             });
+            res.redirect('back')
+    })
+   
+
+    });
 });
 router.post('/api/properties', async (req, res) => {
 var iduser = req.body._id;
