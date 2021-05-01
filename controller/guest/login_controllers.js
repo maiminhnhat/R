@@ -55,15 +55,15 @@ router.post('/api/processLogin', (req, res) => {
             } else {
                 // kiểm tra có tồn tại trong db hay không
                 if (data == '') {
-                    res.send({ kq: 0, err: 'Tên đăng nhập không tồn tại.' });
+                    res.send({ kq: 0, err: 'User is not exist' });
                 } else {
                     if (data[0].active == false) {
-                        res.send({ kq: 0, err: 'Tài Khoản chưa active' })
+                        res.send({ kq: 0, err: 'Your account is not active yet' })
                     }
                     else{
                         bcrypt.compare(password,hash, function(err, result) {
                           if(result == false){
-                            res.send({ kq: 0, err: 'Mật khẩu không chính xác.' });
+                            res.send({ kq: 0, err: 'Invalid Password or Username' });
                           }
                           else{
                             propertyGlobal = [{
@@ -77,7 +77,7 @@ router.post('/api/processLogin', (req, res) => {
                                     var email = data[0].email
                                     var id = data[0]._id
                                     var type = data[0].role
-                                    res.send({ kq: 1, name: name,type:type, email: email, id: id, message: 'Đăng nhập thành công.' });
+                                    res.send({ kq: 1, name: name,type:type, email: email, id: id, message: 'Login Successful' });
                           }
                         });
                     }
@@ -147,7 +147,7 @@ router.post('/api/register', (req, res) => {
                                 var mailOptions = {
                                     from: 'noreply8421@gmail.com',
                                     to: req.body.email,
-                                    subject: 'Sending Email using Node.js',
+                                    subject: 'Active Your Account',
                                     html: htmlToSend // nội dung email
                                 };
                                 transporter.sendMail(mailOptions, function(error, info) {
@@ -224,7 +224,7 @@ router.post('/api/ResetPassword',function(req,res){
             var mailOptions = {
                 from: 'noreply8421@gmail.com',
                 to: email_forgot,
-                subject: 'Sending Email using Node.js',
+                subject: 'Reset Your Password',
                 text: `Hi ${data.name} \n 
                         Please click on the following link ${link} to reset your password. \n\n 
                         If you did not request this, please ignore this email and your password will remain unchanged.\n`,
