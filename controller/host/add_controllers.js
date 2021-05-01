@@ -3,6 +3,8 @@ const router = express.Router();
 var fs = require('fs');
 var Property = require('../../models/Property');
 var Category = require("../../models/Category");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 const { MulterError } = require('multer');
 //multer 
 const multer = require('multer');
@@ -87,9 +89,9 @@ router.post('/uploadFile', (req, res, next) => {
 
 });
 router.get('/delete/:id', (req, res) => {
-  
+        
         var url = req.originalUrl.split('/');
-        Property.findByIdAndDelete({ _id: req.params.id }, (err, data) => {
+        Property.findByIdAndDelete({ _id: ObjectId(req.params.id)  }, (err, data) => {
             if (err) console.log(err)
             Category.updateOne({name: data.category.cate_name},{ 
                 "$pull": { "propertyId": data._id}
