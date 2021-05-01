@@ -96,10 +96,6 @@ router.get('/delete/:id', (req, res) => {
             },function(err, data) {
                     if (err) throw err;
                 })  
-            fs.unlink(req.file.path, (err) => {
-                if (err) throw err
-               console.log('Deleted!')
-             });
             res.redirect('back')
     })
    
