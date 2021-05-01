@@ -49,7 +49,7 @@ router.post('/api/processLogin', (req, res) => {
     // kiểm tra email
     User.find({ 'email': email })
         .exec((err, data) => {
-            const hash = data[0].password
+           
             if (err) {
                 res.send({ kq: 0, err: err });
             } else {
@@ -57,6 +57,7 @@ router.post('/api/processLogin', (req, res) => {
                 if (data == '') {
                     res.send({ kq: 0, err: 'User is not exist' });
                 } else {
+                    const hash = data[0].password
                     if (data[0].active == false) {
                         res.send({ kq: 0, err: 'Your account is not active yet' })
                     }
