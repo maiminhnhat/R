@@ -12,7 +12,7 @@ const saltRounds = 10;
 
 var nodemailer = require('nodemailer');
 const { resolveSoa } = require('dns');
-var transporter = nodemailer.createTransport({
+var transporter = nodemailer.createTransport("SMTP",{
     service: 'gmail',
     auth: {
         XOAuth2:{
