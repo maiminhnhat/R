@@ -182,7 +182,7 @@ router.get('/list(/:page)?', async(req, res) => {
     }
     // lấy toàn bộ property
     Property.find()
-        .sort({ _id: -1 })
+
         .limit(limit)
         .skip(skip)
         .populate('category')
