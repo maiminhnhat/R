@@ -207,7 +207,7 @@ router.get('/list(/:page)?', async(req, res) => {
                         <small>` + e.category.cate_name + `</small>
                         <h4>` + e.title + `</h4>
                         <p>` + e.description + `</p>
-                        <p><a href="delete/` + e._id + `" class="btn_1 gray"><i class="fa fa-fw fa-plus"></i> Edit item</a></p></div>
+                        <p><a href="delete/` + e._id + `" class="btn_1 gray"><i class="fa fa-fw fa-plus"></i> Delete item</a></p></div>
                         <p><a href="edit/` + e._id + `" class="btn_1 gray"><i class="fa fa-fw fa-plus"></i> Edit item</a></p></div>
 
                     </li>
