@@ -62,7 +62,7 @@ router.get('/edit/:id', (req, res) => {
 });
 router.get('/delete/:id', (req, res) => {
     var url = req.originalUrl.split('/');
-    Property.findByIdAndDelete({ _id:ObjectId(req.params.id) }, (err, data) => {
+    Property.findOneAndDelete({ _id:ObjectId(req.params.id) }, (err, data) => {
         if (err) console.log(err)
         Category.updateOne({name: data.category.cate_name},{ 
             "$pull": { "propertyId": data._id}
