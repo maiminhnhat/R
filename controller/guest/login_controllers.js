@@ -13,9 +13,13 @@ const saltRounds = 10;
 var nodemailer = require('nodemailer');
 const { resolveSoa } = require('dns');
 var transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    // service: 'gmail',
     auth: {
         XOAuth2:{
+            type: 'OAuth2',
              user: 'noreply8421@gmail.com',
              clientId: "16491659698-5ffllu1nomqm38jh4qle8a7g3f5mchc1.apps.googleusercontent.com",
              clientSecret: "bj_OOXan8i3t7uaYQHQ2FWcL",
