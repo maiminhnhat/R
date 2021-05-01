@@ -87,7 +87,7 @@ router.post('/uploadFile', (req, res, next) => {
 
 });
 router.get('/delete/:id', (req, res) => {
-    upload(req,res,(err)=>{
+  
         var url = req.originalUrl.split('/');
         Property.findByIdAndDelete({ _id: req.params.id }, (err, data) => {
             if (err) console.log(err)
@@ -97,7 +97,7 @@ router.get('/delete/:id', (req, res) => {
                     if (err) throw err;
                 })  
             res.redirect('back')
-    })
+  
    
 
     });
