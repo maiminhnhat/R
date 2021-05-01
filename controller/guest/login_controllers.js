@@ -15,11 +15,13 @@ const { resolveSoa } = require('dns');
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        host: 'smtp.gmail.com',
-       port: 465,
-       secure: true,
-        user: 'noreply8421@gmail.com',
-        pass: 'zgmfx19a'
+        XOAuth2:{
+             user: 'noreply8421@gmail.com',
+             clientId: "16491659698-5ffllu1nomqm38jh4qle8a7g3f5mchc1.apps.googleusercontent.com",
+             clientSecret: "bj_OOXan8i3t7uaYQHQ2FWcL",
+             refreshToken: "1//04o38BRjXoobLCgYIARAAGAQSNwF-L9IrL0D0Wz17zjK33lcyuIiQP3U03zw-EBBfRBZ-39Zr6kt1zaxNCbwwTl-1Mlfcx_J--yE"
+        }
+       
     }
 });
 // localstorage
