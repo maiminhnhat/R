@@ -207,21 +207,7 @@ router.get('/list(/:page)?', async(req, res) => {
                         <small>` + e.category.cate_name + `</small>
                         <h4>` + e.title + `</h4>
                         <p>` + e.description + `</p>
-                        <div class="modal fade" role="dialog" tabindex="-1" id="MyModal">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">ATTENTION!!!!</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Are you sure?</p>
-                                    </div>
-                                    <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">No</button>
-                                    <a href="delete/` + e._id + `" class="btn btn-primary">Delete</a></div>
-                                   
-                                </div>
-                            </div>
-                        </div>
+        
                         <div class="btn" style="display: flex;"><p> <button class="btn_1 gray" type="button" data-toggle="modal" data-target="#MyModal"><i class="fa fa-trash-o"></i>Delete item</button></p>
                         <p><a href="edit/` + e._id + `" class="btn_1 gray"><i class="fa fa-fw fa-plus"></i> Edit item</a></p></div>
 
@@ -232,7 +218,7 @@ router.get('/list(/:page)?', async(req, res) => {
 
                 // views
                 var main = 'listing/listing';
-                res.render('host/index', { main: main, url: url, str: str, page: page, totalPage: totalPage});
+                res.render('host/index', { main: main,data:data, url: url, str: str, page: page, totalPage: totalPage});
             }
         })
 });
