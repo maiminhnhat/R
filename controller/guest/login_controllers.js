@@ -78,7 +78,7 @@ router.post('/api/processLogin', (req, res) => {
                                     var email = data[0].email
                                     var id = data[0]._id
                                     var type = data[0].role
-                                    res.send({ kq: 1, name: name,type:type, email: email, id: id, message: 'Login Successful' });
+                                    res.send({ kq: 1, name: name,type:type, email: email, id: id, message: 'Login Successfully' });
                           }
                         });
                     }
